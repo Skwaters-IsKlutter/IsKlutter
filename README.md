@@ -3,7 +3,9 @@
 IsKlutter is a marketplace for Iskxs to buy and sell pre-loved items.
  
 Product Owner: Castañeda, Jayvee B.
+
 Scrum Master: Parcon, Mary Nicolette J.
+
 Product Manager: Parcon, Mary Nicolette J.
 
 ## Artifacts
