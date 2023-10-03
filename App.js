@@ -1,34 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-
-const logo = require('./assets/img/logo-1.png'); 
+import { NativeBaseProvider, VStack, Text, Image, Center } from 'native-base';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={logo} style={styles.image} />
-      </View>
-      <StatusBar style="auto" />
-    </View>
-  );
+	return (
+		<NativeBaseProvider>
+			<VStack width={"100%"} height={"100%"} alignItems="center" justifyContent="center" space="2">
+				<Center>
+					<Text fontSize="4xl" color="#5C0001" bottom={200} bold>Welcome to IsKlutter</Text>
+					<Image source={require("./assets/img/logo-1.png")} width={200} height={200} alt="logo"></Image>
+				</Center>
+			</VStack>
+		</NativeBaseProvider>
+	);
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: 250,
-    height: 250,
-  },
-});
