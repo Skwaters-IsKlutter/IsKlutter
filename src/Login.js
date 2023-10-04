@@ -68,7 +68,7 @@ export default function LoginPage() {
                 </VStack>
                 <VStack space="lg" pt="$4">
                     <Button size="sm" backgroundColor={colors.primary}>
-                        <ButtonText>Submit</ButtonText>
+                        <ButtonText>Log In</ButtonText>
                     </Button>
                     <Box flexDirection="row">
                         <Button variant="link" p="$0" size="sm">
