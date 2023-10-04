@@ -1,11 +1,13 @@
 {
   "expo": {
-    "name": "MyReactNative",
-    "slug": "MyReactNative",
+    "name": "IsKlutter",
+    "slug": "isklutter",
     "version": "1.0.0",
+    "orientation": "portrait",
+		"icon": "./assets/img/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ]
   },
-  "name": "MyReactNative"
+  "name": "IsKlutter"
 }
