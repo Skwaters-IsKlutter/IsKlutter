@@ -8,17 +8,16 @@ import {
     ButtonText, 
     FormControl, 
     FormControlLabel, 
-    FormControlError, 
-    FormControlErrorText, 
+    FormControlError, // TODO: Add
+    FormControlErrorText, // TODO: Add
     FormControlLabelText, 
-    FormControlHelper, 
-    FormControlHelperText, 
-    FormControlErrorIcon, 
+    FormControlErrorIcon, // Optional
     Input, 
     InputField
 } from '@gluestack-ui/themed';
 
-import colors from '../app/config/colors.js'
+import Icon from '../app/components/Icon.js';
+import colors from '../app/config/colors.js';
 
 export default function LoginPage() {
     return (
@@ -68,12 +67,14 @@ export default function LoginPage() {
                 </VStack>
                 <VStack space="lg" pt="$4">
                     <Button size="sm" backgroundColor={colors.primary}>
-                        <ButtonText>Log In</ButtonText>
+                        <ButtonText>Sign In</ButtonText>
                     </Button>
                     <Box flexDirection="row">
-                        <Button variant="link" p="$0" size="sm">
+                        <Button variant="link" p="$0" size="sm" borderRadius="$4">
                             <ButtonText sx={{
-                                color: colors.primary,
+                                color: colors.medium,
+                                backgroundColor: colors.secondary,
+                                fontWeight: "$bold"
                             }}>Already have an account? Log in</ButtonText>
                         </Button>
                     </Box>
