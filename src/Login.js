@@ -21,7 +21,13 @@ import colors from '../app/config/colors.js';
 
 export default function LoginPage() {
     return (
+        // 
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
+            {/* Logo */}
+            <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
+                <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
+            </VStack>
+            {/* Form control for login */}
             <Box
                 p="$5"
                 w="100%"
@@ -66,18 +72,22 @@ export default function LoginPage() {
                     </FormControl>
                 </VStack>
                 <VStack space="lg" pt="$4">
-                    <Button size="sm" backgroundColor={colors.primary}>
-                        <ButtonText>Sign In</ButtonText>
+                    <Button variant="outline" size="sm" bg={colors.primary} borderColor={colors.primary}>
+                        <ButtonText sx={{
+                            color: colors.medium
+                        }}>Sign In</ButtonText>
                     </Button>
-                    <Box flexDirection="row">
-                        <Button variant="link" p="$0" size="sm" borderRadius="$4">
-                            <ButtonText sx={{
-                                color: colors.medium,
-                                backgroundColor: colors.secondary,
-                                fontWeight: "$bold"
-                            }}>Already have an account? Log in</ButtonText>
-                        </Button>
-                    </Box>
+                </VStack>
+            </Box>
+            <Box alignItems="center">
+                <VStack space="xs" pt="$4">
+                    <Button variant="link" p="$0" size="sm">
+                        <ButtonText sx={{
+                            color: colors.medium,
+                            backgroundColor: colors.secondary,
+                            fontWeight: "$bold"
+                        }}>Already have an account? Log in</ButtonText>
+                    </Button>
                 </VStack>
             </Box>
         </Box>
