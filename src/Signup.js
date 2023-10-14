@@ -20,7 +20,7 @@ import {
 
 import colors from '../app/config/colors.js';
 
-export default function LoginPage() {
+export default function SignupPage() {
     return (
         // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
@@ -37,8 +37,26 @@ export default function LoginPage() {
             >
                 {/* Heading */}
                 <VStack space="xs" pb="$12">
-                    <Heading lineHeight={60} fontSize="$5xl">Welcome back</Heading>
-                    <Heading lineHeight={30} fontSize="$2xl">Sign in to IsKlutter now.</Heading>
+                    <Heading lineHeight={60} fontSize="$5xl">New here?</Heading>
+                    <Heading lineHeight={30} fontSize="$2xl">Sign up to start decluttering.</Heading>
+                </VStack>
+
+                {/* Email input */}
+                <VStack space="xl" py="$3">
+                    <FormControl
+                        size="md"
+                        isDisabled={false}
+                        isInvalid={false}
+                        isReadOnly={false}
+                        isRequired={false}
+                    >
+                        <FormControlLabel mb="$2">
+                            <FormControlLabelText>Email</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input w="100%">
+                            <InputField type="email" defaultValue="" placeholder="Enter username" />
+                        </Input>
+                    </FormControl>
                 </VStack>
 
                 {/* Username input */}
@@ -72,7 +90,25 @@ export default function LoginPage() {
                             <FormControlLabelText>Password</FormControlLabelText>
                         </FormControlLabel>
                         <Input w="100%">
-                            <InputField type="password" defaultValue="" placeholder="Enter password" />
+                            <InputField type="newPassword" defaultValue="" placeholder="Enter password" />
+                        </Input>
+                    </FormControl>
+                </VStack>
+                
+                {/* Re-enter password input */}
+                <VStack space="xl" py="$2">
+                    <FormControl
+                        size="md"
+                        isDisabled={false}
+                        isInvalid={false}
+                        isReadOnly={false}
+                        isRequired={false}
+                    >
+                        <FormControlLabel mb="$2">
+                            <FormControlLabelText>Re-enter Password</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input w="100%">
+                            <InputField type="retypePassword" defaultValue="" placeholder="Enter password" />
                         </Input>
                     </FormControl>
                 </VStack>
@@ -80,7 +116,7 @@ export default function LoginPage() {
                 {/* Submit button */}
                 <VStack space="lg" pt="$4">
                     <Button size="sm" backgroundColor={colors.primary} onclick="">
-                        <ButtonText>Sign In</ButtonText>
+                        <ButtonText>Sign Up</ButtonText>
                     </Button>
                 </VStack>
             </Box>
@@ -90,7 +126,7 @@ export default function LoginPage() {
                 <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary}>
                     <ButtonText sx={{
                         color: colors.medium
-                    }}>Don't have an account yet? Sign up</ButtonText>
+                    }}>Already have an account? Sign in</ButtonText>
                 </Button>
             </Box>
         </Box>
