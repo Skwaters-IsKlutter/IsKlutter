@@ -17,10 +17,12 @@ import {
     Input, 
     InputField
 } from '@gluestack-ui/themed';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import colors from '../app/config/colors.js';
 
-export default function LoginPage() {
+export default function LoginScreen({ navigation }) {
     return (
         // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">

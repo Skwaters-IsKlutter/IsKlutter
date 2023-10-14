@@ -19,8 +19,9 @@ import {
 } from '@gluestack-ui/themed';
 
 import colors from '../app/config/colors.js';
+import Routes from '../app/components/Routes.js';
 
-export default function SignupPage() {
+export default function SignupScreen() {
     return (
         // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
@@ -123,7 +124,9 @@ export default function SignupPage() {
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={800} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary}>
+                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary}
+                    onPress={() => navigation.navigation(Routes.LOGIN)}
+                >
                     <ButtonText sx={{
                         color: colors.medium
                     }}>Already have an account? Sign in</ButtonText>
