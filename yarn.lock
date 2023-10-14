@@ -5978,11 +5978,14 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+<<<<<<< HEAD
 lucide-react-native@^0.284.0:
   version "0.284.0"
   resolved "https://registry.npmjs.org/lucide-react-native/-/lucide-react-native-0.284.0.tgz"
   integrity sha512-0ghu6lLmQ2UKaDN2Xai6E5NDi8kW7JNrUzywIFZTVn8SzE3huhKD32tGKF9BsOqG0RNJIwIcyShgEZcktsd3Fg==
 
+=======
+>>>>>>> parent of c7dc9a2 (Reconfigured Firebase SDKs and config files)
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/make-dir/-/make-dir-2.1.0.tgz"

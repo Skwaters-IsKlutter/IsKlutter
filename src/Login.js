@@ -8,16 +8,17 @@ import {
     ButtonText, 
     FormControl, 
     FormControlLabel, 
-    FormControlError, // TODO: Add
-    FormControlErrorText, // TODO: Add
+    FormControlError, 
+    FormControlErrorText, 
     FormControlLabelText, 
-    FormControlErrorIcon, // Optional
+    FormControlHelper, 
+    FormControlHelperText, 
+    FormControlErrorIcon, 
     Input, 
     InputField
 } from '@gluestack-ui/themed';
 
-import Icon from '../app/components/Icon.js';
-import colors from '../app/config/colors.js';
+import colors from '../app/config/colors.js'
 
 export default function LoginPage() {
     return (
@@ -72,6 +73,7 @@ export default function LoginPage() {
                     </FormControl>
                 </VStack>
                 <VStack space="lg" pt="$4">
+<<<<<<< HEAD
                     <Button variant="outline" size="sm" bg={colors.primary} borderColor={colors.primary}>
                         <ButtonText sx={{
                             color: colors.medium
@@ -88,6 +90,18 @@ export default function LoginPage() {
                             fontWeight: "$bold"
                         }}>Already have an account? Log in</ButtonText>
                     </Button>
+=======
+                    <Button size="sm" backgroundColor={colors.primary}>
+                        <ButtonText>Log In</ButtonText>
+                    </Button>
+                    <Box flexDirection="row">
+                        <Button variant="link" p="$0" size="sm">
+                            <ButtonText sx={{
+                                color: colors.primary,
+                            }}>Already have an account? Log in</ButtonText>
+                        </Button>
+                    </Box>
+>>>>>>> parent of c7dc9a2 (Reconfigured Firebase SDKs and config files)
                 </VStack>
             </Box>
         </Box>
