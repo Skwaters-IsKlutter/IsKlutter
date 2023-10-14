@@ -92,7 +92,7 @@ export default function LoginPage() {
                     </Button>
 =======
                     <Button size="sm" backgroundColor={colors.primary}>
-                        <ButtonText>Log In</ButtonText>
+                        <ButtonText>Submit</ButtonText>
                     </Button>
                     <Box flexDirection="row">
                         <Button variant="link" p="$0" size="sm">
