@@ -8,38 +8,41 @@ import {
     ButtonText, 
     FormControl, 
     FormControlLabel, 
-    FormControlError, // TODO: Add
-    FormControlErrorText, // TODO: Add
+    FormControlError, 
+    FormControlErrorText, 
     FormControlLabelText, 
-    FormControlErrorIcon, // Optional
+    FormControlHelper, 
+    FormControlHelperText, 
+    FormControlErrorIcon, 
     Input, 
     InputField
 } from '@gluestack-ui/themed';
 
-import Icon from '../app/components/Icon.js';
-import colors from '../app/config/colors.js';
+import colors from '../app/config/colors.js'
 
 export default function LoginPage() {
     return (
-        // 
+        // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
             {/* Logo */}
-            <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
+            {/* <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
-            </VStack>
+            </VStack> */}
+
             {/* Form control for login */}
             <Box
-                p="$5"
+                p="$6"
                 w="100%"
                 maxWidth="$96"
             >
-                {/* <VStack space="xs" pb="$4" backgroundColor={colors.light}>
-                    <Image source={require('../assets/img/icon.png')} w="$600" alt="logo" />
-                </VStack> */}
-                <VStack space="xs" pb="$4">
-                    <Heading lineHeight={60} fontSize="$2xl">Welcome back</Heading>
+                {/* Heading */}
+                <VStack space="xs" pb="$12">
+                    <Heading lineHeight={60} fontSize="$5xl">Welcome back</Heading>
+                    <Heading lineHeight={30} fontSize="$2xl">Sign in to IsKlutter now.</Heading>
                 </VStack>
-                <VStack space="xl" py="$2">
+
+                {/* Username input */}
+                <VStack space="xl" py="$3">
                     <FormControl
                         size="md"
                         isDisabled={false}
@@ -55,6 +58,8 @@ export default function LoginPage() {
                         </Input>
                     </FormControl>
                 </VStack>
+
+                {/* Password input */}
                 <VStack space="xl" py="$2">
                     <FormControl
                         size="md"
@@ -67,28 +72,26 @@ export default function LoginPage() {
                             <FormControlLabelText>Password</FormControlLabelText>
                         </FormControlLabel>
                         <Input w="100%">
-                            <InputField type="username" defaultValue="" placeholder="Enter password" />
+                            <InputField type="password" defaultValue="" placeholder="Enter password" />
                         </Input>
                     </FormControl>
                 </VStack>
+
+                {/* Submit button */}
                 <VStack space="lg" pt="$4">
-                    <Button variant="outline" size="sm" bg={colors.primary} borderColor={colors.primary}>
-                        <ButtonText sx={{
-                            color: colors.medium
-                        }}>Sign In</ButtonText>
+                    <Button size="sm" backgroundColor={colors.primary} onclick="">
+                        <ButtonText>Sign In</ButtonText>
                     </Button>
                 </VStack>
             </Box>
-            <Box alignItems="center">
-                <VStack space="xs" pt="$4">
-                    <Button variant="link" p="$0" size="sm">
-                        <ButtonText sx={{
-                            color: colors.medium,
-                            backgroundColor: colors.secondary,
-                            fontWeight: "$bold"
-                        }}>Already have an account? Log in</ButtonText>
-                    </Button>
-                </VStack>
+
+            {/* Go to sign up */}
+            <Box flexDirection="row" top={800} position="absolute">
+                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary}>
+                    <ButtonText sx={{
+                        color: colors.medium
+                    }}>Don't have an account yet? Sign up</ButtonText>
+                </Button>
             </Box>
         </Box>
     )
