@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     VStack,
     Heading,
@@ -17,11 +17,14 @@ import {
     Input, 
     InputField
 } from '@gluestack-ui/themed';
+import { useNavigation } from '@react-navigation/native';
 
 import colors from '../app/config/colors.js';
 import Routes from '../app/components/Routes.js';
 
 export default function SignupScreen() {
+    const navigation = useNavigation();
+
     return (
         // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">

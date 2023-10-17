@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     VStack,
     Heading,
@@ -17,12 +17,11 @@ import {
     Input, 
     InputField
 } from '@gluestack-ui/themed';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 import colors from '../app/config/colors.js';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginPage() {
     return (
         // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
@@ -89,7 +88,7 @@ export default function LoginScreen({ navigation }) {
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={800} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary}>
+                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate("Signup")}>
                     <ButtonText sx={{
                         color: colors.medium
                     }}>Don't have an account yet? Sign up</ButtonText>
