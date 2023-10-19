@@ -20,7 +20,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../app/config/colors.js';
-
+import Routes from '../app/components/Routes.js';
 
 export default function LoginPage() {
     const navigation = useNavigation();
@@ -91,7 +91,7 @@ export default function LoginPage() {
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={800} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate("Signup")}>
+                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)}>
                     <ButtonText sx={{
                         color: colors.medium
                     }}>Don't have an account yet? Sign up</ButtonText>
