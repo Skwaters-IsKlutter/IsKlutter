@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import {
     VStack,
     Heading,
@@ -21,7 +21,10 @@ import { useNavigation } from '@react-navigation/native';
 
 import colors from '../app/config/colors.js';
 
+
 export default function LoginPage() {
+    const navigation = useNavigation();
+
     return (
         // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">

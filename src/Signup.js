@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import {
     VStack,
     Heading,
@@ -127,8 +127,7 @@ export default function SignupScreen() {
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={800} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary}
-                    onPress={() => navigation.navigation(Routes.LOGIN)}
+                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}
                 >
                     <ButtonText sx={{
                         color: colors.medium
