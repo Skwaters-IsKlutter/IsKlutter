@@ -83,7 +83,7 @@ export default function LoginPage() {
 
                 {/* Submit button */}
                 <VStack space="lg" pt="$4">
-                    <Button size="sm" backgroundColor={colors.primary} onclick="">
+                    <Button size="sm" backgroundColor={colors.primary} onPress={() => navigation.navigate(Routes.LISTINGS)}>
                         <ButtonText>Sign In</ButtonText>
                     </Button>
                 </VStack>

@@ -5,10 +5,10 @@ import LoginPage from '../../../src/Login.js';
 
 export default function LoginScreen() {
 	return (
-	<GluestackUIProvider>
-		<Center>
-			<LoginPage />
-		</Center>
-	</GluestackUIProvider>
+		<GluestackUIProvider>
+			<Center>
+				<LoginPage />
+			</Center>
+		</GluestackUIProvider>
 	);
 }
