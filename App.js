@@ -1,14 +1,19 @@
-import React from 'react';
-import { GluestackUIProvider, Center } from '@gluestack-ui/themed';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import LoginPage from './src/Login.js';
+import LoginScreen from './app/components/screens/LoginScreen.js';
+import SignupScreen from './app/components/screens/SignupScreen.js';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
 	return (
-		<GluestackUIProvider>
-			<Center>
-				<LoginPage />
-			</Center>
-		</GluestackUIProvider>
+		<NavigationContainer>
+			<Stack.Navigator initialRouteName="Login">
+				<Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
+				<Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} />
+			</Stack.Navigator>
+		</NavigationContainer>
 	);
 }

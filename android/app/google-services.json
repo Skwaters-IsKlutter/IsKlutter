@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "810996043861",
+    "project_id": "isklutter",
+    "storage_bucket": "isklutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810996043861:android:b253bc6b993c0d27e104dc",
+        "android_client_info": {
+          "package_name": "com.skwaters.isklutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0JlL02XZ-kkPukLviI1naewdwTAzNRaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
