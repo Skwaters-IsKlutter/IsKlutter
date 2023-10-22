@@ -19,16 +19,17 @@ import {
     InputField,
     Text
 } from '@gluestack-ui/themed';
+import { useNavigation } from '@react-navigation/native';
 
 import colors from '../app/config/colors.js'
 
+export default function HomepagePage() {
+    const navigation = useNavigation();
 
-export default function HomePage() {
     return (
         // Parent box
         <Box w="100%" h="100%"  backgroundColor='lightgray'>
         
-          
             {/*Search Bar*/}
             <Box w="100%" h="18%" backgroundColor='maroon' mb={'$0'} pb={'$10'} >
                 <VStack>
@@ -65,12 +66,12 @@ export default function HomePage() {
             </Box>
             {/*Listings Label */}
             <Text color="darkgreen" 
-                  mt={'$2'} 
-                  ml={'$5'}
-                  mb={'$2'} 
-                  paddingTop={'$5'}
+                  mt='$2'
+                  ml='$5'
+                  mb='$2' 
+                  paddingTop='$5'
                   textAlign="left"
-                  fontSize="30px"
+                  fontSize="$md"
                   fontWeight='bold'>Listings
             </Text>
             
@@ -80,8 +81,8 @@ export default function HomePage() {
                 <Box backgroundColor="white" borderRadius={10} width="45%" h={230} m="2%" marginTop={0}>
                     <VStack padding={5} flex={1} top={5}>
                         <Image source={ require("../assets/img/usericon.jpg") } h={100} w="auto" alt="icon" backgroundColor='gray' borderTopLeftRadius={5} borderTopRightRadius={5}/>
-                        <Heading fontSize="20px" ml={10} color='darkgreen'>Price</Heading>
-                        <Text fontSize="md" marginTop="-5px" ml={10}>Product Name</Text>
+                        <Heading fontSize="$2xl" ml={10} color='darkgreen'>Price</Heading>
+                        <Text fontSize="$md" marginTop="-5px" ml={10}>Product Name</Text>
                     </VStack>
                     {/*Seller Part */}
                     <HStack space = "xs" p="$2">
@@ -98,8 +99,8 @@ export default function HomePage() {
                 <Box backgroundColor="white" borderRadius={10} width="45%" h={230} m="2%" marginTop={0}>
                     <VStack padding={5} flex={1} top={5}>
                         <Image source={ require("../assets/img/usericon.jpg") } h={100} w="auto" alt="icon" backgroundColor='gray' borderTopLeftRadius={5} borderTopRightRadius={5}/>
-                        <Heading fontSize="20px" ml={10} color='darkgreen'>Price</Heading>
-                        <Text fontSize="md" marginTop="-5px" ml={10}>Product Name</Text>
+                        <Heading fontSize="$2xl" ml={10} color='darkgreen'>Price</Heading>
+                        <Text fontSize="$md" marginTop="-5px" ml={10}>Product Name</Text>
                     </VStack>
                     {/*Seller Part */}
                     <HStack space = "xs" p="$2">
@@ -116,8 +117,8 @@ export default function HomePage() {
                 <Box backgroundColor="white" borderRadius={10} width="45%" h={230} m="2%" marginTop={0}>
                     <VStack padding={5} flex={1} top={5}>
                         <Image source={ require("../assets/img/usericon.jpg") } h={100} w="auto" alt="icon" backgroundColor='gray' borderTopLeftRadius={5} borderTopRightRadius={5}/>
-                        <Heading fontSize="20px" ml={10} color='darkgreen'>Price</Heading>
-                        <Text fontSize="md" marginTop="-5px" ml={10}>Product Name</Text>
+                        <Heading fontSize="$2xl" ml={10} color='darkgreen'>Price</Heading>
+                        <Text fontSize="$md" marginTop="-5px" ml={10}>Product Name</Text>
                     </VStack>
                     {/*Seller Part */}
                     <HStack space = "xs" p="$2">
@@ -134,8 +135,8 @@ export default function HomePage() {
                 <Box backgroundColor="white" borderRadius={10} width="45%" h={230} m="2%" marginTop={0}>
                     <VStack padding={5} flex={1} top={5}>
                         <Image source={ require("../assets/img/usericon.jpg") } h={100} w="auto" alt="icon" backgroundColor='gray' borderTopLeftRadius={5} borderTopRightRadius={5}/>
-                        <Heading fontSize="20px" ml={10} color='darkgreen'>Price</Heading>
-                        <Text fontSize="md" marginTop="-5px" ml={10}>Product Name</Text>
+                        <Heading fontSize="$2xl" ml={10} color='darkgreen'>Price</Heading>
+                        <Text fontSize="$md" marginTop="-5px" ml={10}>Product Name</Text>
                     </VStack>
                     {/*Seller Part */}
                     <HStack space = "xs" p="$2">

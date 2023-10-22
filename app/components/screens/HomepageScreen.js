@@ -1,13 +1,13 @@
 import React from 'react';
 import { GluestackUIProvider, Center } from '@gluestack-ui/themed';
 
-import SignupPage from '../../../src/Signup.js';
+import HomepagePage from '../../../src/HomePage.js';
 
-export default function SignupScreen() {
+export default function HomepageScreen() {
 	return (
 		<GluestackUIProvider>
 			<Center>
-				<SignupPage />
+				<HomepagePage />
 			</Center>
 		</GluestackUIProvider>
 	);

@@ -1,4 +1,6 @@
 export default Object.freeze({
     LOGIN: "Login",
-    SIGNUP: "Signup"
+    SIGNUP: "Signup",
+    HOMEPAGE: "Homepage",
+    LISTINGS: "Listings",
 });
