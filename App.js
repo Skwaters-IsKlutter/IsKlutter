@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import HomePage from './src/HomePage.js';
 import LoginScreen from './app/components/screens/LoginScreen.js';
 import SignupScreen from './app/components/screens/SignupScreen.js';
 
