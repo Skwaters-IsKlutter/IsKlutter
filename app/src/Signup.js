@@ -19,8 +19,8 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import colors from '../app/config/colors.js';
-import Routes from '../app/components/Routes.js';
+import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
 export default function SignupScreen() {
     const navigation = useNavigation();

@@ -21,7 +21,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import colors from '../app/config/colors.js'
+import colors from '../config/colors.js'
 
 export default function HomepagePage() {
     const navigation = useNavigation();
