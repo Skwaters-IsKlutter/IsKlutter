@@ -10,7 +10,9 @@ import {
     FormControl, 
     Input, 
     InputField,
-    Text
+    Text,
+    ScrollView,
+    Pressable
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
@@ -24,32 +26,38 @@ export default function HomepagePage() {
 
     return (
         // Parent box
-        <Box w="100%" h="100%"  backgroundColor='lightgray'>
-        
+        <Box w="100%" h="100%">
             {/*Search Bar*/}
             <SearchHeader />
-                
-                
-            {/*Listings Label */}
-            <Heading color={colors.secondary}
-                  mt='$2'
-                  ml='$5'
-                  mb='$2' 
-                  paddingTop='$5'
-                  textAlign="left"
-                  fontSize="$2xl"
-                  fontWeight='bold'>Listings
-            </Heading>
             
-            {/*Listing Box Container*/}
-            <HStack space = "xs" flexWrap='wrap'>
-                <ItemCard />
-            </HStack>
+            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+                {/*Listings Label */}
+                <VStack space="xs" pb="$2">
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
+                </VStack>
+
+                {/*Listing Box Container*/}
+                <ScrollView>
+                    <HStack space="xs" flexWrap="wrap">
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                    </HStack>
+                </ScrollView>
+            </Box>
+        
+            
 
 
 
             {/*Dashboard */}
-            <Box  top={810} position="absolute"  h="20%" width="100%" backgroundColor="$green" borderRadius={50} alignItems='center'>
+            {/* <Box top="90%" position="absolute" h="20%" width="100%" backgroundColor="$green" borderRadius={50} alignItems='center'>
                 <HStack space="xs" p="$5">
                     <Button variant="solid"  backgroundColor={colors.secondary} >
                         <ButtonText sx={{
@@ -67,7 +75,7 @@ export default function HomepagePage() {
                         }}>Profile</ButtonText>
                     </Button>        
                 </HStack>   
-            </Box>
+            </Box> */}
 
         </Box>
     )

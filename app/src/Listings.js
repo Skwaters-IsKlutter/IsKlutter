@@ -17,12 +17,12 @@ import Routes from '../components/constants/Routes.js';
 export default function ListingsPage() {
     return (
         // Parent box
-        <Box w="100%" h="100%" justifyContent="center" alignItems="center">
+        <Box w="100%" h="100%">
             <Box p="$6" w="100%" maxWidth="$96">
 
                 {/* Heading */}
                 <VStack space="xs" pb="$2">
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary} textAlign="left">Listings</Heading>
                 </VStack>
 
                 {/* Listing box */}
