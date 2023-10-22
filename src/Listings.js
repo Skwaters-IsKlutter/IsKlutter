@@ -39,7 +39,7 @@ export default function ListingsPage() {
 
                     {/* Description */}
                     <VStack space="sm" p="$2">
-                        <Text fontSize="md">bilhin niyo na pls, bigay ng ex ko</Text>
+                        <Text fontSize="$md">bilhin niyo na pls, bigay ng ex ko</Text>
                     </VStack>
 
                     {/* Poster info */}
