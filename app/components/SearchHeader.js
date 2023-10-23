@@ -19,7 +19,7 @@ export default function SearchHeader( {search, userIcon} ) {
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
                 <HStack p="$3" w="100%" mt={50} justifyContent="center" alignItems="center">
-                    <Input w="80%" bg={colors.white} borderColor={colors.secondary} size="sm">
+                    <Input w="80%" bg={colors.white} borderColor={colors.primary} size="sm">
                         <InputField placeholder="Search" />
                     </Input>
 
