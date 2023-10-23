@@ -49,7 +49,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
                     </VStack>
 
                     <VStack space="xs">
-                        <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") }/>
+                        <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") } comment={() => Alert.alert("Alert", "This is a dummy action")} />
                     </VStack>
                 </ScrollView>
             </Box>
