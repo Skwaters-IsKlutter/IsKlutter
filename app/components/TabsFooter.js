@@ -10,9 +10,6 @@ export default function TabsFooter() {
     return (
         <SelectionTabs
             tabTitle1="Listings" 
-            tabValue1={() => Alert.alert('Show Alert Action', 'Listings pressed')}
-
-            tabTitle2="Community"
-            tabValue2="Community" />
+            tabTitle2="Community" />
     )
 }

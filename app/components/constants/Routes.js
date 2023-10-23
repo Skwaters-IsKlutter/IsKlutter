@@ -3,4 +3,6 @@ export default Object.freeze({
     SIGNUP: "Signup",
     HOMEPAGE: "Homepage",
     LISTINGS: "Listings",
+    COMMUNITY: "Community",
+    PROFILE: "Profile",
 });
