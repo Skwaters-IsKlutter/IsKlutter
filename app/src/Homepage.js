@@ -18,8 +18,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-
-import ListingsScreen from './screens/ListingsScreen.js';
+import TabsFooter from '../components/TabsFooter.js';
 
 import colors from '../config/colors.js'
 
@@ -56,6 +55,11 @@ export default function HomepagePage() {
                         <ItemCard />
                     </HStack>
                 </ScrollView>
+            </Box>
+
+            {/*Bottom Navigation */}
+            <Box justifyContent="center" alignItems="center">
+                <TabsFooter />
             </Box>
         </Box>
     )
