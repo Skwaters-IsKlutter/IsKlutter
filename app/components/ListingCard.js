@@ -32,9 +32,9 @@ export default function ListingCard({ productName, productImage, productPrice, p
             </VStack>
 
             {/* Poster info */}
-            <HStack space="sm" p="$2">
-                <Image source={sellerImage} h={50} w={50} alt="icon" borderRadius={100} />
-                <Text lineHeight={50}>{sellerName}</Text>
+            <HStack space="sm" p="$2" alignItems="center">
+                <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} />
+                <Text color={colors.gray}>{sellerName}</Text>
             </HStack>
 
             <VStack space="sm" p="$2">

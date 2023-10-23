@@ -24,7 +24,8 @@ export default function ListingsPage({ productName, productImage, productPrice, 
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeader />
+            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
+
 
             {/*Tabs */}
             <TabsFooter />
