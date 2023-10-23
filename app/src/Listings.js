@@ -16,6 +16,7 @@ import SearchHeader from '../components/SearchHeader.js';
 import TabsFooter from '../components/TabsFooter.js';
 import ListingCard from '../components/ListingCard.js';
 import CommentBox from '../components/CommentBox.js';
+import TagLabel from '../components/TagLabel.js';
 
 import colors from '../config/colors.js';
 
@@ -25,7 +26,6 @@ export default function ListingsPage({ productName, productImage, productPrice, 
         <Box w="100%" h="100%">
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
-
 
             {/*Tabs */}
             <TabsFooter />

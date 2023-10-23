@@ -11,6 +11,8 @@ import {
     ScrollView
 } from '@gluestack-ui/themed';
 
+import TagLabel from '../components/TagLabel.js';
+
 import colors from '../config/colors.js';
 
 export default function ListingCard({ productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat }) {
@@ -25,6 +27,12 @@ export default function ListingCard({ productName, productImage, productPrice, p
                 <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{productPrice}</Text>
             </VStack>
+
+            {/* Tags */}
+            <HStack space="sm" p="$2">
+                <TagLabel tagName="toys" />
+                <TagLabel tagName="new" />
+            </HStack>
 
             {/* Description */}
             <VStack space="sm" p="$2">
