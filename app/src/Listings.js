@@ -28,7 +28,7 @@ export default function ListingsPage() {
                 {/* Listing box */}
                 <Box p="$3" w="100%" backgroundColor="$white">
                     <VStack space="md" pb="$2">
-                        <Image source={ require("../assets/img/item.jpg") } h={230} w="100%" alt="item" borderRadius={3}/>
+                        <Image source={ require("../../assets/img/item.jpg") } h={230} w="100%" alt="item" borderRadius={3}/>
                     </VStack>
 
                     {/* Item name and price */}
@@ -44,7 +44,7 @@ export default function ListingsPage() {
 
                     {/* Poster info */}
                     <HStack space="sm" p="$2">
-                        <Image source={ require("../assets/img/usericon.jpg") } h={50} w={50} alt="icon" borderRadius={100} />
+                        <Image source={ require("../../assets/img/usericon.jpg") } h={50} w={50} alt="icon" borderRadius={100} />
                         <Text lineHeight={50}>cinnamonroll</Text>
                     </HStack>
 
