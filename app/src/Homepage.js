@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
+import TabsFooter from '../components/TabsFooter.js';
 
 import colors from '../config/colors.js'
 
@@ -53,7 +54,10 @@ export default function HomepagePage() {
             </Box>
         
             
-
+            {/*Bottom Navigation */}
+            <Box justifyContent="center" alignItems="center">
+                <TabsFooter />
+            </Box>
 
 
             {/*Dashboard */}
