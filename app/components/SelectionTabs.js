@@ -19,15 +19,15 @@ import colors from '../config/colors.js';
 
 export default function SelectionTabs( {tabTitle1, tabTitle2, tabValue1, tabValue2} ) {
     return (
-        <Tabs>
-            <TabsTabList bg={colors.primary}>
+        <Tabs bg={colors.primary} w="100%" h="$10">
+            <TabsTabList>
             {/* Tab selection */}
                 <TabsTab value="tab1">
-                    <TabsTabTitle color={colors.white}>{tabTitle1}</TabsTabTitle>
+                    <TabsTabTitle color={colors.white} fontWeight="$bold">{tabTitle1}</TabsTabTitle>
                 </TabsTab>
 
                 <TabsTab value="tab2">
-                    <TabsTabTitle color={colors.white}>{tabTitle2}</TabsTabTitle>
+                    <TabsTabTitle color={colors.white} fontWeight="$bold">{tabTitle2}</TabsTabTitle>
                 </TabsTab>
             </TabsTabList>
 

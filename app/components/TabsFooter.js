@@ -12,6 +12,7 @@ export default function TabsFooter() {
             tabTitle1="Listings" 
             tabValue1={() => Alert.alert('Show Alert Action', 'Listings pressed')}
 
-            tabTitle2="Community" />
+            tabTitle2="Community"
+            tabValue2="Community" />
     )
 }

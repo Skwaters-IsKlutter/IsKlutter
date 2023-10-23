@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
     HStack,
     VStack,
@@ -14,7 +14,6 @@ import {
     ScrollView,
     Pressable
 } from '@gluestack-ui/themed';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
@@ -22,9 +21,8 @@ import TabsFooter from '../components/TabsFooter.js';
 
 import colors from '../config/colors.js'
 
-const Tab = createBottomTabNavigator();
-
 export default function HomepagePage() {
+    // oginago
     return (
         // <Tab.Navigator>
         //     <Tab.Screen name="Listings" component={ListingsScreen} />
@@ -35,6 +33,11 @@ export default function HomepagePage() {
         <Box w="100%" h="100%">
             {/*Search Bar*/}
             <SearchHeader />
+
+            {/*Bottom Navigation */}
+            <Box justifyContent="center" alignItems="center">
+                <TabsFooter />
+            </Box>
             
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
@@ -52,11 +55,6 @@ export default function HomepagePage() {
                         <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll"/>
                     </HStack>
                 </ScrollView>
-            </Box>
-
-            {/*Bottom Navigation */}
-            <Box justifyContent="center" alignItems="center">
-                <TabsFooter />
             </Box>
         </Box>
     )
