@@ -3,26 +3,15 @@ import {
     HStack,
     VStack,
     Heading,
-    Image,
     Box, 
-    Button, 
-    ButtonText, 
-    FormControl, 
-    Input, 
-    InputField,
-    Text,
     ScrollView,
-    Pressable
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
-import { useNavigation, NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
 import TabsFooter from '../components/TabsFooter.js';
-
-import ListingsScreen from '../components/screens/ListingsScreen.js';
 
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
@@ -41,7 +30,7 @@ export default function HomepagePage() {
             {/*Search Bar*/}
             <SearchHeader />
 
-            {/*Bottom Navigation */}
+            {/*Tabs */}
             <TabsFooter />
             
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
@@ -53,13 +42,13 @@ export default function HomepagePage() {
                 {/*Listing Box Container*/}
                 <ScrollView>
                     <HStack space="xs" flexWrap="wrap">
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => navigation.navigate(Routes.LISTINGS)} />
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => navigation.navigate(Routes.LISTINGS)} />
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
                     </HStack>
                 </ScrollView>
             </Box>
