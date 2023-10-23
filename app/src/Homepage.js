@@ -42,13 +42,13 @@ export default function HomepagePage() {
                 {/*Listing Box Container*/}
                 <ScrollView>
                     <HStack space="xs" flexWrap="wrap">
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => navigation.navigate(Routes.LISTINGS)} />
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
-                        <ItemCard price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Kuromi Plush" seller="cinnamonroll" toListing={() => navigation.navigate(Routes.LISTINGS)} />
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
+                        <ItemCard image={ require("../../assets/img/item.jpg") } price="PHP 300" productName="Plushie" seller="cinnamonroll" toListing={() => Alert.alert("Alert", "This is a dummy action")}/>
                     </HStack>
                 </ScrollView>
             </Box>
