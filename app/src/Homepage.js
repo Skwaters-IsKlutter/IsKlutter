@@ -18,8 +18,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
+<<<<<<< HEAD
 
 import ListingsScreen from './screens/ListingsScreen.js';
+=======
+>>>>>>> parent of b34461e (Attempt at implementing bottom tab navigation)
 
 import colors from '../config/colors.js'
 
