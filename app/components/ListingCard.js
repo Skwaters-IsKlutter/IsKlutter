@@ -13,7 +13,7 @@ import {
 
 import colors from '../config/colors.js';
 
-export default function ListingCard({ productName, productImage, productPrice, productDesc, sellerName, sellerImage }) {
+export default function ListingCard({ productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat }) {
     return (
         <Box p="$3" w="100%" backgroundColor="$white">
             <VStack space="md" pb="$2">
@@ -38,7 +38,7 @@ export default function ListingCard({ productName, productImage, productPrice, p
             </HStack>
 
             <VStack space="sm" p="$2">
-                <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={12}>
+                <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={12} onPress={sellerChat}>
                     <ButtonText color={colors.white} fontSize="$sm">Chat</ButtonText>
                 </Button>
             </VStack>

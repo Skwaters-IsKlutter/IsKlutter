@@ -17,7 +17,7 @@ export default function SearchHeader() {
             <VStack>
                 <HStack p="$5" w="100%" mt={50} justifyContent="center" alignItems="center">
                     <Input w="75%" bg={colors.white} borderColor={colors.secondary} size="sm">
-                        <InputField />
+                        <InputField placeholder="Search" />
                     </Input>
 
                     <Button variant="solid" ml={5} size="sm" backgroundColor={colors.secondary} w="25%">

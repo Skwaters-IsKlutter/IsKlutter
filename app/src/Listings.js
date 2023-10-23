@@ -10,10 +10,12 @@ import {
     ButtonText,
     ScrollView
 } from '@gluestack-ui/themed';
+import { Alert } from 'react-native';
 
 import SearchHeader from '../components/SearchHeader.js';
 import TabsFooter from '../components/TabsFooter.js';
 import ListingCard from '../components/ListingCard.js';
+import CommentBox from '../components/CommentBox.js';
 
 import colors from '../config/colors.js';
 
@@ -42,7 +44,12 @@ export default function ListingsPage({ productName, productImage, productPrice, 
                             productDesc="This is a Kuromi plushie."
                             sellerName="cinnamonroll"
                             sellerImage={ require("../../assets/img/usericon.jpg") }
+                            sellerChat={() => Alert.alert("Alert", "This is a dummy action")}
                         />
+                    </VStack>
+
+                    <VStack space="xs">
+                        <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") }/>
                     </VStack>
                 </ScrollView>
             </Box>
