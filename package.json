@@ -11,7 +11,6 @@
   "dependencies": {
     "@gluestack-style/react": "^0.2.51",
     "@gluestack-ui/themed": "^0.1.55",
-    "@react-navigation/bottom-tabs": "^6.5.10",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
     "@types/react": "~18.2.14",
@@ -25,7 +24,7 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "~3.22.0",
-    "react-native-svg": "^13.4.0"
+    "react-native-svg": "13.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

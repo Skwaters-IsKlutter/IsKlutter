@@ -18,7 +18,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import TabsFooter from '../components/TabsFooter.js';
 
 import ListingsScreen from './screens/ListingsScreen.js';
 
@@ -43,6 +42,7 @@ export default function HomepagePage() {
         //             <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
         //         </VStack>
 
+<<<<<<< HEAD
         //         {/*Listing Box Container*/}
         //         <ScrollView>
         //             <HStack space="xs" flexWrap="wrap">
@@ -59,6 +59,26 @@ export default function HomepagePage() {
         //         </ScrollView>
         //     </Box>
     
+=======
+                {/*Listing Box Container*/}
+                <ScrollView>
+                    <HStack space="xs" flexWrap="wrap">
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                        <ItemCard />
+                    </HStack>
+                </ScrollView>
+            </Box>
+        
+            
+
+>>>>>>> parent of b34461e (Attempt at implementing bottom tab navigation)
 
 
             // {/*Dashboard */}
