@@ -30,6 +30,7 @@ export default function HomepagePage() {
         //     <Tab.Screen name="Listings" component={ListingsScreen} />
         //     {/* <Tab.Screen name="Community" component={SettingsScreen} /> */}
         // </Tab.Navigator>
+        
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
@@ -44,15 +45,11 @@ export default function HomepagePage() {
                 {/*Listing Box Container*/}
                 <ScrollView>
                     <HStack space="xs" flexWrap="wrap">
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
-                        <ItemCard />
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll"/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll"/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll"/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll"/>
+                        <ItemCard price="PHP 300" productName="Plushie" seller="cinammonroll"/>
                     </HStack>
                 </ScrollView>
             </Box>
