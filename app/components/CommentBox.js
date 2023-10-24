@@ -10,7 +10,6 @@ import {
     Input,
     InputField,
 } from '@gluestack-ui/themed';
-import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
 
