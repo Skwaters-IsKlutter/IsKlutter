@@ -90,7 +90,7 @@ export default function LoginPage() {
             </Box>
 
             {/* Go to sign up */}
-            <Box flexDirection="row" top={800} position="absolute">
+            <Box flexDirection="row" top={2} position="absolute">
                 <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)}>
                     <ButtonText sx={{
                         color: colors.medium
