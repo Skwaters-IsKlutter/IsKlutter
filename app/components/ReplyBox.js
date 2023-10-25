@@ -13,12 +13,16 @@ import {
 
 import colors from '../config/colors.js';
 
-export default function CommentBox( {replyText, replyUser, userIcon} ) {
+export default function CommentBox( {key: replyID, replyText, replyUser, replyDate, replyTime, userIcon} ) {
     return (
         <Box p="$2" bg={colors.white}>
             <Box w="100%" maxWidth="$60" pb="$2">
                 <VStack space="sm" pl="21%">
-                    <Text>{replyUser}</Text>
+                    <Text color={colors.gray} fontSize="$lg">{replyUser}</Text>
+                    <HStack space ="sm">
+                        <Text color={colors.gray} fontSize="$sm">{replyDate}</Text>
+                        <Text color={colors.gray} fontSize="$sm">{replyTime}</Text>
+                    </HStack>
                 </VStack>
 
                 <HStack space="sm" justifyContent="center" alignItems="center">

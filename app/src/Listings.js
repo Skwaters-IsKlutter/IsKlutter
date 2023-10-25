@@ -60,7 +60,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
                     <VStack space="xs">
                         <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
                         <VStack space="xs">
-                            <ReplyBox userIcon={ require("../../assets/img/usericon.jpg") } replyUser="kuromi" replyText="wow!" />
+                            <ReplyBox userIcon={ require("../../assets/img/usericon.jpg") } replyUser="kuromi" replyText="mine!" replyDate="10/25/2023" replyTime="12:58 PM"/>
                         </VStack>
                     </VStack>
                 </ScrollView>
