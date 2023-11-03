@@ -15,8 +15,9 @@ import { Alert } from 'react-native';
 import SearchHeader from '../components/SearchHeader.js';
 import TabsFooter from '../components/TabsFooter.js';
 import ListingCard from '../components/ListingCard.js';
-import CommentBox from '../components/CommentBox.js';
 import TagLabel from '../components/TagLabel.js';
+import CommentBox from '../components/CommentBox.js';
+import ReplyBox from '../components/ReplyBox.js';
 
 import colors from '../config/colors.js';
 
@@ -44,13 +45,23 @@ export default function ListingsPage({ productName, productImage, productPrice, 
                             productPrice="PHP 300"
                             productDesc="This is a Kuromi plushie."
                             sellerName="cinnamonroll"
+                            tags={[<TagLabel tagName="toys" />, <TagLabel tagName="new" />]}
                             sellerImage={ require("../../assets/img/usericon.jpg") }
                             sellerChat={() => Alert.alert("Alert", "This is a dummy action")}
                         />
                     </VStack>
 
+                    {/* Added a comment */}
                     <VStack space="xs">
                         <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") } comment={() => Alert.alert("Alert", "This is a dummy action")} />
+                    </VStack>
+                    
+                    {/* Replies */}
+                    <VStack space="xs">
+                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
+                        <VStack space="xs">
+                            <ReplyBox userIcon={ require("../../assets/img/usericon.jpg") } replyUser="kuromi" replyText="mine!" replyDate="10/25/2023" replyTime="12:58 PM"/>
+                        </VStack>
                     </VStack>
                 </ScrollView>
             </Box>

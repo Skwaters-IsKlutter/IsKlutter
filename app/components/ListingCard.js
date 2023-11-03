@@ -15,7 +15,7 @@ import TagLabel from '../components/TagLabel.js';
 
 import colors from '../config/colors.js';
 
-export default function ListingCard({ productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat }) {
+export default function ListingCard({ key: productID, productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat, tags }) {
     return (
         <Box p="$3" w="100%" backgroundColor="$white">
             <VStack space="md" pb="$2">
@@ -29,10 +29,7 @@ export default function ListingCard({ productName, productImage, productPrice, p
             </VStack>
 
             {/* Tags */}
-            <HStack space="sm" p="$2">
-                <TagLabel tagName="toys" />
-                <TagLabel tagName="new" />
-            </HStack>
+            <HStack space="sm" p="$2">{tags}</HStack>
 
             {/* Description */}
             <VStack space="sm" p="$2">

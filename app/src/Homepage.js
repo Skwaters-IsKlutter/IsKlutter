@@ -44,45 +44,45 @@ export default function HomepagePage() {
                 <ScrollView>
                     <HStack space="xs" flexWrap="wrap" justifyContent="center">
                         <ItemCard 
-                            image={ require("../../assets/img/item.jpg") }
-                            price="PHP 300"
+                            productImage={ require("../../assets/img/item.jpg") }
+                            productPrice="PHP 300"
                             productName="Kuromi Plush"
-                            seller="cinnamonroll"
-                            tags={[<TagLabel tagName="toys" />, <TagLabel tagName="new" />]}
+                            productSeller="cinnamonroll"
+                            tags={[<TagLabel tagName="toys" />, <TagLabel tagName="new" />, <TagLabel tagName="plushie" />, <TagLabel tagName="sold" />]}
                             toListing={() => navigation.navigate(Routes.LISTINGS)}
                         />
                         <ItemCard
-                            image={ require("../../assets/img/item.jpg") }
-                            price="Price" productName="Product"
-                            seller="Seller"
+                            productImage={ require("../../assets/img/item.jpg") }
+                            productPrice="Price" productName="Product"
+                            productSeller="Seller"
                             tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
                             toListing={() => Alert.alert("Alert", "This is a dummy action")}
                         />
                         <ItemCard
-                            image={ require("../../assets/img/item.jpg") }
-                            price="Price" productName="Product"
-                            seller="Seller"
+                            productImage={ require("../../assets/img/item.jpg") }
+                            productPrice="Price" productName="Product"
+                            productSeller="Seller"
                             tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
                             toListing={() => Alert.alert("Alert", "This is a dummy action")}
                         />
                         <ItemCard
-                            image={ require("../../assets/img/item.jpg") }
-                            price="Price" productName="Product"
-                            seller="Seller"
+                            productImage={ require("../../assets/img/item.jpg") }
+                            productPrice="Price" productName="Product"
+                            productSeller="Seller"
                             tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
                             toListing={() => Alert.alert("Alert", "This is a dummy action")}
                         />
                         <ItemCard
-                            image={ require("../../assets/img/item.jpg") }
-                            price="Price" productName="Product"
-                            seller="Seller"
+                            productImage={ require("../../assets/img/item.jpg") }
+                            productPrice="Price" productName="Product"
+                            productSeller="Seller"
                             tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
                             toListing={() => Alert.alert("Alert", "This is a dummy action")}
                         />
                         <ItemCard
-                            image={ require("../../assets/img/item.jpg") }
-                            price="Price" productName="Product"
-                            seller="Seller"
+                            productImage={ require("../../assets/img/item.jpg") }
+                            productPrice="Price" productName="Product"
+                            productSeller="Seller"
                             tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
                             toListing={() => Alert.alert("Alert", "This is a dummy action")}
                         />
