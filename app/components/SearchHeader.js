@@ -10,11 +10,15 @@ import {
     Image,
     Pressable,
 } from '@gluestack-ui/themed';
+import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader( {search, userIcon} ) {
+export default function SearchHeader( {search, userIcon, userProfile} ) {
+    const navigation = useNavigation();
+
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
@@ -27,7 +31,7 @@ export default function SearchHeader( {search, userIcon} ) {
                         <ButtonText sx={{color: colors.white}}>Search</ButtonText>
                     </Button> */}
 
-                    <Pressable onPress={() => Alert.alert("Alert", "This is a dummy action")}>
+                    <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
                         <Image source={userIcon} h={40} w={40} ml={10} alt="icon" borderRadius={100} />
                     </Pressable>
                 </HStack>
