@@ -14,7 +14,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import SearchHeader from '../components/SearchHeader.js';
-import TabsFooter from '../components/TabsFooter.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
 import CommentBox from '../components/CommentBox.js';
@@ -34,9 +33,6 @@ export default function ListingsPage({ productName, productImage, productPrice, 
         <Box w="100%" h="100%">
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
-
-            {/*Tabs */}
-            <TabsFooter />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}

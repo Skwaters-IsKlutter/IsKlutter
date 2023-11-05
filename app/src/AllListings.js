@@ -11,7 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import TabsFooter from '../components/TabsFooter.js';
 import TagLabel from '../components/TagLabel.js';
 
 import colors from '../config/colors.js'
@@ -31,9 +30,6 @@ export default function AllListingsPage() {
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
 
-            {/*Tabs */}
-            <TabsFooter />
-            
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
                 <VStack space="xs" pb="$2">

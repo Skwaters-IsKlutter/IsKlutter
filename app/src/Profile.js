@@ -26,7 +26,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import SearchHeader from '../components/SearchHeader.js';
-import TabsFooter from '../components/TabsFooter.js';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
