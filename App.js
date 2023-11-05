@@ -7,8 +7,19 @@ import SignupScreen from './app/components/screens/SignupScreen.js';
 import HomepageScreen from './app/components/screens/HomepageScreen.js';
 import ListingsScreen from './app/components/screens/ListingsScreen.js';
 import ProfileScreen from './app/components/screens/ProfileScreen.js';
+import CommunityScreen from './app/components/screens/CommunityScreen.js';
 
 const Stack = createNativeStackNavigator();
+
+function HeadingTabs() {
+	return (
+		<Tab.Navigator>
+			<Tab.Screen options={{headerShown:false}} name="Listings" component={ListingsScreen} />
+			<Tab.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} />
+			<Tab.Screen options={{headerShown:false}} name="Community" component={CommunityScreen} />
+		</Tab.Navigator>
+	);
+}
 
 export default function App() {
 	return (

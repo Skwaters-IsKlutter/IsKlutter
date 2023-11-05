@@ -20,8 +20,11 @@ import TagLabel from '../components/TagLabel.js';
 import CommentBox from '../components/CommentBox.js';
 import ReplyBox from '../components/ReplyBox.js';
 
+import ProfileScreen from '../components/screens/ProfileScreen.js';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+
 
 export default function ListingsPage({ productName, productImage, productPrice, productDesc, seller }) {
     const navigation = useNavigation();

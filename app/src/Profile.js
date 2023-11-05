@@ -25,8 +25,8 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import colors from '../app/config/colors.js';
-import Routes from '../app/components/Routes.js';
+import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
 export default function ProfilePage( { key : userID, username, userIcon } ) {
     const navigation = useNavigation();
@@ -48,7 +48,7 @@ export default function ProfilePage( { key : userID, username, userIcon } ) {
                 </Input>
 
                 <Avatar bgColor='$amber600' size="md" borderRadius="$full">
-                    <AvatarFallbackText>Kaira Saluria</AvatarFallbackText>
+                    <AvatarFallbackText>{username}</AvatarFallbackText>
                 </Avatar>
             </HStack>
             <Box>

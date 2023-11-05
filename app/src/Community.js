@@ -15,7 +15,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../config/colors.js';
-import Routes from '../app/components/Routes.js';
+import Routes from '../components/constants/Routes.js';
 
 export default function CommunityPage() {
     const navigation = useNavigation();
