@@ -36,14 +36,14 @@ export default function ProfilePage( { key : userID, username, userIcon } ) {
 
     return (
         // Parent box
-        <Box h="100%" justifyContent="center" alignItems="center">
+        <Box w="100%" h="100%">
             {/* Logo */}
             {/* <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
             </VStack> */}
 
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
-            
+
             <Box>
 
                 <VStack space="xs" pb="$12">
