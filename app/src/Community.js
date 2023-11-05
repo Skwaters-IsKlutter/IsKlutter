@@ -14,6 +14,8 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
+import SearchHeader from '../components/SearchHeader.js';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -23,7 +25,8 @@ export default function CommunityPage() {
     return (
 
         // Parent box
-        <Box w="100%" h="100%" justifyContent="center" alignItems="center">
+        <Box w="100%" h="100%">
+            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
             {/* Logo */}
             {/* <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
