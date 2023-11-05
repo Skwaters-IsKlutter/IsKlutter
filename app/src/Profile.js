@@ -25,6 +25,9 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
+import SearchHeader from '../components/SearchHeader.js';
+import TabsFooter from '../components/TabsFooter.js';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -39,18 +42,8 @@ export default function ProfilePage( { key : userID, username, userIcon } ) {
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
             </VStack> */}
 
-            <HStack>
-                <Input w="75%" variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} mr={10}>
-
-                    <InputField
-                        placeholder='Enter Text here'
-                    />
-                </Input>
-
-                <Avatar bgColor='$amber600' size="md" borderRadius="$full">
-                    <AvatarFallbackText>{username}</AvatarFallbackText>
-                </Avatar>
-            </HStack>
+            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
+            
             <Box>
 
                 <VStack space="xs" pb="$12">

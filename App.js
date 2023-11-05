@@ -30,6 +30,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="Homepage" component={HomepageScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Listings" component={ListingsScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} />
+				<Stack.Screen options={{headerShown:false}} name="Community" component={CommunityScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

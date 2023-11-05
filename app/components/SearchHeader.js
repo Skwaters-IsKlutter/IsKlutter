@@ -5,9 +5,9 @@ import {
     HStack,
     Input,
     InputField,
-    Button,
-    ButtonText,
-    Image,
+    Avatar,
+    AvatarFallbackText,
+    AvatarImage,
     Pressable,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +16,7 @@ import { Alert } from 'react-native';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader( {search, userIcon, userProfile} ) {
+export default function SearchHeader({ search, username, userIcon, userProfile }) {
     const navigation = useNavigation();
 
     return (
@@ -32,7 +32,10 @@ export default function SearchHeader( {search, userIcon, userProfile} ) {
                     </Button> */}
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-                        <Image source={userIcon} h={40} w={40} ml={10} alt="icon" borderRadius={100} />
+                        <Avatar bgColor='$amber600' size="md" borderRadius="$full" h={40} w={40} ml={10}>
+                            <AvatarFallbackText>{username}</AvatarFallbackText>
+                            <AvatarImage source={userIcon} />
+                        </Avatar>
                     </Pressable>
                 </HStack>
 
