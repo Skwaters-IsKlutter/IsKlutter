@@ -5,6 +5,8 @@ import {
     HStack,
     Input,
     InputField,
+    InputSlot,
+    InputIcon,
     Avatar,
     AvatarFallbackText,
     AvatarImage,
@@ -12,6 +14,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -25,6 +28,11 @@ export default function SearchHeader({ search, username, userIcon, userProfile }
                 <HStack p="$3" w="100%" mt={50} justifyContent="center" alignItems="center">
                     <Input w="80%" bg={colors.white} borderColor={colors.primary} size="sm">
                         <InputField placeholder="Search" />
+                            <InputSlot>
+                                <InputIcon>
+                                    <MaterialCommunityIcons name="magnify" color={colors.primary} />
+                                </InputIcon>
+                            </InputSlot>
                     </Input>
 
                     {/* <Button variant="solid" ml={5} size="sm" backgroundColor={colors.secondary} w="25%">
