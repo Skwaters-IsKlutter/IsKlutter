@@ -11,13 +11,12 @@ import { useNavigation } from '@react-navigation/native';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import TabsFooter from '../components/TabsFooter.js';
 import TagLabel from '../components/TagLabel.js';
 
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
 
-export default function HomepagePage() {
+export default function AllListingsPage() {
     const navigation = useNavigation();
     
     return (
@@ -31,9 +30,6 @@ export default function HomepagePage() {
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
 
-            {/*Tabs */}
-            <TabsFooter />
-            
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
                 <VStack space="xs" pb="$2">

@@ -10,26 +10,29 @@ import {
     ButtonText,
     ScrollView
 } from '@gluestack-ui/themed';
+import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import SearchHeader from '../components/SearchHeader.js';
-import TabsFooter from '../components/TabsFooter.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
 import CommentBox from '../components/CommentBox.js';
 import ReplyBox from '../components/ReplyBox.js';
 
+import ProfileScreen from '../components/screens/ProfileScreen.js';
+
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
+
 
 export default function ListingsPage({ productName, productImage, productPrice, productDesc, seller }) {
+    const navigation = useNavigation();
+
     return (
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
-
-            {/*Tabs */}
-            <TabsFooter />
+            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}

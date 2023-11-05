@@ -5,30 +5,45 @@ import {
     HStack,
     Input,
     InputField,
-    Button,
-    ButtonText,
-    Image,
+    InputSlot,
+    InputIcon,
+    Avatar,
+    AvatarFallbackText,
+    AvatarImage,
     Pressable,
 } from '@gluestack-ui/themed';
+import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader( {search, userIcon} ) {
+export default function SearchHeader({ search, username, userIcon, userProfile }) {
+    const navigation = useNavigation();
+
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
                 <HStack p="$3" w="100%" mt={50} justifyContent="center" alignItems="center">
                     <Input w="80%" bg={colors.white} borderColor={colors.primary} size="sm">
                         <InputField placeholder="Search" />
+                            <InputSlot>
+                                <InputIcon>
+                                    <MaterialCommunityIcons name="magnify" color={colors.primary} />
+                                </InputIcon>
+                            </InputSlot>
                     </Input>
 
                     {/* <Button variant="solid" ml={5} size="sm" backgroundColor={colors.secondary} w="25%">
                         <ButtonText sx={{color: colors.white}}>Search</ButtonText>
                     </Button> */}
 
-                    <Pressable onPress={() => Alert.alert("Alert", "This is a dummy action")}>
-                        <Image source={userIcon} h={40} w={40} ml={10} alt="icon" borderRadius={100} />
+                    <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
+                        <Avatar bgColor='$amber600' size="md" borderRadius="$full" h={40} w={40} ml={10}>
+                            <AvatarFallbackText>{username}</AvatarFallbackText>
+                            <AvatarImage source={userIcon} />
+                        </Avatar>
                     </Pressable>
                 </HStack>
 
