@@ -50,7 +50,6 @@ export default function ProfilePage({ key: userID, username, userIcon }) {
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Hello, {username}!</Heading>
                 </VStack>
 
-
                 {/*Profile*/}
                 <Box bgColor="white" h="$100" p={20}>
                     <Avatar bgColor='$amber600' borderRadius="$full" alignSelf='center' size='2xl'>
