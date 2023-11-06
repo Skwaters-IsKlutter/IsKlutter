@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import {
     VStack,
     Heading,
@@ -18,12 +18,31 @@ import {
     InputField
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase'; // Import Firebase authentication
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 export default function SignupScreen() {
     const navigation = useNavigation();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [retypePassword, setRetypePassword] = useState(''); 
+    const [error, setError] = useState(null);
+
+    const handleSignup = async () => {
+        try {
+            if (email && password) {
+                await createUserWithEmailAndPassword(auth, email, password);
+                // Signup successful, you can navigate to the next screen or perform any desired action.
+                navigation.navigate(Routes.Login);
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     return (
         // Parent box
@@ -46,22 +65,22 @@ export default function SignupScreen() {
                 </VStack>
 
                 {/* Email input */}
-                <VStack space="xl" py="$3">
-                    <FormControl
-                        size="md"
-                        isDisabled={false}
-                        isInvalid={false}
-                        isReadOnly={false}
-                        isRequired={false}
-                    >
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText>Email</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                            <InputField type="email" defaultValue="" placeholder="Enter username" />
-                        </Input>
-                    </FormControl>
-                </VStack>
+                  <VStack space="xl" py="$3">
+                                <FormControl size="md">
+                                    <FormControlLabel mb="$2">
+                                        <FormControlLabelText>Email</FormControlLabelText>
+                                    </FormControlLabel>
+                                    <Input w="100%">
+                                        <InputField
+                                            type="email"
+                                            placeholder="Enter email"
+                                            value={email}
+                                            onChangeText={(text) => setEmail(text)}
+                                        />
+                                    </Input>
+                                </FormControl>
+                            </VStack>
+
 
                 {/* Username input */}
                 <VStack space="xl" py="$3">
@@ -81,48 +100,46 @@ export default function SignupScreen() {
                     </FormControl>
                 </VStack>
 
-                {/* Password input */}
-                <VStack space="xl" py="$2">
-                    <FormControl
-                        size="md"
-                        isDisabled={false}
-                        isInvalid={false}
-                        isReadOnly={false}
-                        isRequired={false}
-                    >
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText>Password</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                            <InputField type="newPassword" defaultValue="" placeholder="Enter password" />
-                        </Input>
-                    </FormControl>
-                </VStack>
-                
-                {/* Re-enter password input */}
-                <VStack space="xl" py="$2">
-                    <FormControl
-                        size="md"
-                        isDisabled={false}
-                        isInvalid={false}
-                        isReadOnly={false}
-                        isRequired={false}
-                    >
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText>Re-enter Password</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                            <InputField type="retypePassword" defaultValue="" placeholder="Enter password" />
-                        </Input>
-                    </FormControl>
-                </VStack>
+             {/* Password input */}
+                        <VStack space="xl" py="$2">
+                            <FormControl size="md">
+                                <FormControlLabel mb="$2">
+                                    <FormControlLabelText>Password</FormControlLabelText>
+                                </FormControlLabel>
+                                <Input w="100%">
+                                    <InputField
+                                        type="password"
+                                        placeholder="Enter password"
+                                        value={password}
+                                        onChangeText={(text) => setPassword(text)}
+                                    />
+                                </Input>
+                            </FormControl>
+                        </VStack>
 
-                {/* Submit button */}
-                <VStack space="lg" pt="$4">
-                    <Button size="sm" backgroundColor={colors.primary} onclick="">
-                        <ButtonText>Sign Up</ButtonText>
-                    </Button>
-                </VStack>
+               {/* Re-enter password input */}
+            <VStack space="xl" py="$2">
+                <FormControl size="md">
+                    <FormControlLabel mb="$2">
+                        <FormControlLabelText>Re-enter Password</FormControlLabelText>
+                    </FormControlLabel>
+                    <Input w="100%">
+                        <InputField
+                            type="password"
+                            placeholder="Re-enter password"
+                            value={retypePassword}
+                            onChangeText={(text) => setRetypePassword(text)}
+                        />
+                    </Input>
+                </FormControl>
+            </VStack>
+
+            {/* Submit button */}
+            <VStack space="lg" pt="$4">
+                <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup}>
+                    <ButtonText>Sign Up</ButtonText>
+                </Button>
+            </VStack>
             </Box>
 
             {/* Go to sign up */}

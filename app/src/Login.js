@@ -17,6 +17,8 @@ import {
     Input, 
     InputField
 } from '@gluestack-ui/themed';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/firebase";
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../config/colors.js';
@@ -24,6 +26,17 @@ import Routes from '../components/constants/Routes.js';
 
 export default function LoginPage() {
     const navigation = useNavigation();
+
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
+    const onHandleLogin = () => {
+        if (email && password) {
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => console.log("Login success"))
+                .catch((err) => console.error("Login error", err.message));
+        }
+    };
 
     return (
         // Parent box
@@ -45,41 +58,39 @@ export default function LoginPage() {
                     <Heading lineHeight={30} fontSize="$2xl">Sign in to IsKlutter now.</Heading>
                 </VStack>
 
-                {/* Username input */}
-                <VStack space="xl" py="$3">
-                    <FormControl
-                        size="md"
-                        isDisabled={false}
-                        isInvalid={false}
-                        isReadOnly={false}
-                        isRequired={false}
-                    >
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText>Username</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                            <InputField type="username" defaultValue="" placeholder="Enter username" />
-                        </Input>
-                    </FormControl>
-                </VStack>
+            {/* Email input */}
+                          <VStack space="xl" py="$3">
+                                        <FormControl size="md">
+                                            <FormControlLabel mb="$2">
+                                                <FormControlLabelText>Email</FormControlLabelText>
+                                            </FormControlLabel>
+                                            <Input w="100%">
+                                                <InputField
+                                                    type="email"
+                                                    placeholder="Enter email"
+                                                    value={email}
+                                                    onChangeText={(text) => setEmail(text)}
+                                                />
+                                            </Input>
+                                        </FormControl>
+                                    </VStack>
 
-                {/* Password input */}
-                <VStack space="xl" py="$2">
-                    <FormControl
-                        size="md"
-                        isDisabled={false}
-                        isInvalid={false}
-                        isReadOnly={false}
-                        isRequired={false}
-                    >
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText>Password</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                            <InputField type="password" defaultValue="" placeholder="Enter password" />
-                        </Input>
-                    </FormControl>
-                </VStack>
+               {/* Password input */}
+                        <VStack space="xl" py="$2">
+                            <FormControl size="md">
+                                <FormControlLabel mb="$2">
+                                    <FormControlLabelText>Password</FormControlLabelText>
+                                </FormControlLabel>
+                                <Input w="100%">
+                                    <InputField
+                                        type="password"
+                                        placeholder="Enter password"
+                                        value={password}
+                                        onChangeText={(text) => setPassword(text)}
+                                    />
+                                </Input>
+                            </FormControl>
+                        </VStack>
 
                 {/* Submit button */}
                 <VStack space="lg" pt="$4">
