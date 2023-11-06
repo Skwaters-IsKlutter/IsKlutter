@@ -39,7 +39,7 @@ export default function SearchHeader({ search, username, userIcon, userProfile }
                         <ButtonText sx={{color: colors.white}}>Search</ButtonText>
                     </Button> */}
 
-                    <Pressable onPress={() => console.log("Message")} pl={10}>
+                    <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
                         <MaterialCommunityIcons name="message" color={colors.white} size={25}  />
                     </Pressable>
 
