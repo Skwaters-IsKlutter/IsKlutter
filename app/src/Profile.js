@@ -51,29 +51,41 @@ export default function ProfilePage({ key: userID, username, userIcon }) {
                 </VStack>
 
                 {/*Profile*/}
-                <Box bgColor="white" h="$100" p={20}>
+                <Box bgColor="white" p={20} borderRadius={5}>
                     <Avatar bgColor='$amber600' borderRadius="$full" alignSelf='center' size='2xl'>
                     <AvatarFallbackText>{username}</AvatarFallbackText>
                     <AvatarImage>{userIcon}</AvatarImage>
                 </Avatar>
 
                     <VStack space="xs" pb="$2" py='$3'>
-                        <HStack>
-                            <Heading pr='$12' pt='$1.5' pl='$1.5' fontSize={30} color={colors.secondary}>{username}</Heading>
-                            <Pressable borderRadius={8}
-                                onPress={() => console.log('Hello')} bg={colors.secondary}>
+                        <HStack justifyContent="space-between" alignItems="center">
+                            <Heading pr='$12' pt='$1.5' pl='$1' fontSize={30} color={colors.primary}>
+                                {username}
+                            </Heading>
+                            <Pressable borderRadius={15}
+                                onPress={() => console.log('Hello')} bg={colors.primary}>
                                 <Text color="white" p='$1.5'>Edit Profile</Text>
                             </Pressable>
                         </HStack>
-                        <Heading px='$10' pl='$1.5' fontSize={15} color={colors.secondary}>@mimiyuuh</Heading>
-                        <Heading px='$10' pl='$1.5' fontSize={15} color={colors.secondary}>User Description</Heading>
-                        <Heading px='$10' pl='$1' fontSize={10} color={colors.secondary}>Lorem ipsum dolor sit amet, consectetur
-                            adipiscing elit, sed do eiusmod tempor</Heading>
-
+                        <Heading px='$10' pl='$1' fontSize={15} color={colors.black} pt="0" pb="0">
+                            @mimiyuuh
+                        </Heading>
+                        <Text px='$10' pl='$1' fontSize={12} color={colors.gray} pt="0" pb="0">
+                            User Description
+                        </Text>
+                        <Text px='$10' pl='$1' fontSize={10} color={colors.black} lineHeight={15}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        </Text>
                     </VStack>
-
                 </Box>
+
+               <Box bgColor="white" h="100%" p={20} borderRadius={5} marginTop="$5">
+                
+
+               </Box>
             </Box>
         </Box>
+
+
     )
 }
