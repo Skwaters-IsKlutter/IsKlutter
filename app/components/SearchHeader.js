@@ -26,18 +26,22 @@ export default function SearchHeader({ search, username, userIcon, userProfile }
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
                 <HStack p="$3" w="100%" mt={50} justifyContent="center" alignItems="center">
-                    <Input w="80%" bg={colors.white} borderColor={colors.primary} size="sm">
+                    <Input w="70%" bg={colors.white} borderColor={colors.primary} size="sm">
                         <InputField placeholder="Search" />
-                            <InputSlot>
-                                <InputIcon>
-                                    <MaterialCommunityIcons name="magnify" color={colors.primary} />
-                                </InputIcon>
-                            </InputSlot>
+                        <InputSlot>
+                            <InputIcon>
+                                <MaterialCommunityIcons name="magnify" color={colors.primary} />
+                            </InputIcon>
+                        </InputSlot>
                     </Input>
 
                     {/* <Button variant="solid" ml={5} size="sm" backgroundColor={colors.secondary} w="25%">
                         <ButtonText sx={{color: colors.white}}>Search</ButtonText>
                     </Button> */}
+
+                    <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
+                        <MaterialCommunityIcons name="message" color={colors.white} size={25}  />
+                    </Pressable>
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
                         <Avatar bgColor='$amber600' size="md" borderRadius="$full" h={40} w={40} ml={10}>
