@@ -5,9 +5,13 @@ import {
     Heading,
     Box, 
     ScrollView,
+    Button,
+    ButtonIcon,
+    ButtonText
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
@@ -31,9 +35,17 @@ export default function AllListingsPage() {
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
-                {/*Listings Label */}
+                {/*Listings Label and post button */}
                 <VStack space="xs" pb="$2">
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
+                    <HStack space="xs" justifyContent="space-between" alignItems="center">
+                        <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
+                        <Button borderRadius={8} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)}>
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="post" size={15} color={colors.white} />
+                            </ButtonIcon>
+                            <ButtonText>Post</ButtonText>
+                        </Button>
+                    </HStack>
                 </VStack>
 
                 {/*Listing Box Container*/}

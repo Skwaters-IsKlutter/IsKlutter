@@ -1,75 +1,112 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
-import { GiftedChat } from 'react-native-gifted-chat';
-import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { auth, database } from '../../config/firebase';
+import * as React from 'react';
+import {
+    VStack,
+    HStack,
+    Text,
+    Heading,
+    Box,
+    Button,
+    ButtonText,
+    FormControl,
+    Input,
+    InputField,
+    ScrollView,
+} from '@gluestack-ui/themed';
+import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity, View } from 'react-native';
-import { Box, Text, } from '@gluestack-ui/themed'
 
-export default function MessagesPage({ route }) {
-    // const { otherUserEmail } = route.params;
-    // const [messages, setMessages] = useState([]);
-    // const navigation = useNavigation();
+import SearchHeader from '../components/SearchHeader.js';
 
-    // const user = {
-    //     _id: auth?.currentUser?.email,
-    //     avatar: 'https://i.pravatar.cc/300',
-    // };
+import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
-    // const chatRef = collection(database, 'privateChats', otherUserEmail);
+export default function MessagesPage( { user } ) {
+    const navigation = useNavigation();
 
-    // const onSend = async (newMessages = []) => {
-    //     const message = newMessages[0];
-    //     try {
-    //         const docRef = await addDoc(chatRef, {
-    //             _id: message._id,
-    //             text: message.text,
-    //             createdAt: message.createdAt,
-    //             user: {
-    //                 _id: message.user._id,
-    //                 name: auth?.currentUser?.displayName,
-    //                 avatar: user.avatar,
-    //             },
-    //         });
-    //         console.log('Message sent with ID: ', docRef.id);
-    //     } catch (error) {
-    //         console.error('Error sending message: ', error);
-    //     }
-    // };
+    // Message data
+    const messages = [
+        { text: 'Hi', user: 'other' },
+        { text: 'Hello', user: 'me' },
+        { text: 'Hi', user: 'other' },
+        { text: 'Hello', user: 'me' },
+        { text: 'Hi', user: 'other' },
+        { text: 'Hello', user: 'me' },
+        { text: 'Hi', user: 'other' },
+        { text: 'Hello', user: 'me' },
+        { text: 'Hi', user: 'other' },
+        { text: 'Hello', user: 'me' },
+    ];
 
-    // useEffect(() => {
-    //     const unsubscribe = onSnapshot(
-    //         query(chatRef, orderBy('createdAt', 'desc')),
-    //         (querySnapshot) => {
-    //             const newMessages = querySnapshot.docs.map((doc) => doc.data());
-    //             setMessages(newMessages);
-    //         }
-    //     );
-
-    //     return unsubscribe;
-    // }, []);
+    const renderMessageBubbles = () => {
+        // Map messages
+        return messages.map((message, index) => (
+            <Box
+                key={index}
+                bg={message.user === 'me' ? colors.secondary : colors.primary}
+                p="$3"
+                m="$2"
+                borderRadius={12}
+                alignSelf={message.user === 'me' ? 'flex-end' : 'flex-start'}
+                maxWidth="70%"
+            >
+                <Text color={message.user === 'me' ? colors.white : colors.white}>
+                    {message.text}
+                </Text>
+            </Box>
+        ));
+    };
 
     return (
-        <Box>
-            <Text>Messages</Text>
+        <Box w="100%" h="100%" alignItems="center">
+            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+
+            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+                {/*Listings Label and post button */}
+                <VStack space="xs" alignItems="center" bg={colors.secondary} borderTopStartRadius={8} borderTopEndRadius={8}>
+                    <Heading lineHeight={40} fontSize="$2xl" fontWeight="$extrabold" color={colors.white}>cinnamonroll</Heading>
+                </VStack>
+
+                <ScrollView>
+                    <Box bg={colors.white} p={10}>
+                            {/* Render message bubbles based on data */}
+                            <VStack space="xs" pb="$5" flex={1}>
+                            {renderMessageBubbles()}
+                        </VStack>
+                    </Box>
+                </ScrollView>
+
+                <Box p={20}>
+                    <HStack space="2xl" justifyContent="space-evenly">
+                        <FormControl
+                            borderRadius={10}
+                            w="80%"
+                            size="md"
+                            isDisabled={false}
+                            isInvalid={false}
+                            isReadOnly={false}
+                            isRequired={false}
+                        >
+                            <Input w="auto" bg={colors.white}>
+                                <InputField type="text" defaultValue="" />
+                            </Input>
+                        </FormControl>
+
+                        <Button
+                            bg={colors.secondary}
+                            borderRadius={8}
+                            size="sm"
+                            paddingHorizontal={25}
+                            variant="solid"
+                            action="primary"
+                            isDisabled={false}
+                            isFocusVisible={false}
+                            onPress={() => Alert.alert("Alert", "This is a dummy action")}
+                        >
+                            <ButtonText>Send</ButtonText>
+                        </Button>
+                    </HStack>
+                </Box>
+            </Box>
         </Box>
-        // <View style={{ flex: 1 }}>
-        //     <GiftedChat
-        //         messages={messages}
-        //         user={user}
-        //         onSend={(newMessages) => onSend(newMessages)}
-        //     />
-        //     <TouchableOpacity
-        //         onPress={() => navigation.goBack()}
-        //         style={{
-        //             position: 'absolute',
-        //             top: 0,
-        //             left: 10,
-        //             padding: 10,
-        //         }}
-        //     >
-        //         <Text style={{ color: 'blue' }}>Go Back</Text>
-        //     </TouchableOpacity>
-        // </View>
     );
 }
