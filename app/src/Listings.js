@@ -33,7 +33,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} goBack={navigation.goBack()}/>
+            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")}/>
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
