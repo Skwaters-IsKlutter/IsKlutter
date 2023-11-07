@@ -34,7 +34,7 @@ export default function MessagesPage( { user } ) {
         { text: 'Hi', user: 'other' },
         { text: 'Hello', user: 'me' },
         { text: 'Hi', user: 'other' },
-        { text: 'Hello', user: 'me' },
+        { text: 'This is an example of a very long message. I want to eat ice cream. I like rainbows. Hello, Sir Jayvee! Yay!', user: 'me' },
     ];
 
     const renderMessageBubbles = () => {
@@ -70,8 +70,8 @@ export default function MessagesPage( { user } ) {
                     <Box bg={colors.white} p={10}>
                             {/* Render message bubbles based on data */}
                             <VStack space="xs" pb="$5" flex={1}>
-                            {renderMessageBubbles()}
-                        </VStack>
+                                {renderMessageBubbles()}
+                            </VStack>
                     </Box>
                 </ScrollView>
 
