@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import SearchHeader from '../components/SearchHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
 import CommentBox from '../components/CommentBox.js';
@@ -32,7 +33,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
+            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} goBack={navigation.goBack()}/>
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
