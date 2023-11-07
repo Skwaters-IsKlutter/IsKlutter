@@ -37,7 +37,7 @@ export default function AddListingPage() {
                 </VStack>
 
                 <ScrollView>
-                    <Box bg={colors.white} >
+                    <Box bg={colors.medium}>
                         <VStack space="xs">
                             <AddListingBox listingImage={ require("../../assets/img/item.jpg") } />
                         </VStack>
