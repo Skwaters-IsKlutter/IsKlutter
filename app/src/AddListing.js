@@ -7,15 +7,17 @@ import {
     ScrollView,
     Button,
     ButtonIcon,
-    ButtonText
+    ButtonText,
+    Text
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import SearchHeader from '../components/SearchHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ItemCard from '../components/ItemCard.js';
 import TagLabel from '../components/TagLabel.js';
+import AddListingBox from '../components/AddListingBox.js';
 
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
@@ -23,16 +25,25 @@ import Routes from '../components/constants/Routes.js';
 export default function AddListingPage() {
     const navigation = useNavigation();
     
-    return (
-        // <Tab.Navigator>
-        //     <Tab.Screen name="Listings" component={ListingsScreen} />
-        //     {/* <Tab.Screen name="Community" component={SettingsScreen} /> */}
-        // </Tab.Navigator>
-        
+    return (        
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
+            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg") } />
+
+            <Box p="$6" w="100%" maxWidth="$96">
+                <VStack space="xs" pb="$2">
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Create a Listing</Heading>
+                </VStack>
+
+                <ScrollView>
+                    <Box bg={colors.white} >
+                        <VStack space="xs">
+                            <AddListingBox listingImage={ require("../../assets/img/item.jpg") } />
+                        </VStack>
+                    </Box>
+                </ScrollView>
+            </Box>
 
         </Box>
     )
