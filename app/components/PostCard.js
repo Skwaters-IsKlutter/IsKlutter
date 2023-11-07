@@ -10,6 +10,7 @@ import {
     Image,
     Pressable
 } from '@gluestack-ui/themed';
+import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
 import CommunityCommentBox from './CommunityCommentBox.js';
@@ -17,7 +18,7 @@ import CommunityCommentBox from './CommunityCommentBox.js';
 export default function PostCard( {key: posterIcon, posterName, postDate, postContent } ) {
     return (
     <VStack>
-        <Box p="$3" w="100%" backgroundColor="$white">
+        <Box p="$3" w="100%" backgroundColor={colors.white} m={6}>
             <HStack pb="$3">
                 {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100}/>  */}
                 <Text color={colors.gray}size="sm" bold={true}>{posterName}</Text>

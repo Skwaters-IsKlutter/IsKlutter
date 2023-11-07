@@ -34,16 +34,16 @@ export default function CommunityPage() {
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
            
-            <Box p="$6" w="100%" flex={1}>
+            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Community Label */}
                 <VStack space="xs" pb="$0">
-                    <Box bg="$green900" borderTopRightRadius={20} borderTopLeftRadius={20}>
-                        <Heading lineHeight={60} fontSize="$3xl" pl="$5" color="$white" >Community</Heading>
+                    <Box bg={colors.secondary} borderTopRightRadius={20} borderTopLeftRadius={20}>
+                        <Heading lineHeight={60} fontSize="$3xl" pl="$5" color={colors.white}>Community</Heading>
                     </Box>
                 </VStack> 
 
                 {/*Community Posts Container */}
-                <Box bg="$amber200" borderBottomLeftRadius={10} borderBottomRightRadius={10} p="$5" pb="$20">
+                <Box bg="$amber200" borderBottomLeftRadius={10} borderBottomRightRadius={10} p="$5" m={5} flex={1}>
                     <VStack space="xs">
                         <PostBox posterIcon={ require("../../assets/img/usericon.jpg") } post={() => Alert.alert("Alert", "This is a dummy action")} />
                     </VStack>

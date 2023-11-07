@@ -6,4 +6,5 @@ export default Object.freeze({
     COMMUNITY: "Community",
     PROFILE: "Profile",
     MESSAGES: "Messages",
+    ADDLISTING: "AddListing"
 });
