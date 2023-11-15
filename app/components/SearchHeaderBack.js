@@ -19,14 +19,17 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader({ search, username, userIcon, userProfile }) {
+export default function SearchHeaderBack({ search, username, userIcon, userProfile }) {
     const navigation = useNavigation();
 
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
                 <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
-                    <Input w="70%" bg={colors.white} borderColor={colors.primary} size="sm">
+                    <Pressable onPress={() => console.log("Pressed back")}>
+                        <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.white} size={25} />
+                    </Pressable>
+                    <Input w="60%" bg={colors.white} borderColor={colors.primary} size="sm">
                         <InputField placeholder="Search" />
                         <InputSlot>
                             <InputIcon>

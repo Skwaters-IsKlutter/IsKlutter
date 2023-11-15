@@ -27,7 +27,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import SearchHeader from '../components/SearchHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -43,7 +43,7 @@ export default function ProfilePage({ key: userID, username, userIcon }) {
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
             </VStack> */}
 
-            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96">
                 <VStack space="xs" pb="$2">

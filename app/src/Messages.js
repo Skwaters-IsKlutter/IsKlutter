@@ -15,7 +15,7 @@ import {
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import SearchHeader from '../components/SearchHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -58,7 +58,7 @@ export default function MessagesPage( { user } ) {
 
     return (
         <Box w="100%" h="100%" alignItems="center">
-            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label and post button */}

@@ -37,16 +37,16 @@ export default function ListingCard({ key: productID, productName, productImage,
             </VStack>
 
             {/* Poster info */}
-            <HStack space="sm" p="$2" alignItems="center">
-                <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} />
-                <Text color={colors.gray}>{sellerName}</Text>
-            </HStack>
+            <HStack justifyContent="space-between" flexDirection="row">
+                <HStack space="sm" p="$2" alignItems="center">
+                    <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} />
+                    <Text color={colors.gray}>{sellerName}</Text>
+                </HStack>
 
-            <VStack space="sm" p="$2">
-                <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={12} onPress={sellerChat}>
+                <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={12} onPress={sellerChat} alignSelf="flex-end">
                     <ButtonText color={colors.white} fontSize="$sm">Chat</ButtonText>
                 </Button>
-            </VStack>
+            </HStack>
         </Box>
     )
 }
