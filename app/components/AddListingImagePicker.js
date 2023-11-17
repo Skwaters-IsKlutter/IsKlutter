@@ -1,15 +1,26 @@
 
 import React, { useState } from "react";
 import {
+    Box,
     View,
-    Text, 
-    Image, 
+    Text,
+    Image,
     TouchableOpacity,
-    Alert
+    VStack,
+    FormControl,
+    FormControlLabel,
+    FormControlError,
+    FormControlErrorText,
+    FormControlLabelText,
+    FormControlHelper,
+    FormControlHelperText,
+    FormControlErrorIcon,
 } from "@gluestack-ui/themed";
 import * as ImagePicker from "expo-image-picker";
 
-export default function App() {
+import colors from "../config/colors";
+
+export default function AddListingImagePicker({ listingFormLabel }) {
 
     // Stores the selected image URI 
     const [file, setFile] = useState(null);
@@ -48,8 +59,30 @@ export default function App() {
                 setError(null);
             }
         }
-    }; 
-    return {
-        
     };
+    return (
+        <VStack space="xl" m={5}>
+            {/* <FormControl size="md">
+                <FormControlLabel mb="$2">
+                    <FormControlLabelText color={colors.secondary} fontWeight={600}>{listingFormLabel}</FormControlLabelText>
+                </FormControlLabel>
+            </FormControl> */}
+
+            <TouchableOpacity onPress={pickImage}>
+                <Text>Click</Text>
+            </TouchableOpacity>
+
+            {file ? (
+                // Display the selected image 
+                <View>
+                    <Image source={{ uri: file }}
+                        style={styles.image} />
+                </View>
+            ) : (
+                // Display an error message if there's  
+                // an error or no image selected 
+                <Text>{error}</Text>
+            )}
+        </VStack>
+    );
 }

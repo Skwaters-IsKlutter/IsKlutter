@@ -33,7 +33,6 @@ export default function AddListingPage() {
 
             <Box p="$6" w="100%" maxWidth="$96">
                 
-                
                 <VStack space="xs" pb="$2">
                     <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Sell Your Product</Heading>
                 </VStack>
