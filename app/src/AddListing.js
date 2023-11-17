@@ -3,7 +3,7 @@ import {
     HStack,
     VStack,
     Heading,
-    Box, 
+    Box,
     ScrollView,
     Button,
     ButtonIcon,
@@ -24,25 +24,34 @@ import Routes from '../components/constants/Routes.js';
 
 export default function AddListingPage() {
     const navigation = useNavigation();
-    
-    return (        
+
+    return (
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg") } />
+            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96">
                 <VStack space="xs" pb="$2">
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Create a Listing</Heading>
+                    <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Sell Your Product</Heading>
                 </VStack>
 
                 <ScrollView>
-                    <Box bg={colors.medium}>
+                    <Box bg={colors.medium} borderRadius={50}>
                         <VStack space="xs">
-                            <AddListingBox listingImage={ require("../../assets/img/item.jpg") } />
+                            <AddListingBox listingImage={require("../../assets/img/item.jpg")} />
                         </VStack>
                     </Box>
                 </ScrollView>
+                <HStack p="$3" justifyContent='center'>
+                    <Button variant="solid" size="sm" bg={colors.primary} borderRadius={10} m={5}>
+                        <ButtonText color={colors.white} fontSize="$sm">Post Now</ButtonText>
+                    </Button>
+
+                    <Button variant="solid" size="sm" bg={colors.gray} borderRadius={10} m={5}>
+                        <ButtonText color={colors.white} fontSize="$sm">Cancel</ButtonText>
+                    </Button>
+                </HStack>
             </Box>
 
         </Box>

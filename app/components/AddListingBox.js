@@ -19,8 +19,9 @@ export default function AddListingBox( {user, listingImage, listingName, listing
     return (
         <Box p="$2" bg={colors.medium} borderRadius={12}>
             <Box w="100%" maxWidth="$60" pb="$2">
+
                 <AddListingForm 
-                    listingFormLabel="Name"
+                    listingFormLabel="Listing Title"
                     listingFormType="text"
                     listingFormPlaceholder="Enter listing name"
                     listingFormValue={listingName}
@@ -50,5 +51,7 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                 />
             </Box>
         </Box>
+
+        
     )
 }
