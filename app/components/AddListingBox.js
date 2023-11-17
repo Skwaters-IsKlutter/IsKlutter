@@ -18,13 +18,14 @@ import colors from '../config/colors.js';
 export default function AddListingBox( {user, listingImage, listingName, listingPrice, listingDescription, listingTags} ) {
     return (
         <Box p="$2" bg={colors.medium} borderRadius={12}>
-            <Box w="100%" maxWidth="$60" pb="$2">
+            <Box w="100%" maxWidth="$60" pb={0}>
 
                 <AddListingForm 
                     listingFormLabel="Listing Title"
                     listingFormType="text"
                     listingFormPlaceholder="Enter listing name"
                     listingFormValue={listingName}
+                    listingFormBoxHeight="$10"
                 />
 
                 <AddListingForm 
@@ -32,6 +33,7 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                     listingFormType="number"
                     listingFormPlaceholder="Enter listing price"
                     listingFormValue={listingPrice}
+                    listingFormBoxHeight="$10"
                 />
 
                 <AddListingForm 
@@ -48,6 +50,7 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                     listingFormType="text"
                     listingFormPlaceholder="Enter listing tags"
                     listingFormValue={listingTags}
+                    listingFormBoxHeight="$10"
                 />
             </Box>
         </Box>
