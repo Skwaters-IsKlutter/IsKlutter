@@ -18,7 +18,7 @@ import {
     InputField
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase'; // Import Firebase authentication
 
 import colors from '../config/colors.js';
@@ -37,7 +37,8 @@ export default function SignupScreen() {
             if (email && password) {
                 await createUserWithEmailAndPassword(auth, email, password);
                 // Signup successful, you can navigate to the next screen or perform any desired action.
-                navigation.navigate(Routes.Login);
+                navigation.navigate(Routes.LOGIN);
+                console.log("Signup successful.")
             }
         } catch (error) {
             setError(error.message);

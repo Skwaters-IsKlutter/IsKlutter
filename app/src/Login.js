@@ -20,6 +20,7 @@ import {
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -30,13 +31,26 @@ export default function LoginPage() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
-    const onHandleLogin = () => {
-        if (email && password) {
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => console.log("Login success"))
-                .catch((err) => console.error("Login error", err.message));
+    const handleLogin = async () => {
+        try {
+            if (email && password) {
+                await signInWithEmailAndPassword(auth, email, password);
+                navigation.navigate(Routes.HOMEPAGE);
+                console.log("Sign in successful.")
+            }
+        } catch (error) {
+            setError(error.message);
+            console.log(error.message);
         }
     };
+
+    // const onHandleLogin = () => {
+    //     if (email && password) {
+    //         signInWithEmailAndPassword(auth, email, password)
+    //             .then(() => console.log("Login success"))
+    //             .catch((err) => console.error("Login error", err.message));
+    //     }
+    // };
 
     return (
         // Parent box
@@ -94,7 +108,7 @@ export default function LoginPage() {
 
                 {/* Submit button */}
                 <VStack space="lg" pt="$4">
-                    <Button size="sm" backgroundColor={colors.primary} onPress={() => navigation.navigate(Routes.HOMEPAGE)}>
+                    <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin}>
                         <ButtonText>Sign In</ButtonText>
                     </Button>
                 </VStack>
