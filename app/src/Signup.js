@@ -20,6 +20,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase'; // Import Firebase authentication
+import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -38,7 +39,8 @@ export default function SignupScreen() {
                 await createUserWithEmailAndPassword(auth, email, password);
                 // Signup successful, you can navigate to the next screen or perform any desired action.
                 navigation.navigate(Routes.LOGIN);
-                console.log("Signup successful.")
+                console.log("Signup successful.");
+                Alert.alert("Success", "Sign up successful.");
             }
         } catch (error) {
             setError(error.message);

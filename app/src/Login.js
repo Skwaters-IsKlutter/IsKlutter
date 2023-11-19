@@ -37,10 +37,11 @@ export default function LoginPage() {
                 await signInWithEmailAndPassword(auth, email, password);
                 navigation.navigate(Routes.HOMEPAGE);
                 console.log("Sign in successful.")
+            } else {
+                Alert.alert("Login Failed", "Please check your email and password.");
             }
         } catch (error) {
             setError(error.message);
-            console.log(error.message);
         }
     };
 
