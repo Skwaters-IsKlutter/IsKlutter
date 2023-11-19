@@ -1,14 +1,29 @@
-import React from 'react';
+import * as React from 'react';
 import {
-    Box,
-    Text,
     VStack,
     HStack,
     Heading,
     Image,
+    Box,
     Button,
     ButtonText,
-    ScrollView
+    FormControl,
+    FormControlLabel,
+    FormControlError,
+    FormControlErrorText,
+    FormControlLabelText,
+    FormControlHelper,
+    FormControlHelperText,
+    FormControlErrorIcon,
+    Input,
+    InputField,
+    Icon,
+    Avatar,
+    AvatarBadge,
+    AvatarFallbackText,
+    AvatarImage,
+    Pressable,
+    Text
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
