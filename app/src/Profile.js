@@ -29,6 +29,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
+
 import SearchHeader from '../components/SearchHeader.js';
 import HelloCard from '../components/ProfileHello.js'; 
 import ProfileCard from '../components/ProfileCard.js';
@@ -47,7 +48,7 @@ export default function ProfilePage({ key: userID, username, userIcon }) {
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
             </VStack> */}
 
-            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96">
 
