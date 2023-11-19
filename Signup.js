@@ -19,7 +19,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase';
+import { auth } from '../../config/firebase'; // Import Firebase authentication
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -32,16 +32,17 @@ export default function SignupScreen() {
     const [error, setError] = useState(null);
 
     const handleSignup = async () => {
-        if (email !== '' && password !== '') {
-            try {
+        try {
+            if (email && password) {
                 await createUserWithEmailAndPassword(auth, email, password);
                 console.log('Signup success');
-            } catch (err) {
-                console.error('Signup error:', err.message);
-                // You can use Alert.alert here if it's available in your environment
+                // navigation.navigate(Routes.Login);
             }
+        } catch (error) {
+            setError(error.message);
         }
     };
+
 
     return (
         // Parent box
