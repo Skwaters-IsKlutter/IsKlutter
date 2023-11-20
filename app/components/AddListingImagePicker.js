@@ -1,11 +1,11 @@
 
 import React, { useState } from "react";
 import {
-    Box,
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
+    // Box,
+    // View,
+    // Text,
+    // Image,
+    // TouchableOpacity,
     VStack,
     FormControl,
     FormControlLabel,
@@ -16,6 +16,8 @@ import {
     FormControlHelperText,
     FormControlErrorIcon,
 } from "@gluestack-ui/themed";
+import { View, Text, Image, TouchableOpacity,  
+    StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import colors from "../config/colors";
@@ -23,16 +25,15 @@ import colors from "../config/colors";
 export default function AddListingImagePicker({ listingFormLabel }) {
 
     // Stores the selected image URI 
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState('');
 
     // Stores any error message 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState();
 
     // Function to pick an image from  
-    //the device's media library 
+    //the device's media library '
     const pickImage = async () => {
-        const { status } = await ImagePicker.
-            requestMediaLibraryPermissionsAsync();
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (status !== "granted") {
 
@@ -46,17 +47,16 @@ export default function AddListingImagePicker({ listingFormLabel }) {
 
             // Launch the image library and get 
             // the selected image 
-            const result =
-                await ImagePicker.launchImageLibraryAsync();
+            const result = await ImagePicker.launchImageLibraryAsync();
 
-            if (!result.cancelled) {
+            if (!result.canceled) {
 
                 // If an image is selected (not cancelled),  
                 // update the file state variable 
                 setFile(result.uri);
 
                 // Clear any previous errors 
-                setError(null);
+                setError('');
             }
         }
     };
