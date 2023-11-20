@@ -31,7 +31,7 @@ export default function CommunityPage() {
         <Box w="100%" h="100%">
 
             {/*Search Bar*/}
-            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeader posterUser="Sassa Girl" userIcon={require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Community Label */}
@@ -42,7 +42,7 @@ export default function CommunityPage() {
                 </VStack>
 
                 {/*Community Posts Container */}
-                <Box bg="$amber200" borderBottomLeftRadius={10} borderBottomRightRadius={10} p="$5" m={5} flex={1}>
+                <Box bg={colors.medium} borderRadius={8} p="$5" m={5} flex={1}>
                     <VStack space="xs">
                         <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
                     </VStack>
@@ -50,7 +50,7 @@ export default function CommunityPage() {
                     <ScrollView>
                         <HStack space="xs" flexWrap="wrap" justifyContent="center">
                             <PostCard
-                                // posterIcon={ require("../../assets/img/usericon.jpg") }
+                                posterIcon={ require("../../assets/img/usericon.jpg") }
                                 posterName="Sassa"
                                 postDate="11/20/2023"
                                 postContent="betlog"

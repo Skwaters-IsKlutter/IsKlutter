@@ -11,22 +11,26 @@ import {
     InputField,
 } from '@gluestack-ui/themed';
 
+import UserAvatar from './Avatar.js';
+
 import colors from '../config/colors.js';
 
 export default function CommunityCommentBox( {comment, posterUser, posterIcon} ) {
     return (
-        <Box p="$2" bg={colors.white}>
-            <Box w="100%" maxWidth="$60" pb="$2">
-                <HStack space="sm" justifyContent="space-evenly" p={4} alignItems="center">
-                    <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} />
-                    <Input bg={colors.white} borderColor={colors.secondary} h={80} w="75%">
+        <Box bg={colors.white} w="$64">
+            <Box w="100" flex={1}>
+                <HStack space="md" justifyContent="space-evenly" p={2} alignItems="center">
+                    {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
+                    {/* <UserAvatar username={posterUser} userIcon={posterIcon} /> */}
+
+                    <Input bg={colors.white} borderColor={colors.secondary} h={80} w="100%">
                         <InputField multiline={true} size="md" placeholder="Write a comment..." />
                     </Input>
-                    
-                    <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={12} onPress={comment} m={10}>
-                        <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
-                    </Button>
                 </HStack>
+
+                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={8} onPress={comment} m={10}>
+                    <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
+                </Button>
             </Box>
         </Box>
     )

@@ -6,7 +6,7 @@ import colors from "../config/colors";
 export default function UserAvatar( {username, userIcon} ) {
     return (
         <Avatar bgColor={colors.primary} size="md" borderRadius="$full" h={40} w={40} ml={10}>
-            <AvatarFallbackText>{username}</AvatarFallbackText>
+            <AvatarFallbackText color={colors.white}>{username}</AvatarFallbackText>
             <AvatarImage source={userIcon} />
         </Avatar>
     )
