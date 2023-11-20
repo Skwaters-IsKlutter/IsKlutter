@@ -19,9 +19,11 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, database } from '../../config/firebase'; // Import Firebase authentication
-import { addDoc, collection } from 'firebase/firestore';
+import { auth} from '../../config/firebase'; // Import Firebase authentication
+import { getFirestore, addDoc, collection } from 'firebase/firestore';
 import { Alert } from 'react-native';
+import { FIREBASE_APP } from '../../config/firebase'; 
+const db = getFirestore(FIREBASE_APP);
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -37,34 +39,22 @@ export default function SignupScreen() {
 
     const handleSignup = async () => {
         try {
-            // Password matching check
-            if (password !== retypePassword) {
-                setError("Passwords do not match");
-                return;
+          if (email && password && username) {
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            console.log('User UID:', response.user.uid);
+            try {
+                const userDocRef = await addDoc(collection(db, 'users'), {
+                  userID: response.user.uid,
+                  username: username,
+                  email: email,
+                });
+                console.log('Document written with ID:', userDocRef.id);
+              } catch (error) {
+                console.error('Error adding document:', error);
+              }
+    
             }
-
-            // Firebase authentication
-            const userCredential = await createUserWithEmailAndPassword(auth, email);
-            const user = userCredential.user;
-
-            // Firestore
-            const usersCollection = collection(database, 'users');
-
-            // Firestore document creation
-            await addDoc(usersCollection, {
-                email: email,
-                username: username,
-                testing: true,
-            });
-
-            navigation.navigate(Routes.LOGIN);
-            console.log('Signup successful.');
-            console.log('Email:', email);
-            console.log('Username:', username);
-            console.log('Testing Value:', testingValue);
-            Alert.alert('Success', 'Sign up successful.');
         } catch (error) {
-            console.error('Signup error:', error);
             setError(error.message);
         }
     };
@@ -117,15 +107,16 @@ export default function SignupScreen() {
                         isRequired={false}
                     >
                         <FormControlLabel mb="$2">
-                            <FormControlLabelText>Username</FormControlLabelText>
+                        <FormControlLabelText>Username</FormControlLabelText>
                         </FormControlLabel>
                         <Input w="100%">
-                            <InputField
-                                type="username"
-                                defaultValue=""
-                                placeholder="Enter username" 
-                                value={username} 
-                                onChangeText={(text) => setUsername(text)}/>
+                        <InputField
+                            type="username"
+                            defaultValue=""
+                            placeholder="Enter username"
+                            value={username}
+                            onChangeText={(text) => setUsername(text)}
+                        />
                         </Input>
                     </FormControl>
                 </VStack>
