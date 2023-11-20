@@ -11,9 +11,6 @@ import {
     FormControlError, 
     FormControlErrorText, 
     FormControlLabelText, 
-    FormControlHelper, 
-    FormControlHelperText, 
-    FormControlErrorIcon, 
     Input, 
     InputField
 } from '@gluestack-ui/themed';
@@ -21,13 +18,18 @@ import { useNavigation } from '@react-navigation/native';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase'; // Import Firebase authentication
 import { Alert } from 'react-native';
+import {FIREBASE_AUTH, FIREBASE_DB} from '../../config/firebase';
+
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 export default function SignupScreen() {
     const navigation = useNavigation();
-
+    const auth = FIREBASE_AUTH;
+    const db = FIREBASE_DB;
+    
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState(''); 
@@ -36,16 +38,24 @@ export default function SignupScreen() {
     const handleSignup = async () => {
         try {
             if (email && password) {
-                await createUserWithEmailAndPassword(auth, email, password);
-                // Signup successful, you can navigate to the next screen or perform any desired action.
-                navigation.navigate(Routes.LOGIN);
+                const response = await createUserWithEmailAndPassword(auth, email, password);
                 console.log("Signup successful.");
+    
+                const userDocRef = await addDoc(collection(db, 'users'), {
+                    userID: response.user.uid,
+                    username: username,
+                    email: email,
+                });
+                console.log('Document written with ID: ', userDocRef.id);
+    
+                navigation.navigate(Routes.LOGIN);
                 Alert.alert("Success", "Sign up successful.");
             }
         } catch (error) {
             setError(error.message);
         }
     };
+    
 
     return (
         // Parent box
@@ -98,7 +108,12 @@ export default function SignupScreen() {
                             <FormControlLabelText>Username</FormControlLabelText>
                         </FormControlLabel>
                         <Input w="100%">
-                            <InputField type="username" defaultValue="" placeholder="Enter username" />
+                        <InputField
+                                 type="username"
+                                 placeholder="Enter Username"
+                                 value={username}
+                                 onChangeText={(text) => setUsername(text)}
+                                        />
                         </Input>
                     </FormControl>
                 </VStack>
