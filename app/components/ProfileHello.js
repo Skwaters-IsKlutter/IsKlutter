@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { auth, database } from '../../config/firebase';
+import { getFirestore, collection, doc, getDoc } from "firebase/firestore";
 import {
     Box,
     VStack,
@@ -13,29 +14,26 @@ export default function HelloCard() {
     const [username, setUsername] = useState(null);
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
                 // User is signed in
-                // Assuming your Firebase user document has a 'username' field
-                // Replace 'users' with your actual Firebase collection name
-                const userDocRef = database.collection('users').doc(user.uid);
-                userDocRef.get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            setUsername(doc.data().username);
-                        } else {
-                            console.log('No such document!');
-                        }
-                    })
-                    .catch((error) => {
-                        console.log('Error getting document:', error);
-                    });
+                const userDocRef = doc(collection(getFirestore(), 'users'), user.uid);
+                try {
+                    const docSnapshot = await getDoc(userDocRef);
+                    if (docSnapshot.exists()) {
+                        setUsername(docSnapshot.data().username);
+                    } else {
+                        console.log('No such document!');
+                    }
+                } catch (error) {
+                    console.error('Error getting document:', error);
+                }
             } else {
                 // No user is signed in
                 setUsername(null);
             }
         });
-
+    
         return () => {
             unsubscribe(); // Cleanup the subscription when the component unmounts
         };

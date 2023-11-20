@@ -11,51 +11,63 @@ import {
     FormControlError, 
     FormControlErrorText, 
     FormControlLabelText, 
+    FormControlHelper, 
+    FormControlHelperText, 
+    FormControlErrorIcon, 
     Input, 
     InputField
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase'; // Import Firebase authentication
+import { auth, database } from '../../config/firebase'; // Import Firebase authentication
+import { addDoc, collection } from 'firebase/firestore';
 import { Alert } from 'react-native';
-import {FIREBASE_AUTH, FIREBASE_DB} from '../../config/firebase';
-
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 export default function SignupScreen() {
     const navigation = useNavigation();
-    const auth = FIREBASE_AUTH;
-    const db = FIREBASE_DB;
-    
-    const [username, setUsername] = useState('');
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState(''); 
+    const [username, setUsername] = useState('');
     const [error, setError] = useState(null);
 
     const handleSignup = async () => {
         try {
-            if (email && password) {
-                const response = await createUserWithEmailAndPassword(auth, email, password);
-                console.log("Signup successful.");
-    
-                const userDocRef = await addDoc(collection(db, 'users'), {
-                    userID: response.user.uid,
-                    username: username,
-                    email: email,
-                });
-                console.log('Document written with ID: ', userDocRef.id);
-    
-                navigation.navigate(Routes.LOGIN);
-                Alert.alert("Success", "Sign up successful.");
+            // Password matching check
+            if (password !== retypePassword) {
+                setError("Passwords do not match");
+                return;
             }
+
+            // Firebase authentication
+            const userCredential = await createUserWithEmailAndPassword(auth, email);
+            const user = userCredential.user;
+
+            // Firestore
+            const usersCollection = collection(database, 'users');
+
+            // Firestore document creation
+            await addDoc(usersCollection, {
+                email: email,
+                username: username,
+                testing: true,
+            });
+
+            navigation.navigate(Routes.LOGIN);
+            console.log('Signup successful.');
+            console.log('Email:', email);
+            console.log('Username:', username);
+            console.log('Testing Value:', testingValue);
+            Alert.alert('Success', 'Sign up successful.');
         } catch (error) {
+            console.error('Signup error:', error);
             setError(error.message);
         }
     };
-    
 
     return (
         // Parent box
@@ -108,12 +120,12 @@ export default function SignupScreen() {
                             <FormControlLabelText>Username</FormControlLabelText>
                         </FormControlLabel>
                         <Input w="100%">
-                        <InputField
-                                 type="username"
-                                 placeholder="Enter Username"
-                                 value={username}
-                                 onChangeText={(text) => setUsername(text)}
-                                        />
+                            <InputField
+                                type="username"
+                                defaultValue=""
+                                placeholder="Enter username" 
+                                value={username} 
+                                onChangeText={(text) => setUsername(text)}/>
                         </Input>
                     </FormControl>
                 </VStack>
@@ -161,7 +173,7 @@ export default function SignupScreen() {
             </Box>
 
             {/* Go to sign up */}
-            <Box flexDirection="row" top={800} position="absolute">
+            <Box flexDirection="row" top={700} position="absolute">
                 <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}>
                     <ButtonText sx={{
                         color: colors.medium
