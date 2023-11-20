@@ -17,8 +17,8 @@ import colors from '../config/colors.js';
 
 export default function CommunityCommentBox( {comment, posterUser, posterIcon} ) {
     return (
-        <Box bg={colors.white} w="$64">
-            <Box w="100" flex={1}>
+        <Box bg={colors.white}>
+            <Box w="$64" flex={1}>
                 <HStack space="md" justifyContent="space-evenly" p={2} alignItems="center">
                     {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
                     {/* <UserAvatar username={posterUser} userIcon={posterIcon} /> */}
@@ -28,7 +28,7 @@ export default function CommunityCommentBox( {comment, posterUser, posterIcon} )
                     </Input>
                 </HStack>
 
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={8} onPress={comment} m={10}>
+                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={8} onPress={comment} mt={10} w="40%" alignSelf="flex-end">
                     <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
                 </Button>
             </Box>
