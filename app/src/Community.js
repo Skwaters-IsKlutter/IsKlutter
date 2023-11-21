@@ -28,15 +28,20 @@ export default function CommunityPage() {
 
     const communityData = [
         { 
-        posterIcon: require("../../assets/img/sassa.jpg"),
-        posterName: "Sassa",
-        postDate: "11/20/2023",
-        postContent: "avail na po ang neon balls"
+            posterIcon: require("../../assets/img/sassa.jpg"),
+            posterName: "Sassa",
+            postDate: "11/20/2023",
+            postContent: "avail na po ang neon balls"
         }, { 
-        posterIcon: require("../../assets/img/usericon.jpg"),
-        posterName: "Rawr",
-        postDate: "11/19/2023",
-        postContent: "Hello."
+            posterIcon: require("../../assets/img/usericon.jpg"),
+            posterName: "Rawr",
+            postDate: "11/19/2023",
+            postContent: "Hello."
+        }, {
+            posterIcon: require("../../assets/img/sassa.jpg"),
+            posterName: "Sassa",
+            postDate: "11/17/2023",
+            postContent: "sapaka niyo ko b"
         }
         
     ]
