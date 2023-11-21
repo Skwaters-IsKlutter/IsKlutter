@@ -23,7 +23,7 @@ export default function CommunityCommentBox( {comment, posterUser, posterIcon} )
                     {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
                     {/* <UserAvatar username={posterUser} userIcon={posterIcon} /> */}
 
-                    <Input bg={colors.white} borderColor={colors.secondary} h={80} w="100%">
+                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="100%">
                         <InputField multiline={true} size="md" placeholder="Write a comment..." />
                     </Input>
                 </HStack>

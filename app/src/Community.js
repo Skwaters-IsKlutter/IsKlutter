@@ -28,7 +28,7 @@ export default function CommunityPage() {
 
     const communityData = [
         { 
-        posterIcon: require("../../assets/img/usericon.jpg"),
+        posterIcon: require("../../assets/img/sassa.jpg"),
         posterName: "Sassa",
         postDate: "11/20/2023",
         postContent: "avail na po ang neon balls"
