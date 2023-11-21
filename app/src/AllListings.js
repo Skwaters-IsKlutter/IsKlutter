@@ -54,15 +54,13 @@ export default function AllListingsPage() {
                 // console.log(bgcolor)
             })
             console.log(bgcolor)
-            return bgcolor;
+            setUserColor(bgcolor)
         } catch (error) {
             console.error('Error fetching user color:', error.message);
         }
     };
-    
-        const color = fetchUserColor();
-        console.log(color)
-        setUserColor(color)
+        fetchUserColor();
+        
     }, []);
 
     return (
