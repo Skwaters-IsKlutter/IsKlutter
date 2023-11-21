@@ -12,24 +12,25 @@ import {
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 
+import UserAvatar from './Avatar.js';
+
 import colors from '../config/colors.js';
 import CommunityCommentBox from './CommunityCommentBox.js';
 
-export default function PostCard( {key: posterIcon, posterName, postDate, postContent } ) {
+export default function PostCard( { posterIcon, posterName, postDate, postContent, username} ) {
     return (
-    <VStack>
-        <Box p="$3" w="100%" backgroundColor={colors.white} m={6}>
-            <HStack pb="$3">
-                {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100}/>  */}
-                <Text color={colors.gray}size="sm" bold={true}>{posterName}</Text>
-                <Text color={colors.gray} size="2xs" pl={100}>{postDate}</Text>
-            </HStack>
+        <VStack pb={6}>
+            <Box p={15} w="100%" backgroundColor={colors.white} borderRadius={8}>
+                <HStack space="sm" alignItems="center">
+                    <UserAvatar username={username} userIcon={posterIcon} />
+                    <Text color={colors.gray}size="sm" bold={true}>{posterName}</Text>
+                    <Text color={colors.gray} size="2xs">{postDate}</Text>
+                </HStack>
 
-            <Text color="black" pb="$3" size="sm">{postContent}</Text>
+                <Text color="black" pb="$3" size="sm" ml="$3" mt="$3">{postContent}</Text>
 
-            <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} />
-        </Box>
-    </VStack>
-
+                <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} />
+            </Box>
+        </VStack>
     )
 }

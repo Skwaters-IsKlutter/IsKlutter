@@ -16,6 +16,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import UserAvatar from './Avatar.js';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -44,10 +46,7 @@ export default function SearchHeader({ search, username, userIcon, userProfile }
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-                        <Avatar bgColor='$amber600' size="md" borderRadius="$full" h={40} w={40} ml={10}>
-                            <AvatarFallbackText>{username}</AvatarFallbackText>
-                            <AvatarImage source={userIcon} />
-                        </Avatar>
+                        <UserAvatar username={username} userIcon={userIcon}/>
                     </Pressable>
                 </HStack>
 

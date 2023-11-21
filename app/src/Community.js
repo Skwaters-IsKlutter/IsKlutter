@@ -5,11 +5,11 @@ import {
     Text,
     Heading,
     Image,
-    Box, 
-    Button, 
+    Box,
+    Button,
     ButtonText,
-    FormControl, 
-    Input, 
+    FormControl,
+    Input,
     InputField,
     ScrollView
 } from '@gluestack-ui/themed';
@@ -26,71 +26,56 @@ import Routes from '../components/constants/Routes.js';
 export default function CommunityPage() {
     const navigation = useNavigation();
 
-    return (
+    const communityData = [
+        { 
+        posterIcon: require("../../assets/img/sassa.jpg"),
+        posterName: "Sassa",
+        postDate: "11/20/2023",
+        postContent: "avail na po ang neon balls"
+        }, { 
+        posterIcon: require("../../assets/img/usericon.jpg"),
+        posterName: "Rawr",
+        postDate: "11/19/2023",
+        postContent: "Hello."
+        }
+        
+    ]
 
+    const renderCommunityPosts = () => {
+        return communityData.map((post, index) => 
+            <PostCard
+                key={index}
+                posterIcon={post.posterIcon}
+                posterName={post.posterName}
+                postDate={post.postDate}
+                postContent={post.postContent}
+            />
+        );
+    }
+
+    return (
         // Parent box
         <Box w="100%" h="100%">
 
             {/*Search Bar*/}
-            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg")} />
-           
+            <SearchHeader posterUser="Sassa Girl" userIcon={require("../../assets/img/usericon.jpg")} />
+
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Community Label */}
-                <VStack space="xs" pb="$0">
-                    <Box bg={colors.secondary} borderTopRightRadius={20} borderTopLeftRadius={20}>
-                        <Heading lineHeight={60} fontSize="$3xl" pl="$5" color={colors.white}>Community</Heading>
-                    </Box>
-                </VStack> 
+                <VStack space="xs" pb={2}>
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
+                    <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
+                </VStack>
 
                 {/*Community Posts Container */}
-                <Box bg="$amber200" borderBottomLeftRadius={10} borderBottomRightRadius={10} p="$5" m={5} flex={1}>
-                    <VStack space="xs">
-                        <PostBox posterIcon={ require("../../assets/img/usericon.jpg") } post={() => Alert.alert("Alert", "This is a dummy action")} />
-                    </VStack>
-                    
-                    
+                <Box bg={colors.medium} borderRadius={8} p="$5" m={5} flex={1}>
                     <ScrollView>
                         <HStack space="xs" flexWrap="wrap" justifyContent="center">
-                            <PostCard
-                                    // posterIcon={ require("../../assets/img/usericon.jpg") }
-                                    posterName="Sassa"
-                                    postDate="11-6-23"
-                                    postContent="HHEHEHEHEHHEHEHEHBHDUUEFHCEIUCNIRWNIQWNCVWBNWIBIBVRHYBV"
-                    
-                            />
-                            <PostCard
-                                    // posterIcon={ require("../../assets/img/usericon.jpg") }
-                                    posterName="Sassa"
-                                    postDate="11-6-23"
-                                    postContent="HHEHEHEHEHHEHEHEHBHDUUEFHCEIUCNIRWNIQWNCVWBNWIBIBVRHYBV"
-                    
-                            />
-                            <PostCard
-                                    // posterIcon={ require("../../assets/img/usericon.jpg") }
-                                    posterName="Sassa"
-                                    postDate="11-6-23"
-                                    postContent="HHEHEHEHEHHEHEHEHBHDUUEFHCEIUCNIRWNIQWNCVWBNWIBIBVRHYBV"
-                    
-                            />
-                            <PostCard
-                                    // posterIcon={ require("../../assets/img/usericon.jpg") }
-                                    posterName="Sassa"
-                                    postDate="11-6-23"
-                                    postContent="HHEHEHEHEHHEHEHEHBHDUUEFHCEIUCNIRWNIQWNCVWBNWIBIBVRHYBV"
-                    
-                            />
-                            <PostCard
-                                    // posterIcon={ require("../../assets/img/usericon.jpg") }
-                                    posterName="Sassa"
-                                    postDate="11-6-23"
-                                    postContent="HHEHEHEHEHHEHEHEHBHDUUEFHCEIUCNIRWNIQWNCVWBNWIBIBVRHYBV"
-                    
-                            />
+                            {renderCommunityPosts()}
                         </HStack>
                     </ScrollView>
                 </Box>
             </Box>
         </Box>
     )
-
 }
