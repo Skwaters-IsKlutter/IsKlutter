@@ -26,8 +26,35 @@ import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 
-export default function ListingsPage({ productName, productImage, productPrice, productDesc, seller }) {
+export default function ListingsPage() {
     const navigation = useNavigation();
+
+    const listingsData = [
+        {
+            productImage: require("../../assets/img/item.jpg") ,
+            productName: "Kuromi Plush",
+            productPrice: "PHP 450",
+            productDesc: "Brand new Kuromi plushie from Japan, selling for less than SRP. Meetup at CUB, 2 PM.",
+            sellerName: "cinnamonroll",
+            tags: [<TagLabel tagName="toys" />, <TagLabel tagName="new" />],
+            sellerImage: require("../../assets/img/usericon.jpg"),
+        }
+    ]
+
+    const renderListings = () => {
+        return listingsData.map((listing, index) => 
+            <ListingCard
+                key={index}
+                productImage={listing.productImage}
+                productName={listing.productName}
+                productPrice={listing.productPrice}
+                productDesc={listing.productDesc}
+                sellerName={listing.sellerName}
+                tags={listing.tags}
+                sellerImage={listing.sellerImage}
+            />
+        );
+    }
 
     return (
         // Parent box
@@ -43,16 +70,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
 
                 <ScrollView>
                     <VStack space="xs" flexWrap="wrap">
-                        <ListingCard 
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productName="Kuromi Plush"
-                            productPrice="PHP 300"
-                            productDesc="This is a Kuromi plushie."
-                            sellerName="cinnamonroll"
-                            tags={[<TagLabel tagName="toys" />, <TagLabel tagName="new" />]}
-                            sellerImage={ require("../../assets/img/usericon.jpg") }
-                            sellerChat={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
+                        {renderListings()}
                     </VStack>
 
                     {/* Added a comment */}
