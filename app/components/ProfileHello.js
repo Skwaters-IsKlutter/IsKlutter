@@ -17,7 +17,7 @@ export default function HelloCard() {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
                 // User is signed in
-                const userDocRef = doc(collection(getFirestore(), 'users'), user.uid);
+                const userDocRef = doc(database, 'users', user.uid); // search and compare id
                 try {
                     const docSnapshot = await getDoc(userDocRef);
                     if (docSnapshot.exists()) {

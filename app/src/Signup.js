@@ -15,9 +15,10 @@ import {
     FormControlHelperText, 
     FormControlErrorIcon, 
     Input, 
-    InputField
+    InputField,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth} from '../../config/firebase'; // Import Firebase authentication
 import { getFirestore, addDoc, collection } from 'firebase/firestore';
@@ -35,11 +36,12 @@ export default function SignupScreen() {
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState(''); 
     const [username, setUsername] = useState('');
+    const [selectedColor, setSelectedColor] = useState(''); 
     const [error, setError] = useState(null);
 
     const handleSignup = async () => {
         try {
-          if (email && password && username) {
+          if (email && password && username && selectedColor) {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('User UID:', response.user.uid);
             try {
@@ -47,12 +49,14 @@ export default function SignupScreen() {
                   userID: response.user.uid,
                   username: username,
                   email: email,
+                  color: selectedColor,
                 });
                 console.log('Document written with ID:', userDocRef.id);
               } catch (error) {
                 console.error('Error adding document:', error);
               }
-    
+            } else {
+                setError('Please fill in all fields, including color selection.');
             }
         } catch (error) {
             setError(error.message);
@@ -154,6 +158,33 @@ export default function SignupScreen() {
                     </Input>
                 </FormControl>
             </VStack>
+
+             {/* Dropdown color choose */}
+             <VStack space="xl" py="$3">
+                    <FormControl>
+                    <VStack space="xl" py="$3">
+                    <FormControl>
+                    <FormControlLabel mb="$2">
+                        <FormControlLabelText>Choose Color</FormControlLabelText>
+                    </FormControlLabel>
+                    <Picker
+                        selectedValue={selectedColor}
+                        onValueChange={(itemValue) => setSelectedColor(itemValue)}
+                        style={{ height: 50, width: '100%' }}
+                    >
+                        <Picker.Item label="Red" value="red" />
+                        <Picker.Item label="Orange" value="orange" />
+                        <Picker.Item label="Green" value="green" />
+                        <Picker.Item label="Blue" value="blue" />
+                        <Picker.Item label="Indigo" value="indigo" />
+                        <Picker.Item label="Violet" value="violet" />
+                        {/* Add more color options as needed */}
+                    </Picker>
+                    </FormControl>
+                </VStack>
+                        
+                    </FormControl>
+                </VStack>
 
             {/* Submit button */}
             <VStack space="lg" pt="$4">
