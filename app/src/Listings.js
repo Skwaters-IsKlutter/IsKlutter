@@ -26,14 +26,70 @@ import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 
-export default function ListingsPage({ productName, productImage, productPrice, productDesc, seller }) {
+export default function ListingsPage() {
     const navigation = useNavigation();
+
+    const listingsData = [
+        {
+            productImage: require("../../assets/img/item.jpg") ,
+            productName: "Kuromi Plush",
+            productPrice: "PHP 450",
+            productDesc: "Brand new Kuromi plushie from Japan, selling for less than SRP. Meetup at CUB, 2 PM.",
+            sellerName: "cinnamonroll",
+            tags: [<TagLabel tagName="Toys" />],
+            sellerImage: require("../../assets/img/usericon.jpg"),
+        }
+    ]
+
+    const listingsRepliesData = [
+        {
+            replyUser: "kuromi",
+            userIcon: require("../../assets/img/usericon.jpg"),
+            replyText: "mine!",
+            replyDate: "10/25/2023",
+            replyTime:"12:58 PM"
+        }, {
+            replyUser: "sassag0rl",
+            userIcon: require("../../assets/img/sassa.jpg"),
+            replyText: "EPAL NG NAG MINE",
+            replyDate: "10/25/2023",
+            replyTime:"1:43 PM"
+        }, 
+    ]
+
+    const renderListings = () => {
+        return listingsData.map((listing, index) => 
+            <ListingCard
+                key={index}
+                productImage={listing.productImage}
+                productName={listing.productName}
+                productPrice={listing.productPrice}
+                productDesc={listing.productDesc}
+                sellerName={listing.sellerName}
+                tags={listing.tags}
+                sellerImage={listing.sellerImage}
+            />
+        );
+    }
+
+    const renderListingsReply = () => {
+        return listingsRepliesData.map((listing, index) =>
+            <ReplyBox
+                key={index}
+                replyUser={listing.replyUser}
+                userIcon={listing.userIcon}
+                replyText={listing.replyText}
+                replyDate={listing.replyDate}
+                replyTime={listing.replyTime}
+            />
+        );
+    }
 
     return (
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
-            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")}/>
+            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
@@ -43,16 +99,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
 
                 <ScrollView>
                     <VStack space="xs" flexWrap="wrap">
-                        <ListingCard 
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productName="Kuromi Plush"
-                            productPrice="PHP 300"
-                            productDesc="This is a Kuromi plushie."
-                            sellerName="cinnamonroll"
-                            tags={[<TagLabel tagName="toys" />, <TagLabel tagName="new" />]}
-                            sellerImage={ require("../../assets/img/usericon.jpg") }
-                            sellerChat={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
+                        {renderListings()}
                     </VStack>
 
                     {/* Added a comment */}
@@ -64,7 +111,7 @@ export default function ListingsPage({ productName, productImage, productPrice, 
                     <VStack space="xs">
                         <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
                         <VStack space="xs">
-                            <ReplyBox userIcon={ require("../../assets/img/usericon.jpg") } replyUser="kuromi" replyText="mine!" replyDate="10/25/2023" replyTime="12:58 PM"/>
+                            {renderListingsReply()}
                         </VStack>
                     </VStack>
                 </ScrollView>

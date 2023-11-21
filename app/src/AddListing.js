@@ -30,7 +30,7 @@ export default function AddListingPage() {
         <ScrollView>
             <Box w="100%" h="100%">
                 {/*Search Bar*/}
-                <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
+                <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg") } back={navigation.goBack} />
 
                 <Box p="$6" w="100%" maxWidth="$96">
 
