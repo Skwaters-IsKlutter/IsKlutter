@@ -36,7 +36,7 @@ export default function ListingsPage() {
             productPrice: "PHP 450",
             productDesc: "Brand new Kuromi plushie from Japan, selling for less than SRP. Meetup at CUB, 2 PM.",
             sellerName: "cinnamonroll",
-            tags: [<TagLabel tagName="toys" />, <TagLabel tagName="new" />],
+            tags: [<TagLabel tagName="Toys" />],
             sellerImage: require("../../assets/img/usericon.jpg"),
         }
     ]

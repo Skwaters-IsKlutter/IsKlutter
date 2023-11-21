@@ -22,13 +22,42 @@ import Routes from '../components/constants/Routes.js';
 
 export default function AllListingsPage() {
     const navigation = useNavigation();
+
+    const allListingsData = [
+        {
+            productId: "1",
+            productImage: require("../../assets/img/item.jpg") ,
+            productName: "Kuromi Plush",
+            productPrice: "PHP 450",
+            productSeller: "cinnamonroll",
+            tags: [<TagLabel tagName="Toys" />],
+            toListing: () => navigation.navigate(Routes.LISTING)
+        }, {
+            productId: "2",
+            productImage: require("../../assets/img/item2.jpg") ,
+            productName: "UP Shirt",
+            productPrice: "PHP 250",
+            productSeller: "sassag0rl",
+            tags: [<TagLabel tagName="Clothing" />]
+        }
+    ]
+
+    const renderAllListings = () => {
+        return allListingsData.map((item, index) =>
+            <ItemCard
+                key={index}
+                productImage={item.productImage}
+                productPrice={item.productPrice}
+                productName={item.productName}
+                productSeller={item.productSeller}
+                tags={item.tags}
+                toListing={item.toListing}
+                // toListing={() => navigation.navigate(Routes.LISTING, {item})}
+            />
+        );
+    }
     
     return (
-        // <Tab.Navigator>
-        //     <Tab.Screen name="Listings" component={ListingsScreen} />
-        //     {/* <Tab.Screen name="Community" component={SettingsScreen} /> */}
-        // </Tab.Navigator>
-        
         // Parent box
         <Box w="100%" h="100%">
             {/*Search Bar*/}
@@ -51,49 +80,7 @@ export default function AllListingsPage() {
                 {/*Listing Box Container*/}
                 <ScrollView>
                     <HStack space="xs" flexWrap="wrap" justifyContent="center">
-                        <ItemCard 
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productPrice="PHP 300"
-                            productName="Kuromi Plush"
-                            productSeller="cinnamonroll"
-                            tags={[<TagLabel tagName="toys" />, <TagLabel tagName="new" />, <TagLabel tagName="plushie" />, <TagLabel tagName="sold" />]}
-                            toListing={() => navigation.navigate(Routes.LISTINGS)}
-                        />
-                        <ItemCard
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productPrice="Price" productName="Product"
-                            productSeller="Seller"
-                            tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
-                            toListing={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
-                        <ItemCard
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productPrice="Price" productName="Product"
-                            productSeller="Seller"
-                            tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
-                            toListing={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
-                        <ItemCard
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productPrice="Price" productName="Product"
-                            productSeller="Seller"
-                            tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
-                            toListing={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
-                        <ItemCard
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productPrice="Price" productName="Product"
-                            productSeller="Seller"
-                            tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
-                            toListing={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
-                        <ItemCard
-                            productImage={ require("../../assets/img/item.jpg") }
-                            productPrice="Price" productName="Product"
-                            productSeller="Seller"
-                            tags={[<TagLabel tagName="dummy" />, <TagLabel tagName="dummy" />]}
-                            toListing={() => Alert.alert("Alert", "This is a dummy action")}
-                        />
+                        {renderAllListings()}
                     </HStack>
                 </ScrollView>
             </Box>
