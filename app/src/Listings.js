@@ -41,6 +41,22 @@ export default function ListingsPage() {
         }
     ]
 
+    const listingsRepliesData = [
+        {
+            replyUser: "kuromi",
+            userIcon: require("../../assets/img/usericon.jpg"),
+            replyText: "mine!",
+            replyDate: "10/25/2023",
+            replyTime:"12:58 PM"
+        }, {
+            replyUser: "sassag0rl",
+            userIcon: require("../../assets/img/sassa.jpg"),
+            replyText: "EPAL NG NAG MINE",
+            replyDate: "10/25/2023",
+            replyTime:"1:43 PM"
+        }, 
+    ]
+
     const renderListings = () => {
         return listingsData.map((listing, index) => 
             <ListingCard
@@ -52,6 +68,19 @@ export default function ListingsPage() {
                 sellerName={listing.sellerName}
                 tags={listing.tags}
                 sellerImage={listing.sellerImage}
+            />
+        );
+    }
+
+    const renderListingsReply = () => {
+        return listingsRepliesData.map((listing, index) =>
+            <ReplyBox
+                key={index}
+                replyUser={listing.replyUser}
+                userIcon={listing.userIcon}
+                replyText={listing.replyText}
+                replyDate={listing.replyDate}
+                replyTime={listing.replyTime}
             />
         );
     }
@@ -82,7 +111,7 @@ export default function ListingsPage() {
                     <VStack space="xs">
                         <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
                         <VStack space="xs">
-                            <ReplyBox userIcon={ require("../../assets/img/usericon.jpg") } replyUser="kuromi" replyText="mine!" replyDate="10/25/2023" replyTime="12:58 PM"/>
+                            {renderListingsReply()}
                         </VStack>
                     </VStack>
                 </ScrollView>
