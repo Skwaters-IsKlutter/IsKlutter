@@ -19,7 +19,7 @@ import CommunityCommentBox from './CommunityCommentBox.js';
 
 export default function PostCard( { posterIcon, posterName, postDate, postContent, username} ) {
     return (
-        <VStack>
+        <VStack pb={6}>
             <Box p={15} w="100%" backgroundColor={colors.white} borderRadius={8}>
                 <HStack space="sm" alignItems="center">
                     <UserAvatar username={username} userIcon={posterIcon} />
@@ -27,7 +27,7 @@ export default function PostCard( { posterIcon, posterName, postDate, postConten
                     <Text color={colors.gray} size="2xs">{postDate}</Text>
                 </HStack>
 
-                <Text color="black" pb="$3" size="sm" m={7}>{postContent}</Text>
+                <Text color="black" pb="$3" size="sm" ml="$3" mt="$3">{postContent}</Text>
 
                 <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} />
             </Box>

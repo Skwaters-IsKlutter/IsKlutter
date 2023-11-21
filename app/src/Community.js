@@ -32,7 +32,13 @@ export default function CommunityPage() {
         posterName: "Sassa",
         postDate: "11/20/2023",
         postContent: "avail na po ang neon balls"
+        }, { 
+        posterIcon: require("../../assets/img/usericon.jpg"),
+        posterName: "Rawr",
+        postDate: "11/19/2023",
+        postContent: "Hello."
         }
+        
     ]
 
     const renderCommunityPosts = () => {
@@ -56,7 +62,7 @@ export default function CommunityPage() {
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Community Label */}
-                <VStack space="xs" pb="$2">
+                <VStack space="xs" pb={2}>
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
                     <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
                 </VStack>
