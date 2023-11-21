@@ -27,10 +27,12 @@ export default function CommunityPage() {
     const navigation = useNavigation();
 
     const communityData = [
-        { posterIcon: require("../../assets/img/usericon.jpg"),
+        { 
+        posterIcon: require("../../assets/img/usericon.jpg"),
         posterName: "Sassa",
         postDate: "11/20/2023",
-        postContent: "avail na po ang neon balls" }
+        postContent: "avail na po ang neon balls"
+        }
     ]
 
     const renderCommunityPosts = () => {
@@ -56,14 +58,11 @@ export default function CommunityPage() {
                 {/*Community Label */}
                 <VStack space="xs" pb="$2">
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
+                    <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
                 </VStack>
 
                 {/*Community Posts Container */}
                 <Box bg={colors.medium} borderRadius={8} p="$5" m={5} flex={1}>
-                    <VStack space="xs">
-                        <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
-                    </VStack>
-
                     <ScrollView>
                         <HStack space="xs" flexWrap="wrap" justifyContent="center">
                             {renderCommunityPosts()}
