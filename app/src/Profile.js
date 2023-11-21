@@ -23,11 +23,16 @@ import {
     AvatarFallbackText,
     AvatarImage,
     Pressable,
-    Text
+    Text,
+    ScrollView
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
+
+import SearchHeader from '../components/SearchHeader.js';
+import HelloCard from '../components/ProfileHello.js'; 
+import ProfileCard from '../components/ProfileCard.js';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -43,45 +48,31 @@ export default function ProfilePage({ key: userID, username, userIcon }) {
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
             </VStack> */}
 
-            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
 
             <Box p="$6" w="100%" maxWidth="$96">
-                <VStack space="xs" pb="$2">
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Hello, {username}!</Heading>
-                </VStack>
 
-                {/*Profile*/}
-                <Box bgColor="white" p={20} borderRadius={5}>
-                    <Avatar bgColor='$amber600' borderRadius="$full" alignSelf='center' size='2xl'>
-                        <AvatarFallbackText>{username}</AvatarFallbackText>
-                        <AvatarImage>{userIcon}</AvatarImage>
-                    </Avatar>
+                <HelloCard username /> 
 
-                    <VStack space="xs" pb="$2" py='$3'>
-                        <HStack justifyContent="space-between" alignItems="center">
-                            <Heading pr='$12' pt='$1.5' pl='$1' fontSize={30} color={colors.primary}>
-                                {username}
-                            </Heading>
-                            <Pressable borderRadius={15}
-                                onPress={() => console.log('Hello')} bg={colors.primary}>
-                                <Text color="white" p='$1.5'>Edit Profile</Text>
-                            </Pressable>
-                        </HStack>
-                        <Heading px='$10' pl='$1' fontSize={15} color={colors.black} pt="0" pb="0">
-                            @mimiyuuh
-                        </Heading>
-                        <Text px='$10' pl='$1' fontSize={12} color={colors.gray} pt="0" pb="0">
-                            User Description
-                        </Text>
-                        <Text px='$10' pl='$1' fontSize={10} color={colors.black} lineHeight={15}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        </Text>
-                    </VStack>
-                </Box>
+                <ScrollView>
+                    <ProfileCard
+                        userIcon={ require("../../assets/img/item.jpg") }
+                        username = "@mimiyuuuh"
+                        profileName = "Name"
+                        bio="Insert user description"
+                    />
+                    
+                     <Box bgColor="white" p={20} borderRadius={5} m={5}>
+                        
+                    </Box>
 
-                <Box bgColor="white" h="100%" p={20} borderRadius={5} marginTop="$5">
-                </Box>
+                </ScrollView>
+
+                
+
             </Box>
         </Box>
+
+
     )
 }

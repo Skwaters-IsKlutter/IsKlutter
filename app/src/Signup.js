@@ -15,12 +15,16 @@ import {
     FormControlHelperText, 
     FormControlErrorIcon, 
     Input, 
-    InputField
+    InputField,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase'; // Import Firebase authentication
+import { auth} from '../../config/firebase'; // Import Firebase authentication
+import { getFirestore, addDoc, collection } from 'firebase/firestore';
 import { Alert } from 'react-native';
+import { FIREBASE_APP } from '../../config/firebase'; 
+const db = getFirestore(FIREBASE_APP);
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -31,16 +35,28 @@ export default function SignupScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState(''); 
+    const [username, setUsername] = useState('');
+    const [selectedColor, setSelectedColor] = useState(''); 
     const [error, setError] = useState(null);
 
     const handleSignup = async () => {
         try {
-            if (email && password) {
-                await createUserWithEmailAndPassword(auth, email, password);
-                // Signup successful, you can navigate to the next screen or perform any desired action.
-                navigation.navigate(Routes.LOGIN);
-                console.log("Signup successful.");
-                Alert.alert("Success", "Sign up successful.");
+          if (email && password && username && selectedColor) {
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            console.log('User UID:', response.user.uid);
+            try {
+                const userDocRef = await addDoc(collection(db, 'users'), {
+                  userID: response.user.uid,
+                  username: username,
+                  email: email,
+                  color: selectedColor,
+                });
+                console.log('Document written with ID:', userDocRef.id);
+              } catch (error) {
+                console.error('Error adding document:', error);
+              }
+            } else {
+                setError('Please fill in all fields, including color selection.');
             }
         } catch (error) {
             setError(error.message);
@@ -95,10 +111,16 @@ export default function SignupScreen() {
                         isRequired={false}
                     >
                         <FormControlLabel mb="$2">
-                            <FormControlLabelText>Username</FormControlLabelText>
+                        <FormControlLabelText>Username</FormControlLabelText>
                         </FormControlLabel>
                         <Input w="100%">
-                            <InputField type="username" defaultValue="" placeholder="Enter username" />
+                        <InputField
+                            type="username"
+                            defaultValue=""
+                            placeholder="Enter username"
+                            value={username}
+                            onChangeText={(text) => setUsername(text)}
+                        />
                         </Input>
                     </FormControl>
                 </VStack>
@@ -137,6 +159,30 @@ export default function SignupScreen() {
                 </FormControl>
             </VStack>
 
+             {/* Dropdown color choose */}
+             <VStack space="xl" py="$1">
+                    
+                        <VStack space="xl" py="$1">
+                    <FormControl>
+                        <FormControlLabel mb="$2">
+                            <FormControlLabelText>Choose Color</FormControlLabelText>
+                        </FormControlLabel>
+                        <Picker
+                            selectedValue={selectedColor}
+                            onValueChange={(itemValue) => setSelectedColor(itemValue)}
+                            style={{ height: 50, width: '100%' }}
+                        >
+                            <Picker.Item label="Red" value="red" />
+                            <Picker.Item label="Orange" value="orange" />
+                            <Picker.Item label="Green" value="green" />
+                            <Picker.Item label="Blue" value="blue" />
+                            <Picker.Item label="Indigo" value="indigo" />
+                            <Picker.Item label="Violet" value="violet" />
+                        </Picker>
+                    </FormControl>
+                </VStack>
+            </VStack>
+
             {/* Submit button */}
             <VStack space="lg" pt="$4">
                 <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup}>
@@ -146,7 +192,7 @@ export default function SignupScreen() {
             </Box>
 
             {/* Go to sign up */}
-            <Box flexDirection="row" top={800} position="absolute">
+            <Box flexDirection="row" top={700} position="absolute">
                 <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}>
                     <ButtonText sx={{
                         color: colors.medium
