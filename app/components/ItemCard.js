@@ -15,7 +15,7 @@ import TagLabel from '../components/TagLabel.js';
 
 import colors from '../config/colors.js';
 
-export default function ItemCard( {key : productID, productImage, productPrice, productName, productSeller, sellerIcon, toListing, tags} ) {
+export default function ItemCard( { productImage, productPrice, productName, productSeller, toListing, tags } ) {
     return (
         <Pressable onPress={toListing}>
             <Box bg={colors.white} borderRadius={10} width={150} maxHeight={256} m="2%" flex={1} overflow="hidden">

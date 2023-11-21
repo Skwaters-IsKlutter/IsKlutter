@@ -20,20 +20,20 @@ import TagLabel from '../components/TagLabel.js';
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
 
-export default function AllListingsPage() {
+export default function AllListingsPage( { item } ) {
     const navigation = useNavigation();
 
     const allListingsData = [
         {
-            productId: "1",
+            key: 1,
             productImage: require("../../assets/img/item.jpg") ,
             productName: "Kuromi Plush",
             productPrice: "PHP 450",
             productSeller: "cinnamonroll",
             tags: [<TagLabel tagName="Toys" />],
-            toListing: () => navigation.navigate(Routes.LISTING)
+            toListing: () => navigation.navigate(Routes.LISTING, {item})
         }, {
-            productId: "2",
+            key: 2,
             productImage: require("../../assets/img/item2.jpg") ,
             productName: "UP Shirt",
             productPrice: "PHP 250",
