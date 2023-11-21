@@ -160,31 +160,28 @@ export default function SignupScreen() {
             </VStack>
 
              {/* Dropdown color choose */}
-             <VStack space="xl" py="$3">
+             <VStack space="xl" py="$1">
+                    
+                        <VStack space="xl" py="$1">
                     <FormControl>
-                    <VStack space="xl" py="$3">
-                    <FormControl>
-                    <FormControlLabel mb="$2">
-                        <FormControlLabelText>Choose Color</FormControlLabelText>
-                    </FormControlLabel>
-                    <Picker
-                        selectedValue={selectedColor}
-                        onValueChange={(itemValue) => setSelectedColor(itemValue)}
-                        style={{ height: 50, width: '100%' }}
-                    >
-                        <Picker.Item label="Red" value="red" />
-                        <Picker.Item label="Orange" value="orange" />
-                        <Picker.Item label="Green" value="green" />
-                        <Picker.Item label="Blue" value="blue" />
-                        <Picker.Item label="Indigo" value="indigo" />
-                        <Picker.Item label="Violet" value="violet" />
-                        {/* Add more color options as needed */}
-                    </Picker>
+                        <FormControlLabel mb="$2">
+                            <FormControlLabelText>Choose Color</FormControlLabelText>
+                        </FormControlLabel>
+                        <Picker
+                            selectedValue={selectedColor}
+                            onValueChange={(itemValue) => setSelectedColor(itemValue)}
+                            style={{ height: 50, width: '100%' }}
+                        >
+                            <Picker.Item label="Red" value="red" />
+                            <Picker.Item label="Orange" value="orange" />
+                            <Picker.Item label="Green" value="green" />
+                            <Picker.Item label="Blue" value="blue" />
+                            <Picker.Item label="Indigo" value="indigo" />
+                            <Picker.Item label="Violet" value="violet" />
+                        </Picker>
                     </FormControl>
                 </VStack>
-                        
-                    </FormControl>
-                </VStack>
+            </VStack>
 
             {/* Submit button */}
             <VStack space="lg" pt="$4">
