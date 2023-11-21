@@ -16,17 +16,19 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import UserAvatar from './Avatar.js';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeaderBack({ search, username, userIcon, userProfile }) {
+export default function SearchHeaderBack({ search, username, userIcon, userProfile, back }) {
     const navigation = useNavigation();
 
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
                 <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
-                    <Pressable onPress={() => console.log("Pressed back")}>
+                    <Pressable onPress={back}>
                         <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.white} size={25} />
                     </Pressable>
                     <Input w="60%" bg={colors.white} borderColor={colors.primary} size="sm">
@@ -47,10 +49,7 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-                        <Avatar bgColor='$amber600' size="md" borderRadius="$full" h={40} w={40} ml={10}>
-                            <AvatarFallbackText>{username}</AvatarFallbackText>
-                            <AvatarImage source={userIcon} />
-                        </Avatar>
+                        <UserAvatar username={username} userIcon={userIcon}/>
                     </Pressable>
                 </HStack>
 

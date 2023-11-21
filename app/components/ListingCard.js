@@ -7,11 +7,11 @@ import {
     Heading,
     Image,
     Button,
+    ButtonIcon,
     ButtonText,
     ScrollView
 } from '@gluestack-ui/themed';
-
-import TagLabel from '../components/TagLabel.js';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../config/colors.js';
 
@@ -41,11 +41,14 @@ export default function ListingCard({ key: productID, productName, productImage,
                 <HStack space="sm" p="$2" alignItems="center">
                     <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} />
                     <Text color={colors.gray}>{sellerName}</Text>
-                </HStack>
 
-                <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={12} onPress={sellerChat} alignSelf="flex-end">
-                    <ButtonText color={colors.white} fontSize="$sm">Chat</ButtonText>
-                </Button>
+                    <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={8} onPress={sellerChat} alignSelf="flex-end">
+                        <ButtonIcon>
+                            <MaterialCommunityIcons name="chat" size={13} color={colors.white} />
+                        </ButtonIcon>
+                        <ButtonText color={colors.white} fontSize="$sm">Chat</ButtonText>
+                    </Button>
+                </HStack>
             </HStack>
         </Box>
     )
