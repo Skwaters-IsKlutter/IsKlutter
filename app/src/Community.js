@@ -26,6 +26,25 @@ import Routes from '../components/constants/Routes.js';
 export default function CommunityPage() {
     const navigation = useNavigation();
 
+    const communityData = [
+        { posterIcon: require("../../assets/img/usericon.jpg"),
+        posterName: "Sassa",
+        postDate: "11/20/2023",
+        postContent: "avail na po ang neon balls" }
+    ]
+
+    const renderCommunityPosts = () => {
+        return communityData.map((post, index) => 
+            <PostCard
+                key={index}
+                posterIcon={post.posterIcon}
+                posterName={post.posterName}
+                postDate={post.postDate}
+                postContent={post.postContent}
+            />
+        );
+    }
+
     return (
         // Parent box
         <Box w="100%" h="100%">
@@ -35,10 +54,8 @@ export default function CommunityPage() {
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Community Label */}
-                <VStack space="xs" pb="$0">
-                    <Box bg={colors.secondary} borderTopRightRadius={20} borderTopLeftRadius={20}>
-                        <Heading lineHeight={60} fontSize="$3xl" pl="$5" color={colors.white}>Community</Heading>
-                    </Box>
+                <VStack space="xs" pb="$2">
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
                 </VStack>
 
                 {/*Community Posts Container */}
@@ -49,12 +66,7 @@ export default function CommunityPage() {
 
                     <ScrollView>
                         <HStack space="xs" flexWrap="wrap" justifyContent="center">
-                            <PostCard
-                                posterIcon={ require("../../assets/img/usericon.jpg") }
-                                posterName="Sassa"
-                                postDate="11/20/2023"
-                                postContent="betlog"
-                            />
+                            {renderCommunityPosts()}
                         </HStack>
                     </ScrollView>
                 </Box>
