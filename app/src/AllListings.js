@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     HStack,
     VStack,
@@ -20,9 +20,51 @@ import TagLabel from '../components/TagLabel.js';
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
 
+import { auth} from '../../config/firebase';
+import { where, getFirestore, doc, getDoc, collection, query, getDocs } from 'firebase/firestore'; // Import necessary Firebase modules
+import { FIREBASE_APP } from '../../config/firebase'; 
+const db = getFirestore(FIREBASE_APP);
+
 export default function AllListingsPage() {
     const navigation = useNavigation();
     
+    const [userColor, setUserColor] = useState(colors.secondary); // Default color is primary
+
+    useEffect(() => {
+        const fetchUserColor = async () => {
+          try {
+            // Ensure Firebase is initialized
+            if (!auth || !auth.currentUser) {
+                
+              // Firebase might not be initialized yet, wait and retry
+              setTimeout(fetchUserColor, 1000);
+              return;
+            }
+            
+            const user = auth.currentUser;
+            const userCollection = collection(db, "users")
+            const column = query(userCollection, where("userID","==",`${user.uid}`))
+            const userDoc = await getDocs(column);
+            
+            let bgcolor = null;
+            
+            userDoc.forEach((doc)=> {
+                // console.log(doc.id, "=>", doc.data())
+                bgcolor = doc.data()["color"];
+                // console.log(bgcolor)
+            })
+            console.log(bgcolor)
+            return bgcolor;
+        } catch (error) {
+            console.error('Error fetching user color:', error.message);
+        }
+    };
+    
+        const color = fetchUserColor();
+        console.log(color)
+        setUserColor(color)
+    }, []);
+
     return (
         // <Tab.Navigator>
         //     <Tab.Screen name="Listings" component={ListingsScreen} />
@@ -30,7 +72,7 @@ export default function AllListingsPage() {
         // </Tab.Navigator>
         
         // Parent box
-        <Box w="100%" h="100%">
+        <Box w="100%" h="100%" backgroundColor={userColor}>
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
 
