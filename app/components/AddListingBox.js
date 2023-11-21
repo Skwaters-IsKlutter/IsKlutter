@@ -13,6 +13,7 @@ import {
 
 import AddListingForm from './AddListingForm.js';
 import AddListingImagePicker from '../components/AddListingImagePicker.js'
+import AddTags from './AddTags.js';
 
 import colors from '../config/colors.js';
 
@@ -50,13 +51,19 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                     listingFormBoxHeight={100}
                 />
 
-                <AddListingForm 
+                {/* <AddListingForm 
                     listingFormLabel="Tags"
                     listingFormType="text"
                     listingFormPlaceholder="Enter listing tags"
                     listingFormValue={listingTags}
                     listingFormBoxHeight="$10"
+                /> */}
+
+                <AddTags
+                    listingFormLabel="Tags"
+                    listingFormPlaceholder="Select a Tag"
                 />
+
             </Box>
         </Box>
 
