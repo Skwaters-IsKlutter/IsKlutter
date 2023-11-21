@@ -19,6 +19,7 @@ import { Alert } from 'react-native';
 import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
+import ImgCarousel from '../components/Carousel.js';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -69,6 +70,7 @@ export default function CommunityPage() {
                 {/*Community Label */}
                 <VStack space="xs" pb={2}>
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
+                    <ImgCarousel />
                     <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
                 </VStack>
 
