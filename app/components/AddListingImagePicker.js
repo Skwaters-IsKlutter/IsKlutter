@@ -5,7 +5,9 @@ import {
     // View,
     // Text,
     // Image,
-    // TouchableOpacity,
+    //TouchableOpacity,
+    Button,
+    ButtonText,
     VStack,
     FormControl,
     FormControlLabel,
@@ -68,15 +70,23 @@ export default function AddListingImagePicker({ listingFormLabel }) {
                 </FormControlLabel>
             </FormControl> */}
 
-            <TouchableOpacity onPress={pickImage}>
-                <Text>Click</Text>
+            {/* <TouchableOpacity onPress={pickImage}>
+                <Button variant="solid" size="sm" bg={colors.primary} borderRadius={10} m={2}>
+                    <ButtonText color={colors.white} fontSize="$sm">Add Photo</ButtonText>
+                </Button>
+        </TouchableOpacity> */}
+
+            <TouchableOpacity onPress={pickImage} style={styles.button}>
+                <Text style={styles.text}>Add Photo</Text>
             </TouchableOpacity>
 
             {file ? (
                 // Display the selected image 
-                <View>
-                    <Image source={{ uri: file }}
-                        style={styles.image} />
+                <View style={styles.imageContainer}>
+                    <Image 
+                        source={{ uri: file }}
+                        style={styles.image} 
+                    />
                 </View>
             ) : (
                 // Display an error message if there's  
@@ -86,3 +96,30 @@ export default function AddListingImagePicker({ listingFormLabel }) {
         </VStack>
     );
 }
+
+const styles = StyleSheet.create({
+    text: {
+        color: colors.white,
+        fontSize: 15
+    }, 
+    button: {
+        alignItems: "center",
+        backgroundColor: colors.primary,
+        padding: 10,
+        marginTop: 10,
+        marginHorizontal: 70,
+        borderRadius: 50
+    },
+    imageContainer: {
+        flex: 1,  // This ensures that the image takes up the entire available space
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        width: 200,  // Adjust the width and height as needed
+        height: 200,
+        resizeMode: 'cover',  // Adjust the resizeMode based on your requirements
+        borderRadius: 10,     // Optional: Add border radius for rounded corners
+    },
+});
+

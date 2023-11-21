@@ -27,34 +27,36 @@ export default function AddListingPage() {
 
     return (
         // Parent box
-        <Box w="100%" h="100%">
-            {/*Search Bar*/}
-            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
+        <ScrollView>
+            <Box w="100%" h="100%">
+                {/*Search Bar*/}
+                <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} />
 
-            <Box p="$6" w="100%" maxWidth="$96">
-                
-                <VStack space="xs" pb="$2">
-                    <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Sell Your Product</Heading>
-                </VStack>
+                <Box p="$6" w="100%" maxWidth="$96">
 
-                <ScrollView>
+                    <VStack space="xs" pb="$2">
+                        <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Sell Your Product</Heading>
+                    </VStack>
+
+
                     <Box bg={colors.medium} borderRadius={50}>
                         <VStack space="xs">
                             <AddListingBox listingImage={require("../../assets/img/item.jpg")} />
                         </VStack>
                     </Box>
-                </ScrollView>
-                <HStack p="$3" justifyContent='center'>
-                    <Button variant="solid" size="sm" bg={colors.primary} borderRadius={10} m={5}>
-                        <ButtonText color={colors.white} fontSize="$sm">Post Now</ButtonText>
-                    </Button>
+                    <HStack p="$3" justifyContent='center'>
+                        <Button variant="solid" size="sm" bg={colors.primary} borderRadius={10} m={5}>
+                            <ButtonText color={colors.white} fontSize="$sm">Post Now</ButtonText>
+                        </Button>
 
-                    <Button variant="solid" size="sm" bg={colors.gray} borderRadius={10} m={5}>
-                        <ButtonText color={colors.white} fontSize="$sm">Cancel</ButtonText>
-                    </Button>
-                </HStack>
+                        <Button variant="solid" size="sm" bg={colors.gray} borderRadius={10} m={5}>
+                            <ButtonText color={colors.white} fontSize="$sm">Cancel</ButtonText>
+                        </Button>
+                    </HStack>
+                </Box>
+
             </Box>
+        </ScrollView>
 
-        </Box>
     )
 }
