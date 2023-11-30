@@ -36,12 +36,11 @@ export default function SignupScreen() {
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState(''); 
     const [username, setUsername] = useState('');
-    const [selectedColor, setSelectedColor] = useState(''); 
     const [error, setError] = useState(null);
 
     const handleSignup = async () => {
         try {
-          if (email && password && username && selectedColor) {
+          if (email && password && username) {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('User UID:', response.user.uid);
             try {
@@ -49,14 +48,13 @@ export default function SignupScreen() {
                   userID: response.user.uid,
                   username: username,
                   email: email,
-                  color: selectedColor,
                 });
                 console.log('Document written with ID:', userDocRef.id);
               } catch (error) {
                 console.error('Error adding document:', error);
               }
             } else {
-                setError('Please fill in all fields, including color selection.');
+                setError('Please fill in all fields.');
             }
         } catch (error) {
             setError(error.message);
@@ -157,30 +155,6 @@ export default function SignupScreen() {
                         />
                     </Input>
                 </FormControl>
-            </VStack>
-
-             {/* Dropdown color choose */}
-             <VStack space="xl" py="$1">
-                    
-                        <VStack space="xl" py="$1">
-                    <FormControl>
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText>Choose Color</FormControlLabelText>
-                        </FormControlLabel>
-                        <Picker
-                            selectedValue={selectedColor}
-                            onValueChange={(itemValue) => setSelectedColor(itemValue)}
-                            style={{ height: 50, width: '100%' }}
-                        >
-                            <Picker.Item label="Red" value="red" />
-                            <Picker.Item label="Orange" value="orange" />
-                            <Picker.Item label="Green" value="green" />
-                            <Picker.Item label="Blue" value="blue" />
-                            <Picker.Item label="Indigo" value="indigo" />
-                            <Picker.Item label="Violet" value="violet" />
-                        </Picker>
-                    </FormControl>
-                </VStack>
             </VStack>
 
             {/* Submit button */}

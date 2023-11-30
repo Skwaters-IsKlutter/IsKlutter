@@ -20,10 +20,10 @@ import TagLabel from '../components/TagLabel.js';
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
 
-import { auth} from '../../config/firebase';
-import { where, getFirestore, doc, getDoc, collection, query, getDocs } from 'firebase/firestore'; // Import necessary Firebase modules
-import { FIREBASE_APP } from '../../config/firebase'; 
-const db = getFirestore(FIREBASE_APP);
+// import { auth} from '../../config/firebase';
+// import { where, getFirestore, doc, getDoc, collection, query, getDocs } from 'firebase/firestore'; // Import necessary Firebase modules
+// import { FIREBASE_APP } from '../../config/firebase'; 
+// const db = getFirestore(FIREBASE_APP);
 
 export default function AllListingsPage() {
     const navigation = useNavigation();
