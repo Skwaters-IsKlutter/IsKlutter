@@ -2,7 +2,7 @@ import React from 'react';
 import {
     FormControlLabel,
     FormControlLabelText,
-    View,
+    Box,
     VStack,
     Checkbox,
     CheckboxIndicator,
@@ -16,7 +16,6 @@ import CheckBox from './CheckBox.js';
 import colors from '../config/colors.js';
 
 const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
-
     const [mainTags, setMainTags] = React.useState("");
 
     const Tags = [
@@ -32,22 +31,24 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
     const renderCheckbox = () => {
         if (mainTags === 'food') {
             return (
-                <CheckBox 
-                    checkBoxLabel = "Gluten-free"
-                />
+                <Box>
+                    <CheckBox checkBoxLabel = "Gluten-free" />
+                </Box>
+                
             );
         } else if (['clothing', 'accessories', 'toys'].includes(mainTags)) {
             return (
-                <CheckBox
-                    checkBoxLabel = "Hypoallergenic"
-                />
+                <Box>
+                    <CheckBox checkBoxLabel = "Hypoallergenic" />
+                </Box>
+                
             );
         }
         return null;
     };
 
     return (
-        <View>
+        <Box>
             <VStack space="xl" m={5}>
                 <FormControlLabel mb="$2">
                     <FormControlLabelText color={colors.secondary} fontWeight={600}>{listingFormLabel}</FormControlLabelText>
@@ -59,11 +60,10 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
                 data={Tags}
                 placeholder={listingFormPlaceholder}
                 defaultOption={{ key: 'food', value: 'Food' }}
-            
             />
 
             {renderCheckbox()}
-        </View>
+        </Box>
     );
 };
 

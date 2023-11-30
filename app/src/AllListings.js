@@ -7,7 +7,7 @@ import {
     ScrollView,
     Button,
     ButtonIcon,
-    ButtonText
+    ButtonText,
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -61,45 +61,10 @@ export default function AllListingsPage() {
             />
         );
     }
-    
-    const [userColor, setUserColor] = useState(colors.secondary); // Default color is primary
-
-    useEffect(() => {
-        const fetchUserColor = async () => {
-          try {
-            // Ensure Firebase is initialized
-            if (!auth || !auth.currentUser) {
-                
-              // Firebase might not be initialized yet, wait and retry
-              setTimeout(fetchUserColor, 1000);
-              return;
-            }
-            
-            const user = auth.currentUser;
-            const userCollection = collection(db, "users")
-            const column = query(userCollection, where("userID","==",`${user.uid}`))
-            const userDoc = await getDocs(column);
-            
-            let bgcolor = null;
-            
-            userDoc.forEach((doc)=> {
-                // console.log(doc.id, "=>", doc.data())
-                bgcolor = doc.data()["color"];
-                // console.log(bgcolor)
-            })
-            console.log(bgcolor)
-            setUserColor(bgcolor)
-        } catch (error) {
-            console.error('Error fetching user color:', error.message);
-        }
-    };
-        fetchUserColor();
-        
-    }, []);
 
     return (
         // Parent box
-        <Box w="100%" h="100%" backgroundColor={userColor}>
+        <Box w="100%" h="100%">
             {/*Search Bar*/}
             <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
 

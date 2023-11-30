@@ -24,7 +24,7 @@ export default function AddListingBox( {user, listingImage, listingName, listing
 
                 <AddListingImagePicker 
                     listingFormLabel="Upload an Image"
-                />
+                /> 
 
                 <AddListingForm 
                     listingFormLabel="Listing Title"

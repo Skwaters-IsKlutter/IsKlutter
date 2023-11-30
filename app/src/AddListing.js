@@ -38,7 +38,6 @@ export default function AddListingPage() {
                         <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Sell Your Product</Heading>
                     </VStack>
 
-
                     <Box bg={colors.medium} borderRadius={50}>
                         <VStack space="xs">
                             <AddListingBox listingImage={require("../../assets/img/item.jpg")} />

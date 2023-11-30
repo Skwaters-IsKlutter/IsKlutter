@@ -16,6 +16,7 @@ import {
     FormControlErrorIcon, 
     Input, 
     InputField,
+    ScrollView
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
@@ -40,19 +41,20 @@ export default function SignupScreen() {
 
     const handleSignup = async () => {
         try {
-          if (email && password && username) {
-            const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log('User UID:', response.user.uid);
-            try {
-                const userDocRef = await addDoc(collection(db, 'users'), {
-                  userID: response.user.uid,
-                  username: username,
-                  email: email,
-                });
-                console.log('Document written with ID:', userDocRef.id);
-              } catch (error) {
-                console.error('Error adding document:', error);
-              }
+            if (email && password && username) {
+                const response = await createUserWithEmailAndPassword(auth, email, password);
+                console.log('User UID:', response.user.uid);
+                try {
+                    const userDocRef = await addDoc(collection(db, 'users'), {
+                        userID: response.user.uid,
+                        username: username,
+                        email: email,
+                    });
+                    console.log('Document written with ID:', userDocRef.id);
+                    navigation.navigate(Routes.LISTINGS)
+                } catch (error) {
+                    console.error('Error adding document:', error);
+                }
             } else {
                 setError('Please fill in all fields.');
             }
