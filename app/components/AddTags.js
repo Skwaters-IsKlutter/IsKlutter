@@ -2,7 +2,7 @@ import React from 'react';
 import {
     FormControlLabel,
     FormControlLabelText,
-    View,
+    Box,
     VStack,
     Checkbox,
     CheckboxIndicator,
@@ -47,7 +47,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
     };
 
     return (
-        <View>
+        <Box>
             <VStack space="xl" m={5}>
                 <FormControlLabel mb="$2">
                     <FormControlLabelText color={colors.secondary} fontWeight={600}>{listingFormLabel}</FormControlLabelText>
@@ -63,7 +63,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
             />
 
             {renderCheckbox()}
-        </View>
+        </Box>
     );
 };
 
