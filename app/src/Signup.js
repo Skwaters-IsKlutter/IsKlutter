@@ -19,7 +19,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth} from '../../config/firebase'; // Import Firebase authentication
 import { getFirestore, addDoc, collection } from 'firebase/firestore';
 import { Alert } from 'react-native';
@@ -41,12 +41,6 @@ export default function SignupScreen() {
     const handleSignup = async () => {
         try {
             if (email && password && username) {
-
-                // // Password matching check
-                // if (password !== retypePassword) {
-                //     setError('Passwords do not match.');
-                //     return;
-                // }
 
                 const response = await createUserWithEmailAndPassword(auth, email, password);
                 console.log('User UID:', response.user.uid);
