@@ -10,7 +10,7 @@ import AllListingsScreen from './app/components/screens/AllListingsScreen.js';
 import ListingsScreen from './app/components/screens/ListingsScreen.js';
 import ProfileScreen from './app/components/screens/ProfileScreen.js';
 import CommunityScreen from './app/components/screens/CommunityScreen.js';
-import MessagesScreen from './app/components/screens/MessagesScreen.js';
+import AllMessagesScreen from './app/components/screens/AllMessagesScreen.js';
 import AddListingScreen from './app/components/screens/AddListingScreen.js';
 
 import colors from './app/config/colors.js';
@@ -46,7 +46,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="Homepage" component={HomepageScreenTabs} />
 				<Stack.Screen options={{headerShown:false}} name="Listings" component={ListingsScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} />
-				<Stack.Screen options={{headerShown:false}} name="Messages" component={MessagesScreen} />
+				<Stack.Screen options={{headerShown:false}} name="Messages" component={AllMessagesScreen} />
 				<Stack.Screen options={{headerShown:false}} name="AddListing" component={AddListingScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
