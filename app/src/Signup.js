@@ -16,7 +16,6 @@ import {
     FormControlErrorIcon, 
     Input, 
     InputField,
-    ScrollView
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
@@ -42,8 +41,16 @@ export default function SignupScreen() {
     const handleSignup = async () => {
         try {
             if (email && password && username) {
+
+                // // Password matching check
+                // if (password !== retypePassword) {
+                //     setError('Passwords do not match.');
+                //     return;
+                // }
+
                 const response = await createUserWithEmailAndPassword(auth, email, password);
                 console.log('User UID:', response.user.uid);
+
                 try {
                     const userDocRef = await addDoc(collection(db, 'users'), {
                         userID: response.user.uid,
@@ -51,7 +58,7 @@ export default function SignupScreen() {
                         email: email,
                     });
                     console.log('Document written with ID:', userDocRef.id);
-                    navigation.navigate(Routes.LISTINGS)
+                    navigation.navigate(Routes.LOGIN)
                 } catch (error) {
                     console.error('Error adding document:', error);
                 }
@@ -84,21 +91,21 @@ export default function SignupScreen() {
                 </VStack>
 
                 {/* Email input */}
-                  <VStack space="xl" py="$3">
-                                <FormControl size="md">
-                                    <FormControlLabel mb="$2">
-                                        <FormControlLabelText>Email</FormControlLabelText>
-                                    </FormControlLabel>
-                                    <Input w="100%">
-                                        <InputField
-                                            type="email"
-                                            placeholder="Enter email"
-                                            value={email}
-                                            onChangeText={(text) => setEmail(text)}
-                                        />
-                                    </Input>
-                                </FormControl>
-                            </VStack>
+                <VStack space="xl" py="$3">
+                    <FormControl size="md">
+                        <FormControlLabel mb="$2">
+                            <FormControlLabelText>Email</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input w="100%">
+                            <InputField
+                                type="email"
+                                placeholder="Enter email"
+                                value={email}
+                                onChangeText={(text) => setEmail(text)}
+                            />
+                            </Input>
+                    </FormControl>
+                </VStack>
 
 
                 {/* Username input */}
