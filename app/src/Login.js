@@ -27,9 +27,9 @@ import Routes from '../components/constants/Routes.js';
 
 export default function LoginPage() {
     const navigation = useNavigation();
-
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [error, setError] = React.useState(null); // State to manage error message
 
     const handleLogin = async () => {
         try {
@@ -38,10 +38,11 @@ export default function LoginPage() {
                 navigation.navigate(Routes.HOMEPAGE);
                 console.log("Sign in successful.")
             } else {
-                Alert.alert("Login Failed", "Please check your email and password.");
+                throw new Error("Please check your email and password.");
             }
         } catch (error) {
-            setError(error.message);
+            setError(error.message); // Set the error message
+            Alert.alert("Login Failed", error.message); // Optionally show an alert
         }
     };
 
