@@ -17,7 +17,7 @@ import AddTags from './AddTags.js';
 
 import colors from '../config/colors.js';
 
-export default function AddListingBox( {user, listingImage, listingName, listingPrice, listingDescription, listingTags} ) {
+export default function AddListingBox( {user, listingImage, listingName, listingPrice, listingDescription, listingTags, setListingData} ) {
     return (
         <Box p="$2" bg={colors.medium} borderRadius={12}>
             <Box w="100%" maxWidth="$60" pb={0}>
@@ -32,6 +32,7 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                     listingFormPlaceholder="Enter listing name"
                     listingFormValue={listingName}
                     listingFormBoxHeight="$10"
+                    onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingName: value }))}
                 />
 
                 <AddListingForm 
@@ -40,6 +41,8 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                     listingFormPlaceholder="Enter listing price"
                     listingFormValue={listingPrice}
                     listingFormBoxHeight="$10"
+                    onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingPrice: value }))}
+                    
                 />
 
                 <AddListingForm 
@@ -49,24 +52,16 @@ export default function AddListingBox( {user, listingImage, listingName, listing
                     listingFormValue={listingDescription}
                     listingFormMultiline={true}
                     listingFormBoxHeight={100}
+                    onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingDescription: value }))}
                 />
-
-                {/* <AddListingForm 
-                    listingFormLabel="Tags"
-                    listingFormType="text"
-                    listingFormPlaceholder="Enter listing tags"
-                    listingFormValue={listingTags}
-                    listingFormBoxHeight="$10"
-                /> */}
 
                 <AddTags
                     listingFormLabel="Tags"
                     listingFormPlaceholder="Select a Tag"
+                    onTagChange={(tags) => setListingData((prevData) => ({ ...prevData, listingTags: tags }))}
                 />
 
             </Box>
         </Box>
-
-        
     )
 }
