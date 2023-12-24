@@ -9,7 +9,6 @@ import {
     ButtonText,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ItemCard from '../components/ItemCard.js';
@@ -47,9 +46,18 @@ export default function AddListingPage() {
             listingDescription: "",
             listingTags: [],
           });
+
+          // Go back to the previous screen (listings page)
+      navigation.goBack();
+
         } catch (error) {
           console.error('Error adding document: ', error);
         }
+      };
+
+      const handleCancel = () => {
+        // Go back to the previous screen (listings page)
+        navigation.goBack();
       };
 
     return (
@@ -97,7 +105,14 @@ export default function AddListingPage() {
                             </ButtonText>
                         </Button>
 
-                        <Button variant="solid" size="sm" bg={colors.gray} borderRadius={10} m={5}>
+                        <Button 
+                            variant="solid" 
+                            size="sm" 
+                            bg={colors.gray} 
+                            borderRadius={10} 
+                            m={5}
+                            onPress={handleCancel}
+                        >
                             <ButtonText color={colors.white} fontSize="$sm">
                                 Cancel
                             </ButtonText>
