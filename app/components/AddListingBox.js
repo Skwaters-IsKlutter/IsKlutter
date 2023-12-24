@@ -17,7 +17,7 @@ export default function AddListingBox({ user, listingImage, listingName, listing
             <Box w="100%" maxWidth="$60" pb={0} >
 
                 <AddListingImagePicker
-                    
+                
                     listingFormLabel="Upload an Image"
                     setListingData={setListingData}
                 />
@@ -54,9 +54,7 @@ export default function AddListingBox({ user, listingImage, listingName, listing
                     listingFormLabel="Tags"
                     listingFormPlaceholder="Select a Tag"
                     listingTags={listingTags}  // Pass listingTags to AddTags
-                    setListingData={(updatedTags) => {
-                    setListingData((prevData) => ({ ...prevData, listingTags: updatedTags }));
-                    }}
+                    setListingData={setListingData}
                 />
 
             </Box>

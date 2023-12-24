@@ -33,8 +33,22 @@ export default function AddListingPage() {
 
     const handlePostNow = async () => {
     try {
+        // Remove any functions from listingData before sending to Firestore
+        const { listingTags, ...cleanListingData } = listingData;
+        //const sanitizedTags = Array.isArray(listingTags) ? listingTags : [];
+        
+            console.log('Listing Data before adding to Firestore: ', {
+                ...cleanListingData,
+                listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
+            });
+        
         // Add the listing data to Firestore
-        const docRef = await addDoc(collection(database, 'listings'), listingData);
+        const docRef = await addDoc(collection(database, 'listings'), {
+            ...cleanListingData,
+            // Ensure listingTags is an array
+            listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
+        });
+
         console.log('Document written with ID: ', docRef.id);
     
         // Reset the form or navigate to a different screen

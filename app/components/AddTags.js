@@ -12,19 +12,23 @@ import CheckBox from './CheckBox.js';
 
 import colors from '../config/colors.js';
 
+const Tags = [
+    { key: 'food', value: 'Food' },
+    { key: 'clothing', value: 'Clothing' },
+    { key: 'accessories', value: 'Accessories' },
+    { key: 'appliances', value: 'Appliances' },
+    { key: 'toys', value: 'Toys' },
+    { key: 'schoolessential', value: 'School Essentials' },
+    { key: 'footwear', value: 'Footwear' },
+];
+
 const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) => {
     const [mainTags, setMainTags] = React.useState("");
     const [selectedTags, setSelectedTags] = React.useState([]);
+    const [secondaryTags, setSecondaryTags] = React.useState([]);
 
-    const Tags = [
-        { key: 'food', value: 'Food' },
-        { key: 'clothing', value: 'Clothing' },
-        { key: 'accessories', value: 'Accessories' },
-        { key: 'appliances', value: 'Appliances' },
-        { key: 'toys', value: 'Toys' },
-        { key: 'schoolessential', value: 'School Essentials' },
-        { key: 'footwear', value: 'Footwear' },
-    ];
+    // Ensure that listingTags is always initialized as an array
+    const [listingTags, setListingTags] = React.useState(Tags.filter(tagInfo => tagInfo.key === mainTags));
 
     const renderCheckbox = () => {
         if (mainTags === 'food') {
@@ -32,7 +36,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Gluten-free"
-                        onValueChange={(value) => handleTagChange(value, 'glutenFree')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'glutenFree')}
                         ariaLabel="Gluten-free Checkbox"
                     />
                 </Box>
@@ -42,7 +46,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Hypoallergenic"
-                        onValueChange={(value) => handleTagChange(value, 'hypoallergenic')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'hypoallergenic')}
                         ariaLabel="Hypoallergenic Checkbox"
                     />
                 </Box>
@@ -51,18 +55,29 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
         return null;
     };
 
-    const handleTagChange = (value, tagName) => {
-        const newTags = value
-            ? [...selectedTags, tagName]
-            : selectedTags.filter((tag) => tag !== tagName);
+    const handleSecondaryTagChange = (value, secondaryTagName) => {
+        const newSecondaryTags = value
+          ? [...secondaryTags, secondaryTagName]
+          : secondaryTags.filter((tag) => tag !== secondaryTagName);
+        setSecondaryTags(newSecondaryTags);
+        updateListingTags(mainTags, newSecondaryTags);
+    };
 
-        console.log('newTags:', newTags);  // Log the newTags array
+    const updateListingTags = (mainTag, secondaryTags) => {
+        const updatedTags = Array.from(new Set([...secondaryTags, mainTag]));
+        setListingData((prevData) => ({
+          ...prevData,
+          listingTags: updatedTags,
+        }));
+    };
 
-        setSelectedTags(newTags);
-        setListingData((prevData) => {
-            console.log('prevData:', prevData);  // Log the previous data
-            return { ...prevData, listingTags: newTags }
-        });
+    // Update the main tag and reset selectedTags when it changes
+    const handleMainTagChange = (value) => {
+        setMainTags(value);
+        setSelectedTags([]);
+        setListingTags(Tags.filter(tagInfo => tagInfo.key === value));
+        setSecondaryTags([]); // Reset secondaryTags when main tag changes
+        updateListingTags(value, []); // Update listingTags with only the main tag
     };
 
     return (
@@ -76,7 +91,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
             </VStack>
 
             <SelectList
-                setSelected={setMainTags}
+                setSelected={handleMainTagChange}
                 data={Tags}
                 placeholder={listingFormPlaceholder}
                 defaultOption={{ key: 'food', value: 'Food' }}
