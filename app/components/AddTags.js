@@ -1,22 +1,20 @@
+// AddTags.js
+
 import React from 'react';
 import {
     FormControlLabel,
     FormControlLabelText,
     Box,
     VStack,
-    Checkbox,
-    CheckboxIndicator,
-    CheckboxLabel,
-    CheckboxIcon,
-    CheckIcon,
 } from '@gluestack-ui/themed';
 import { SelectList } from 'react-native-dropdown-select-list';
 import CheckBox from './CheckBox.js';
 
 import colors from '../config/colors.js';
 
-const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
+const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) => {
     const [mainTags, setMainTags] = React.useState("");
+    const [selectedTags, setSelectedTags] = React.useState([]);
 
     const Tags = [
         { key: 'food', value: 'Food' },
@@ -32,26 +30,48 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder }) => {
         if (mainTags === 'food') {
             return (
                 <Box>
-                    <CheckBox checkBoxLabel = "Gluten-free" />
+                    <CheckBox
+                        checkBoxLabel="Gluten-free"
+                        onValueChange={(value) => handleTagChange(value, 'glutenFree')}
+                        ariaLabel="Gluten-free Checkbox"
+                    />
                 </Box>
-                
             );
         } else if (['clothing', 'accessories', 'toys'].includes(mainTags)) {
             return (
                 <Box>
-                    <CheckBox checkBoxLabel = "Hypoallergenic" />
+                    <CheckBox
+                        checkBoxLabel="Hypoallergenic"
+                        onValueChange={(value) => handleTagChange(value, 'hypoallergenic')}
+                        ariaLabel="Hypoallergenic Checkbox"
+                    />
                 </Box>
-                
             );
         }
         return null;
+    };
+
+    const handleTagChange = (value, tagName) => {
+        const newTags = value
+            ? [...selectedTags, tagName]
+            : selectedTags.filter((tag) => tag !== tagName);
+
+        console.log('newTags:', newTags);  // Log the newTags array
+
+        setSelectedTags(newTags);
+        setListingData((prevData) => {
+            console.log('prevData:', prevData);  // Log the previous data
+            return { ...prevData, listingTags: newTags }
+        });
     };
 
     return (
         <Box>
             <VStack space="xl" m={5}>
                 <FormControlLabel mb="$2">
-                    <FormControlLabelText color={colors.secondary} fontWeight={600}>{listingFormLabel}</FormControlLabelText>
+                    <FormControlLabelText color={colors.secondary} fontWeight={600}>
+                        {listingFormLabel}
+                    </FormControlLabelText>
                 </FormControlLabel>
             </VStack>
 

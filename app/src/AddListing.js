@@ -55,7 +55,7 @@ export default function AddListingPage() {
     return (
         // Parent box
         <ScrollView>
-            <Box w="100%" h="100%">
+            <Box w="100%" h="100%" >
                 {/*Search Bar*/}
                 <SearchHeaderBack 
                     userIcon={ require("../../assets/img/usericon.jpg") } 
@@ -69,7 +69,7 @@ export default function AddListingPage() {
                         </Heading>
                     </VStack>
 
-                    <Box bg={colors.medium} borderRadius={50}>
+                    <Box bg={colors.medium} borderRadius={50} >
                         <VStack space="xs">
                             <AddListingBox 
                             listingImage={require("../../assets/img/item.jpg")} 
@@ -90,6 +90,7 @@ export default function AddListingPage() {
                             borderRadius={10} 
                             m={5}
                             onPress={handlePostNow}
+                            
                         >
                             <ButtonText color={colors.white} fontSize="$sm">
                                 Post Now

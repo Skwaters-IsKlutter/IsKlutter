@@ -10,10 +10,10 @@ import {
 
 import colors from '../config/colors.js';
 
-export default function CheckBox({ checkBoxLabel }) {
+export default function CheckBox({ checkBoxLabel, ariaLabel }) {
     return (
         <Box>
-            <Checkbox m={10} size="sm" isInvalid={false} isDisabled={false}>
+            <Checkbox m={10} size="sm" isInvalid={false} isDisabled={false} aria-label={ariaLabel}>
                 <CheckboxIndicator mr="$2">
                     <CheckboxIcon as={CheckIcon} />
                 </CheckboxIndicator>
