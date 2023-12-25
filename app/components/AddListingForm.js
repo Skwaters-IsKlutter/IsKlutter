@@ -20,7 +20,21 @@ import {
 
 import colors from '../config/colors.js';
 
-export default function AddListingForm( { listingFormLabel, listingFormType, listingFormPlaceholder, listingFormValue, listingFormBoxHeight, listingFormMultiline } ) {
+export default function AddListingForm( { 
+    listingFormLabel, 
+    listingFormType, 
+    listingFormPlaceholder, 
+    listingFormValue, 
+    listingFormBoxHeight, 
+    listingFormMultiline, 
+    onValueChange, 
+} ) {
+    const handleInputChange = (value) => {
+        // Call the onValueChange prop to handle changes in the parent component
+        if (onValueChange) {
+            onValueChange(value);
+        }
+    };
     return (
         <VStack space="xl" m={5}>
             <FormControl size="md">
@@ -34,6 +48,7 @@ export default function AddListingForm( { listingFormLabel, listingFormType, lis
                         placeholder={listingFormPlaceholder}
                         value={listingFormValue}
                         multiline={listingFormMultiline}
+                        onChangeText={handleInputChange}
                     />
                 </Input>
             </FormControl>
