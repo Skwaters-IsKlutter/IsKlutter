@@ -1,25 +1,7 @@
 
 import React, { useState } from "react";
-import {
-    // Box,
-    // View,
-    // Text,
-    // Image,
-    //TouchableOpacity,
-    Button,
-    ButtonText,
-    VStack,
-    FormControl,
-    FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
-    FormControlLabelText,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlErrorIcon,
-} from "@gluestack-ui/themed";
-import { View, Text, Image, TouchableOpacity,  
-    StyleSheet, Alert } from "react-native";
+import { VStack, } from "@gluestack-ui/themed";
+import { View, Text, Image, TouchableOpacity,  StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import colors from "../config/colors";
@@ -53,11 +35,9 @@ export default function AddListingImagePicker({ listingFormLabel }) {
 
             if (!result.canceled) {
 
-                // If an image is selected (not cancelled),  
-                // update the file state variable 
-                setFile(result.uri);
-
-                // Clear any previous errors 
+                // Access the selected asset using the assets array
+                const selectedAsset = result.assets[0];
+                setFile(selectedAsset.uri);
                 setError('');
             }
         }
