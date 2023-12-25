@@ -1,5 +1,5 @@
 import React from 'react';
-import { GluestackUIProvider, Center } from '@gluestack-uithemed';
+import { GluestackUIProvider, Center } from '@gluestack-ui/themed';
 
 import PrivateMessagePage from '../../src/PrivateMessage';
 

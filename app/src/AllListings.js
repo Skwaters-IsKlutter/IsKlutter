@@ -25,20 +25,23 @@ import Routes from '../components/constants/Routes.js';
 // import { FIREBASE_APP } from '../../config/firebase'; 
 // const db = getFirestore(FIREBASE_APP);
 
-export default function AllListingsPage() {
+export default function AllListingsPage( { key } ) {
     const navigation = useNavigation();
+
+    const [item, setItem] = useState('');
+    const [error, setError] = useState('');
 
     const allListingsData = [
         {
-            key: 1,
+            key: 1001,
             productImage: require("../../assets/img/item.jpg") ,
             productName: "Kuromi Plush",
             productPrice: "PHP 450",
             productSeller: "cinnamonroll",
             tags: [<TagLabel tagName="Toys" />],
-            toListing: () => navigation.navigate(Routes.LISTING, {item})
+            toListing: () => navigation.navigate(Routes.LISTING, {item: key})
         }, {
-            key: 2,
+            key: 1002,
             productImage: require("../../assets/img/item2.jpg") ,
             productName: "UP Shirt",
             productPrice: "PHP 250",
