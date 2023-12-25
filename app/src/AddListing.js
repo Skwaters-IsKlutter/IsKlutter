@@ -16,7 +16,7 @@ import TagLabel from '../components/TagLabel.js';
 import AddListingBox from '../components/AddListingBox.js';
 
 import { collection, addDoc } from 'firebase/firestore';
-import { storage, storageRef, uploadBytes,  database } from '../../config/firebase';
+import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
@@ -42,7 +42,12 @@ export default function AddListingPage() {
             console.log('Image uploaded to Firebase Storage');
 
         // Add the listing data to Firestore with the image URL
+        const user = auth.currentUser; // User authenticated
+        const uid = user.uid;
+
+        // Add the listing data to Firestore with the image URL
         const docRef = await addDoc(collection(database, 'listings'), {
+            userID: uid,
             ...listingData,
             listingImage: storagePath,
         });
