@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth} from '../../config/firebase'; // Import Firebase authentication
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { Alert } from 'react-native';
 import { FIREBASE_APP } from '../../config/firebase'; 
 const db = getFirestore(FIREBASE_APP);
@@ -37,30 +37,42 @@ export default function SignupScreen() {
     const [retypePassword, setRetypePassword] = useState(''); 
     const [username, setUsername] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleSignup = async () => {
         try {
-            if (email && password && username) {
+            setLoading(true);
+            setError(null);
 
-                const response = await createUserWithEmailAndPassword(auth, email, password);
-                console.log('User UID:', response.user.uid);
+            if (email && password && username && password === retypePassword) {
+                const usernameSnapshot = await getDocs(collection(db, 'users'), where('username', '==', username));
+                
+                if (!isEmpty(usernameSnapshot.docs)) {
+                    setError('Username is already taken. Please choose a different one.');
+                } else {
+                    const response = await createUserWithEmailAndPassword(auth, email, password);
+                    console.log('User UID:', response.user.uid);
 
-                try {
-                    const userDocRef = await addDoc(collection(db, 'users'), {
-                        userID: response.user.uid,
-                        username: username,
-                        email: email,
-                    });
-                    console.log('Document written with ID:', userDocRef.id);
-                    navigation.navigate(Routes.LOGIN)
-                } catch (error) {
-                    console.error('Error adding document:', error);
+                    try {
+                        const userDocRef = await addDoc(collection(db, 'users'), {
+                            userID: response.user.uid,
+                            username: username,
+                            email: email,
+                        });
+                        console.log('Document written with ID:', userDocRef.id);
+                        navigation.navigate(Routes.LOGIN);
+                    } catch (error) {
+                        console.error('Error adding document:', error);
+                        setError('Error creating user. Please try again.');
+                    }
                 }
             } else {
-                setError('Please fill in all fields.');
+                setError('Please fill in all fields and make sure passwords match.');
             }
         } catch (error) {
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -160,13 +172,13 @@ export default function SignupScreen() {
                 </FormControl>
             </VStack>
 
-            {/* Submit button */}
+            {/* Submit button with loading state */}
             <VStack space="lg" pt="$4">
-                <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup}>
-                    <ButtonText>Sign Up</ButtonText>
+                <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup} disabled={loading}>
+                    <ButtonText>{loading ? 'Signing Up...' : 'Sign Up'}</ButtonText>
                 </Button>
             </VStack>
-            </Box>
+        </Box>
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={700} position="absolute">
