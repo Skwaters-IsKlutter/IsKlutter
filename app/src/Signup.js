@@ -18,16 +18,14 @@ import {
     InputField,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth} from '../../config/firebase'; // Import Firebase authentication
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
-import { Alert } from 'react-native';
+import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase'; 
-const db = getFirestore(FIREBASE_APP);
-
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+
+const db = getFirestore(FIREBASE_APP);
 
 export default function SignupScreen() {
     const navigation = useNavigation();
@@ -39,34 +37,48 @@ export default function SignupScreen() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const isUsernameUnique = async (username) => {
+        const q = query(collection(db, 'users'), where('username', '==', username));
+        const usernameSnapshot = await getDocs(q);
+        return usernameSnapshot.empty;
+    };
+
     const handleSignup = async () => {
         try {
-            setLoading(true); // Set loading to true when signup process starts
+            setLoading(true);
             setError(null);
 
-            if (email && password && username) {
-                const response = await createUserWithEmailAndPassword(auth, email, password);
-                console.log('User UID:', response.user.uid);
+            if (email && password && username && password === retypePassword) {
+                const uniqueUsername = await isUsernameUnique(username);
 
-                try {
-                    const userDocRef = await addDoc(collection(db, 'users'), {
-                        userID: response.user.uid,
-                        username: username,
-                        email: email,
-                    });
-                    console.log('Document written with ID:', userDocRef.id);
-                    navigation.navigate(Routes.LOGIN);
-                } catch (error) {
-                    console.error('Error adding document:', error);
-                    setError('Error creating user. Please try again.');
+                if (!uniqueUsername) {
+                    console.log('Username is already taken');
+                    setError('Username is already taken. Please choose a different one.');
+                } else {
+                    const response = await createUserWithEmailAndPassword(auth, email, password);
+                    console.log('User UID:', response.user.uid);
+
+                    try {
+                        const userDocRef = await addDoc(collection(db, 'users'), {
+                            userID: response.user.uid,
+                            username: username,
+                            email: email,
+                        });
+                        console.log('Document written with ID:', userDocRef.id);
+                        navigation.navigate(Routes.LOGIN);
+                    } catch (error) {
+                        console.error('Error adding document:', error);
+                        setError('Error creating user. Please try again.');
+                    }
                 }
             } else {
-                setError('Please fill in all fields.');
+                setError('Please fill in all fields and make sure passwords match.');
             }
         } catch (error) {
+            console.error(error);
             setError(error.message);
         } finally {
-            setLoading(false); // Set loading to false when signup process completes
+            setLoading(false);
         }
     };
 
