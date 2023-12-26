@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import AddListingBox from '../components/AddListingBox.js';
 
-import { collection, addDoc, getDoc, doc, getFirestore } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, query, where, getDocs} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 
 import colors from '../config/colors.js'
@@ -32,34 +32,38 @@ export default function AddListingPage() {
     const [username, setUsername] = useState("");
     const [isFirestoreOnline, setIsFirestoreOnline] = useState(true); // New state to track Firestore online status
 
-    useEffect(() => {
-        const fetchUsername = async () => {
-            try {
-                const user = auth.currentUser;
-                if (user) {
-                    const userDocRef = doc(database, 'users', user.uid);
-                    const userDocSnapshot = await getDoc(userDocRef);
-                    if (userDocSnapshot.exists()) {
-                        setUsername(userDocSnapshot.data().username);
-                    }
+    
+    const fetchUsername = async () => {
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                // Use a query to find the document with the specified UID
+                const userQuery = query(collection(database, 'users'), where('userID', '==', user.uid));
+                const userQuerySnapshot = await getDocs(userQuery);
+    
+                if (userQuerySnapshot.docs.length > 0) {
+                    const retrievedUsername = userQuerySnapshot.docs[0].data().username;
+                    setUsername(retrievedUsername); // Set the username in the state
                 }
-            } catch (error) {
-                console.error('Error fetching username:', error);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching username:', error);
+        }
+    };
 
-        const checkFirestoreStatus = async () => {
-            try {
-                await getDoc(doc(database, 'some-collection', 'some-doc')); // Use an existing document for the check
-                setIsFirestoreOnline(true);
-            } catch (error) {
-                console.error('Error checking Firestore status:', error);
-                setIsFirestoreOnline(false);
-            }
-        };
+    const checkFirestoreStatus = async () => {
+        try {
+            await getDoc(doc(database, 'some-collection', 'some-doc')); // Use an existing document for the check
+            setIsFirestoreOnline(true);
+        } catch (error) {
+            console.error('Error checking Firestore status:', error);
+            setIsFirestoreOnline(false);
+        }
+    };
 
-        fetchUsername();
-        checkFirestoreStatus();
+    useEffect(() => {
+            fetchUsername();
+            checkFirestoreStatus();
     }, []);
 
     const handlePostNow = async () => {
@@ -67,6 +71,11 @@ export default function AddListingPage() {
             if (!isFirestoreOnline) {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
+            if (!username) {
+                console.error('Username not found.');
+                throw new Error('Username is not available.');
+            }
+
             // Upload the image to Firebase Storage
             const storagePath = `images/${listingData.listingName}`;
             const file = listingData.listingImage; // Adjust this based on how you handle image selection
