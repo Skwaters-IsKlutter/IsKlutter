@@ -32,7 +32,6 @@ export default function AddListingPage() {
     const [username, setUsername] = useState("");
     const [isFirestoreOnline, setIsFirestoreOnline] = useState(true); // New state to track Firestore online status
 
-    
     const fetchUsername = async () => {
         try {
             const user = auth.currentUser;
@@ -71,10 +70,6 @@ export default function AddListingPage() {
             if (!isFirestoreOnline) {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
-            if (!username) {
-                console.error('Username not found.');
-                throw new Error('Username is not available.');
-            }
 
             // Upload the image to Firebase Storage
             const storagePath = `images/${listingData.listingName}`;
@@ -101,8 +96,7 @@ export default function AddListingPage() {
                     listingImage: storagePath,
                 });
         
-            // Reset the form or navigate to a different screen
-            // You can implement this based on your app flow
+            // Reset the form and navigate to a different screen
             setListingData({
                 listingImage: require("../../assets/img/item.jpg"),
                 listingName: "",
