@@ -11,8 +11,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
-import ItemCard from '../components/ItemCard.js';
-import TagLabel from '../components/TagLabel.js';
 import AddListingBox from '../components/AddListingBox.js';
 
 import { collection, addDoc } from 'firebase/firestore';
@@ -32,57 +30,51 @@ export default function AddListingPage() {
       });
 
     const handlePostNow = async () => {
-    try {
-        // Upload the image to Firebase Storage
-        const storagePath = `images/${listingData.listingName}`;
-        const file = listingData.listingImage; // Adjust this based on how you handle image selection
-        const imageRef = storageRef(storage, storagePath);
-        await uploadBytes(imageRef, file);
+        try {
+            // Upload the image to Firebase Storage
+            const storagePath = `images/${listingData.listingName}`;
+            const file = listingData.listingImage; // Adjust this based on how you handle image selection
+            const imageRef = storageRef(storage, storagePath);
+            await uploadBytes(imageRef, file);
 
-            console.log('Image uploaded to Firebase Storage');
+            const user = auth.currentUser; // User authenticated
+            const uid = user.uid;
 
-        // Add the listing data to Firestore with the image URL
-        const user = auth.currentUser; // User authenticated
-        const uid = user.uid;
-
-        // Add the listing data to Firestore with the image URL
-        const docRef = await addDoc(collection(database, 'listings'), {
-            userID: uid,
-            ...listingData,
-            listingImage: storagePath,
-        });
-
-            console.log('Listing Data before adding to Firestore: ', {
+            // Add the listing data to Firestore with the image URL
+            const docRef = await addDoc(collection(database, 'listings'), {
+                userID: uid,
                 ...listingData,
-                listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
                 listingImage: storagePath,
             });
 
-            console.log('Document written with ID: ', docRef.id);
-        // Remove any functions from listingData before sending to Firestore
-        const { listingTags, ...cleanListingData } = listingData;
-    
-        // Reset the form or navigate to a different screen
-        // You can implement this based on your app flow
-        setListingData({
-            listingImage: require("../../assets/img/item.jpg"),
-            listingName: "",
-            listingPrice: "",
-            listingDescription: "",
-            listingTags: [],
-        });
+                console.log('Listing Data before adding to Firestore: ', {
+                    userID: uid,
+                    ...listingData,
+                    listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
+                    listingImage: storagePath,
+                });
+        
+            // Reset the form or navigate to a different screen
+            // You can implement this based on your app flow
+            setListingData({
+                listingImage: require("../../assets/img/item.jpg"),
+                listingName: "",
+                listingPrice: "",
+                listingDescription: "",
+                listingTags: [],
+            });
 
+            // Go back to the previous screen (listings page)
+            navigation.goBack();
+
+            } catch (error) {
+            console.error('Error adding document: ', error);
+            }
+        };
+
+        const handleCancel = () => {
         // Go back to the previous screen (listings page)
         navigation.goBack();
-
-        } catch (error) {
-          console.error('Error adding document: ', error);
-        }
-      };
-
-    const handleCancel = () => {
-    // Go back to the previous screen (listings page)
-    navigation.goBack();
     };
 
     return (
