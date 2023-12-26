@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useState, useEffect }  from 'react';
 import {
     HStack,
     VStack,
@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import AddListingBox from '../components/AddListingBox.js';
 
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, getFirestore } from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 
 import colors from '../config/colors.js'
@@ -27,10 +27,46 @@ export default function AddListingPage() {
         listingPrice: "",
         listingDescription: "",
         listingTags: [],
-      });
+    });
+
+    const [username, setUsername] = useState("");
+    const [isFirestoreOnline, setIsFirestoreOnline] = useState(true); // New state to track Firestore online status
+
+    useEffect(() => {
+        const fetchUsername = async () => {
+            try {
+                const user = auth.currentUser;
+                if (user) {
+                    const userDocRef = doc(database, 'users', user.uid);
+                    const userDocSnapshot = await getDoc(userDocRef);
+                    if (userDocSnapshot.exists()) {
+                        setUsername(userDocSnapshot.data().username);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching username:', error);
+            }
+        };
+
+        const checkFirestoreStatus = async () => {
+            try {
+                await getDoc(doc(database, 'some-collection', 'some-doc')); // Use an existing document for the check
+                setIsFirestoreOnline(true);
+            } catch (error) {
+                console.error('Error checking Firestore status:', error);
+                setIsFirestoreOnline(false);
+            }
+        };
+
+        fetchUsername();
+        checkFirestoreStatus();
+    }, []);
 
     const handlePostNow = async () => {
         try {
+            if (!isFirestoreOnline) {
+                throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
+            }
             // Upload the image to Firebase Storage
             const storagePath = `images/${listingData.listingName}`;
             const file = listingData.listingImage; // Adjust this based on how you handle image selection
@@ -43,12 +79,14 @@ export default function AddListingPage() {
             // Add the listing data to Firestore with the image URL
             const docRef = await addDoc(collection(database, 'listings'), {
                 userID: uid,
+                username: username,
                 ...listingData,
                 listingImage: storagePath,
             });
 
                 console.log('Listing Data before adding to Firestore: ', {
                     userID: uid,
+                    username: username,
                     ...listingData,
                     listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
                     listingImage: storagePath,
