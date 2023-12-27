@@ -65,7 +65,10 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     };
 
     const updateListingTags = (mainTag, secondaryTags) => {
-        const updatedTags = Array.from(new Set([mainTag, ...secondaryTags]));
+        const mainTagValue = Tags.find(tag => tag.key === mainTag)?.value;
+        const secondaryTagsValues = secondaryTags.map(tag => Tags.find(t => t.key === tag)?.value).filter(Boolean);
+        
+        const updatedTags = Array.from(new Set([mainTagValue, ...secondaryTagsValues]));
         setListingData((prevData) => ({
           ...prevData,
           listingTags: updatedTags,
