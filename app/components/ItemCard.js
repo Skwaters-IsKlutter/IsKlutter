@@ -53,7 +53,7 @@ export default function ItemCard( { productImage, productPrice, productName, pro
                         <Text fontSize="$sm" color={colors.gray}>{productSeller}</Text>
                     </VStack>
 
-                    <HStack space="xs" p={0} flexWrap="wrap">{tags}</HStack>
+                    <HStack space="xs" p={0} flexWrap="wrap"><Text>{tags}</Text></HStack>
                 </Box>
             </Box>
         </Pressable>

@@ -18,7 +18,7 @@ import Routes from '../components/constants/Routes.js';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { database } from '../../config/firebase'; // Firebase configuration
 
-export default function AllListingsPage() {
+export default function AllListingsPage({key}) {
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
 
@@ -40,16 +40,22 @@ export default function AllListingsPage() {
     }, []); // Empty dependency array to run effect only once
 
     const renderAllListings = () => {
-        return allListingsData.map((item) => (
-            <ItemCard
-                key={item.id}
-                productImage={item.listingImage || require("../../assets/img/item.jpg")}
-                productPrice={item.listingPrice}
-                productName={item.listingName}
-                productSeller={item.username}
-                toListing={() => navigation.navigate(Routes.LISTING, { item })}
-            />
-        ));
+        return allListingsData.map((item) => {
+
+            const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
+            
+            return(
+                <ItemCard
+                    key={item.id}
+                    productImage={item.listingImage || require("../../assets/img/item.jpg")}
+                    productPrice={item.listingPrice}
+                    productName={item.listingName}
+                    productSeller={item.username}
+                    tags={firstTag}
+                    toListing={() => navigation.navigate(Routes.LISTINGS, {item})}
+                />
+            );
+        });
     };
 
     return (

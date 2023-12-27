@@ -37,7 +37,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Gluten-free"
-                        onValueChange={(value) => handleSecondaryTagChange(value, 'glutenFree')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'GlutenFree')}
                         ariaLabel="Gluten-free Checkbox"
                     />
                 </Box>
@@ -47,7 +47,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Hypoallergenic"
-                        onValueChange={(value) => handleSecondaryTagChange(value, 'hypoallergenic')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'Hypoallergenic')}
                         ariaLabel="Hypoallergenic Checkbox"
                     />
                 </Box>
@@ -65,7 +65,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     };
 
     const updateListingTags = (mainTag, secondaryTags) => {
-        const updatedTags = Array.from(new Set([...secondaryTags, mainTag]));
+        const updatedTags = Array.from(new Set([mainTag, ...secondaryTags]));
         setListingData((prevData) => ({
           ...prevData,
           listingTags: updatedTags,
