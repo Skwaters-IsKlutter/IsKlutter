@@ -30,7 +30,7 @@ export default function AllListingsPage({key}) {
             setAllListingsData(listingsData);
         });
 
-        // This useEffect cleanup function will detach the listener when the component unmounts
+        // Cleanup function detach the listener when the component unmounts
         return () => {
             // Check if unsubscribe is a function before calling it
             if (typeof unsubscribe === 'function') {
@@ -47,7 +47,7 @@ export default function AllListingsPage({key}) {
             return(
                 <ItemCard
                     key={item.id}
-                    productImage={item.listingImage || require("../../assets/img/item.jpg")}
+                    productImage={item.listingImageURL}
                     productPrice={item.listingPrice}
                     productName={item.listingName}
                     productSeller={item.username}

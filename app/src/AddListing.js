@@ -15,6 +15,7 @@ import AddListingBox from '../components/AddListingBox.js';
 
 import { collection, addDoc, getDoc, doc, query, where, getDocs} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
+import { getDownloadURL } from 'firebase/storage';
 
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
@@ -71,14 +72,23 @@ export default function AddListingPage() {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
 
-            // Upload the image to Firebase Storage
-            const storagePath = `images/${listingData.listingName}`;
-            const file = listingData.listingImage; // Adjust this based on how you handle image selection
+            const user = auth.currentUser; // User authenticated
+            const uid = user.uid;
+
+            // Generate a unique filename using timestamp and random string
+            const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;   
+            
+            // Remove spaces from the listing name for the image file name
+            const sanitizedListingName = listingData.listingName.replace(/\s+/g, ''); 
+
+            // Upload the image to Firebase Storage with a sanitized file name and ".jpeg" extension
+            const storagePath = `images/${uniqueFilename}_${sanitizedListingName}.jpeg`;
+            const file = listingData.listingImage;
             const imageRef = storageRef(storage, storagePath);
             await uploadBytes(imageRef, file);
 
-            const user = auth.currentUser; // User authenticated
-            const uid = user.uid;
+            // Get the download URL of the uploaded image
+            const downloadURL = await getDownloadURL(imageRef);
 
             // Add the listing data to Firestore with the image URL
             const docRef = await addDoc(collection(database, 'listings'), {
@@ -86,6 +96,7 @@ export default function AddListingPage() {
                 username: username,
                 ...listingData,
                 listingImage: storagePath,
+                listingImageURL: downloadURL,
             });
 
                 console.log('Listing Data before adding to Firestore: ', {
@@ -94,11 +105,12 @@ export default function AddListingPage() {
                     ...listingData,
                     listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
                     listingImage: storagePath,
+                    listingImageURL: downloadURL,
                 });
         
             // Reset the form and navigate to a different screen
             setListingData({
-                listingImage: require("../../assets/img/item.jpg"),
+                listingImage: null,
                 listingName: "",
                 listingPrice: "",
                 listingDescription: "",
