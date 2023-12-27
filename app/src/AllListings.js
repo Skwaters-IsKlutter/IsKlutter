@@ -18,7 +18,7 @@ import Routes from '../components/constants/Routes.js';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { database } from '../../config/firebase'; // Firebase configuration
 
-export default function AllListingsPage() {
+export default function AllListingsPage( { key } ) {
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
 
