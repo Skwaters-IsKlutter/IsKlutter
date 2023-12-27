@@ -85,7 +85,13 @@ export default function AddListingPage() {
             const storagePath = `images/${uniqueFilename}_${sanitizedListingName}.jpeg`;
             const file = listingData.listingImage;
             const imageRef = storageRef(storage, storagePath);
-            await uploadBytes(imageRef, file);
+            // Set content type to image/jpeg
+            const metadata = {
+                contentType: 'image/jpeg',
+            };
+            
+            // Use uploadBytes with metadata
+            await uploadBytes(imageRef, file, metadata);
 
             // Get the download URL of the uploaded image
             const downloadURL = await getDownloadURL(imageRef);

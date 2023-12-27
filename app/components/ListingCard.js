@@ -17,9 +17,10 @@ import colors from '../config/colors.js';
 
 export default function ListingCard({ key: productID, productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat, tags }) {
     return (
+        console.log('Product Image:', productImage),
         <Box p="$3" w="100%" backgroundColor="$white">
             <VStack space="md" pb="$2">
-                <Image source={productImage} h={230} w="100%" alt="item" borderRadius={3} />
+                <Image source={productImage ? { uri: productImage } : null} h={230} w="100%" alt="item" borderRadius={3} />
             </VStack>
 
             {/* Item name and price */}
@@ -29,7 +30,11 @@ export default function ListingCard({ key: productID, productName, productImage,
             </VStack>
 
             {/* Tags */}
-            <HStack space="sm" p="$2">{tags}</HStack>
+            <HStack space="sm" p="$2">
+                {tags.map((tag, index) => (
+                    <Text key={index}>{tag}</Text>
+                ))}
+            </HStack>
 
             {/* Description */}
             <VStack space="sm" p="$2">
