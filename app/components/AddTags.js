@@ -20,6 +20,7 @@ const Tags = [
     { key: 'toys', value: 'Toys' },
     { key: 'schoolessential', value: 'School Essentials' },
     { key: 'footwear', value: 'Footwear' },
+    { key: 'kitcherware', value: 'Kitchenware' },
 ];
 
 const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) => {

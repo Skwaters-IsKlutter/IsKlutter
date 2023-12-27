@@ -9,61 +9,48 @@ import {
     ButtonIcon,
     ButtonText,
 } from '@gluestack-ui/themed';
-import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import TagLabel from '../components/TagLabel.js';
-
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
-
-// import { auth} from '../../config/firebase';
-// import { where, getFirestore, doc, getDoc, collection, query, getDocs } from 'firebase/firestore'; // Import necessary Firebase modules
-// import { FIREBASE_APP } from '../../config/firebase'; 
-// const db = getFirestore(FIREBASE_APP);
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { database } from '../../config/firebase'; // Firebase configuration
 
 export default function AllListingsPage( { key } ) {
     const navigation = useNavigation();
+    const [allListingsData, setAllListingsData] = useState([]);
 
-    const [item, setItem] = useState('');
-    const [error, setError] = useState('');
+    useEffect(() => {
+        // Set up a real-time listener for changes to the listings collection
+        const listingsCollection = collection(database, 'listings');
+        const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
+            const listingsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setAllListingsData(listingsData);
+        });
 
-    const allListingsData = [
-        {
-            key: 1001,
-            productImage: require("../../assets/img/item.jpg") ,
-            productName: "Kuromi Plush",
-            productPrice: "PHP 450",
-            productSeller: "cinnamonroll",
-            tags: [<TagLabel tagName="Toys" />],
-            toListing: () => navigation.navigate(Routes.LISTING, {item: key})
-        }, {
-            key: 1002,
-            productImage: require("../../assets/img/item2.jpg") ,
-            productName: "UP Shirt",
-            productPrice: "PHP 250",
-            productSeller: "sassag0rl",
-            tags: [<TagLabel tagName="Clothing" />]
-        }
-    ]
+        // This useEffect cleanup function will detach the listener when the component unmounts
+        return () => {
+            // Check if unsubscribe is a function before calling it
+            if (typeof unsubscribe === 'function') {
+                unsubscribe();
+            }
+        };
+    }, []); // Empty dependency array to run effect only once
 
     const renderAllListings = () => {
-        return allListingsData.map((item, index) =>
+        return allListingsData.map((item) => (
             <ItemCard
-                key={index}
-                productImage={item.productImage}
-                productPrice={item.productPrice}
-                productName={item.productName}
-                productSeller={item.productSeller}
-                tags={item.tags}
-                toListing={item.toListing}
-                // toListing={() => navigation.navigate(Routes.LISTING, {item})}
+                key={item.id}
+                productImage={item.listingImage || require("../../assets/img/item.jpg")}
+                productPrice={item.listingPrice}
+                productName={item.listingName}
+                productSeller={item.username}
+                toListing={() => navigation.navigate(Routes.LISTING, { item })}
             />
-        );
-    }
+        ));
+    };
 
     return (
         // Parent box

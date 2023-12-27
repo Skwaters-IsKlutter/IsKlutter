@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useState, useEffect }  from 'react';
 import {
     HStack,
     VStack,
@@ -11,11 +11,9 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
-import ItemCard from '../components/ItemCard.js';
-import TagLabel from '../components/TagLabel.js';
 import AddListingBox from '../components/AddListingBox.js';
 
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, query, where, getDocs} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 
 import colors from '../config/colors.js'
@@ -29,60 +27,95 @@ export default function AddListingPage() {
         listingPrice: "",
         listingDescription: "",
         listingTags: [],
-      });
+    });
+
+    const [username, setUsername] = useState("");
+    const [isFirestoreOnline, setIsFirestoreOnline] = useState(true); // New state to track Firestore online status
+
+    const fetchUsername = async () => {
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                // Use a query to find the document with the specified UID
+                const userQuery = query(collection(database, 'users'), where('userID', '==', user.uid));
+                const userQuerySnapshot = await getDocs(userQuery);
+    
+                if (userQuerySnapshot.docs.length > 0) {
+                    const retrievedUsername = userQuerySnapshot.docs[0].data().username;
+                    setUsername(retrievedUsername); // Set the username in the state
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching username:', error);
+        }
+    };
+
+    const checkFirestoreStatus = async () => {
+        try {
+            await getDoc(doc(database, 'some-collection', 'some-doc')); // Use an existing document for the check
+            setIsFirestoreOnline(true);
+        } catch (error) {
+            console.error('Error checking Firestore status:', error);
+            setIsFirestoreOnline(false);
+        }
+    };
+
+    useEffect(() => {
+            fetchUsername();
+            checkFirestoreStatus();
+    }, []);
 
     const handlePostNow = async () => {
-    try {
-        // Upload the image to Firebase Storage
-        const storagePath = `images/${listingData.listingName}`;
-        const file = listingData.listingImage; // Adjust this based on how you handle image selection
-        const imageRef = storageRef(storage, storagePath);
-        await uploadBytes(imageRef, file);
+        try {
+            if (!isFirestoreOnline) {
+                throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
+            }
 
-            console.log('Image uploaded to Firebase Storage');
+            // Upload the image to Firebase Storage
+            const storagePath = `images/${listingData.listingName}`;
+            const file = listingData.listingImage; // Adjust this based on how you handle image selection
+            const imageRef = storageRef(storage, storagePath);
+            await uploadBytes(imageRef, file);
 
-        // Add the listing data to Firestore with the image URL
-        const user = auth.currentUser; // User authenticated
-        const uid = user.uid;
+            const user = auth.currentUser; // User authenticated
+            const uid = user.uid;
 
-        // Add the listing data to Firestore with the image URL
-        const docRef = await addDoc(collection(database, 'listings'), {
-            userID: uid,
-            ...listingData,
-            listingImage: storagePath,
-        });
-
-            console.log('Listing Data before adding to Firestore: ', {
+            // Add the listing data to Firestore with the image URL
+            const docRef = await addDoc(collection(database, 'listings'), {
+                userID: uid,
+                username: username,
                 ...listingData,
-                listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
                 listingImage: storagePath,
             });
 
-            console.log('Document written with ID: ', docRef.id);
-        // Remove any functions from listingData before sending to Firestore
-        const { listingTags, ...cleanListingData } = listingData;
-    
-        // Reset the form or navigate to a different screen
-        // You can implement this based on your app flow
-        setListingData({
-            listingImage: require("../../assets/img/item.jpg"),
-            listingName: "",
-            listingPrice: "",
-            listingDescription: "",
-            listingTags: [],
-        });
+                console.log('Listing Data before adding to Firestore: ', {
+                    userID: uid,
+                    username: username,
+                    ...listingData,
+                    listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
+                    listingImage: storagePath,
+                });
+        
+            // Reset the form and navigate to a different screen
+            setListingData({
+                listingImage: require("../../assets/img/item.jpg"),
+                listingName: "",
+                listingPrice: "",
+                listingDescription: "",
+                listingTags: [],
+            });
 
+            // Go back to the previous screen (listings page)
+            navigation.goBack();
+
+            } catch (error) {
+            console.error('Error adding document: ', error);
+            }
+        };
+
+        const handleCancel = () => {
         // Go back to the previous screen (listings page)
         navigation.goBack();
-
-        } catch (error) {
-          console.error('Error adding document: ', error);
-        }
-      };
-
-    const handleCancel = () => {
-    // Go back to the previous screen (listings page)
-    navigation.goBack();
     };
 
     return (
