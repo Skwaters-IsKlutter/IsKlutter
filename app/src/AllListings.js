@@ -13,27 +13,31 @@ import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import TagLabel from '../components/TagLabel.js';
 import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
-import { collection, getDocs } from 'firebase/firestore';
-import { database } from '../../config/firebase'; // Import your Firebase configuration
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { database } from '../../config/firebase'; // Firebase configuration
 
 export default function AllListingsPage() {
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
 
-    const fetchAllListings = async () => {
-        const listingsCollection = collection(database, 'listings');
-        const listingsSnapshot = await getDocs(listingsCollection);
-
-        const listingsData = listingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setAllListingsData(listingsData);
-    };
-
     useEffect(() => {
-        fetchAllListings();
-    }, []);
+        // Set up a real-time listener for changes to the listings collection
+        const listingsCollection = collection(database, 'listings');
+        const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
+            const listingsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setAllListingsData(listingsData);
+        });
+
+        // This useEffect cleanup function will detach the listener when the component unmounts
+        return () => {
+            // Check if unsubscribe is a function before calling it
+            if (typeof unsubscribe === 'function') {
+                unsubscribe();
+            }
+        };
+    }, []); // Empty dependency array to run effect only once
 
     const renderAllListings = () => {
         return allListingsData.map((item) => (
