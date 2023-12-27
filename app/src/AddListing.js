@@ -98,7 +98,6 @@ export default function AddListingPage() {
 
             // Add the listing data to Firestore with the image URL
             const docRef = await addDoc(collection(database, 'listings'), {
-                userID: uid,
                 username: username,
                 ...listingData,
                 listingImage: storagePath,
@@ -106,7 +105,6 @@ export default function AddListingPage() {
             });
 
                 console.log('Listing Data before adding to Firestore: ', {
-                    userID: uid,
                     username: username,
                     ...listingData,
                     listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],

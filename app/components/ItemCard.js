@@ -4,8 +4,6 @@ import colors from '../config/colors.js';
 
 export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags }) {
     const isImageUrl = typeof productImage === 'string';
-    console.log(isImageUrl);
-    console.log(productImage);
 
     return (
         <Pressable onPress={toListing}>
@@ -15,7 +13,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                         {isImageUrl && (
                             <Image
                                 source={{ uri: productImage }}
-                                style={{ height: 100, width: '100%', aspectRatio: 1 }}
+                                style={{ height: 100, width: '100%'}}
                                 resizeMode="cover"
                                 alt="icon"
                                 borderTopLeftRadius={5}
