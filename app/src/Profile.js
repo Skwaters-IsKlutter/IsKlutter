@@ -12,6 +12,9 @@ import colors from '../config/colors.js';
 
 export default function ProfilePage() {
     const [currentUser, setCurrentUser] = React.useState(null);
+    const [profileName, setProfileName] = React.useState('');
+    const [username, setUsername] = React.useState('');
+    const [bio, setBio] = React.useState('');
 
     React.useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -21,14 +24,10 @@ export default function ProfilePage() {
 
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
-                    console.log('User Document Path:', userDoc.ref.path);
-
                     const userDocSnapshot = await getDoc(doc(database, userDoc.ref.path));
-                    console.log('User Document Snapshot:', userDocSnapshot);
 
                     if (userDocSnapshot.exists()) {
                         const userData = userDocSnapshot.data();
-                        console.log('User Document Data:', userData);
                         setCurrentUser(userData);
                     } else {
                         console.log('User document does not exist.');
@@ -57,6 +56,10 @@ export default function ProfilePage() {
                         username={currentUser?.username}
                         profileName={currentUser?.username}
                         bio="Insert user description"
+                        user={currentUser}
+                        setProfileName={setProfileName}
+                        setUsername={setUsername}
+                        setBio={setBio}
                     />
                     <Box bgColor="white" p={20} borderRadius={5} m={5}></Box>
                 </ScrollView>
