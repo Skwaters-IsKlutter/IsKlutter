@@ -21,6 +21,7 @@ export default function ProfilePage() {
             if (user !== null) {
                 const q = query(collection(database, 'users'), where('userID', '==', user.uid));
                 const querySnapshot = await getDocs(q);
+                console.log('User UID:', user.uid);
 
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
@@ -28,6 +29,7 @@ export default function ProfilePage() {
 
                     if (userDocSnapshot.exists()) {
                         const userData = userDocSnapshot.data();
+                        console.log('User Data:', userData);
                         setCurrentUser(userData);
                     } else {
                         console.log('User document does not exist.');
@@ -54,9 +56,9 @@ export default function ProfilePage() {
                     <ProfileCard
                         userIcon={require("../../assets/img/item.jpg")}
                         username={currentUser?.username}
-                        profileName={currentUser?.username}
-                        bio="Insert user description"
-                        user={currentUser}
+                        profileName={currentUser?.userProfile || currentUser?.username}
+                        bio={currentUser?.userBio || "I have no interesting info."}
+                        userID={currentUser?.userID}
                         setProfileName={setProfileName}
                         setUsername={setUsername}
                         setBio={setBio}

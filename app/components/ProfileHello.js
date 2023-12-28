@@ -15,7 +15,6 @@ export default function HelloCard() {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
-                console.log('User UID:', user.uid);
           
                 const userDocRef = collection(database, 'users');
                 const userQuery = query(userDocRef, where('userID', '==', user.uid)); // Corrected 'uid' to 'userID'
