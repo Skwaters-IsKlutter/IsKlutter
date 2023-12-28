@@ -1,61 +1,60 @@
 import * as React from 'react';
 import {
     VStack,
-    HStack,
     Heading,
-    Image,
     Box,
-    Button,
-    ButtonText,
-    FormControl,
-    FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
-    FormControlLabelText,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlErrorIcon,
-    Input,
-    InputField,
-    Icon,
-    Avatar,
-    AvatarBadge,
-    AvatarFallbackText,
-    AvatarImage,
-    Pressable,
-    Text
+    ScrollView,
 } from '@gluestack-ui/themed';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
-
-import SearchHeader from '../components/SearchHeader.js';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
 import CommentBox from '../components/CommentBox.js';
 import ReplyBox from '../components/ReplyBox.js';
-
-import ProfileScreen from '../components/screens/ProfileScreen.js';
-
 import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
-
 
 export default function ListingsPage() {
     const navigation = useNavigation();
+    const route = useRoute(); // Move this line up
 
-    const listingsData = [
+    // Access the selected item data from the route parameters
+    console.log('Route:', route);
+    const selectedItem = route?.params?.selectedItem;
+    console.log('Selected Item:', selectedItem);
+
+    const listingsData = selectedItem
+    ? [
         {
-            productImage: require("../../assets/img/item.jpg") ,
-            productName: "Kuromi Plush",
-            productPrice: "PHP 450",
-            productDesc: "Brand new Kuromi plushie from Japan, selling for less than SRP. Meetup at CUB, 2 PM.",
-            sellerName: "cinnamonroll",
-            tags: [<TagLabel tagName="Toys" />],
-            sellerImage: require("../../assets/img/usericon.jpg"),
-        }
+            productImage: { uri: selectedItem.listingImageURL },
+            productName: selectedItem.listingName,
+            productPrice: selectedItem.listingPrice,
+            productDesc: selectedItem.listingDescription,
+            sellerName: selectedItem.username,
+            tags: selectedItem.listingTags.map((tag, index) => (
+              <TagLabel key={index} tagName={tag} />
+            )),
+            //sellerImage: { uri: selectedItem.userIconURL }, // Use userIconURL as sellerImage
+        },
     ]
+    : [];
 
+    const renderListings = () => {
+      console.log('Listings Data:', listingsData);
+      return listingsData.map((listings, index) => (
+        <ListingCard
+          key={index}
+          productImage={listings.productImage?.uri ? listings.productImage : { uri: 'fallback_image_url' }}
+          productName={listings.productName}
+          productPrice={listings.productPrice}
+          productDesc={listings.productDesc}
+          sellerName={listings.sellerName}
+          tags={listings.tags}
+          //sellerImage={listing.sellerImage}
+        />
+      ));
+    };
+    
     const listingsRepliesData = [
         {
             replyUser: "kuromi",
@@ -70,22 +69,7 @@ export default function ListingsPage() {
             replyDate: "10/25/2023",
             replyTime:"1:43 PM"
         }, 
-    ]
-
-    const renderListings = () => {
-        return listingsData.map((listing, index) => 
-            <ListingCard
-                key={index}
-                productImage={listing.productImage}
-                productName={listing.productName}
-                productPrice={listing.productPrice}
-                productDesc={listing.productDesc}
-                sellerName={listing.sellerName}
-                tags={listing.tags}
-                sellerImage={listing.sellerImage}
-            />
-        );
-    }
+    ];
 
     const renderListingsReply = () => {
         return listingsRepliesData.map((listing, index) =>

@@ -37,7 +37,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Gluten-free"
-                        onValueChange={(value) => handleSecondaryTagChange(value, 'glutenFree')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'Gluten Free')}
                         ariaLabel="Gluten-free Checkbox"
                     />
                 </Box>
@@ -47,7 +47,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Hypoallergenic"
-                        onValueChange={(value) => handleSecondaryTagChange(value, 'hypoallergenic')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'Hypoallergenic')}
                         ariaLabel="Hypoallergenic Checkbox"
                     />
                 </Box>
@@ -65,11 +65,13 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     };
 
     const updateListingTags = (mainTag, secondaryTags) => {
-        const updatedTags = Array.from(new Set([...secondaryTags, mainTag]));
+        const updatedMainTag = mainTag.charAt(0).toUpperCase() + mainTag.slice(1); // Capitalize the first letter
+        const updatedTags = Array.from(new Set([updatedMainTag, ...secondaryTags]));
         setListingData((prevData) => ({
           ...prevData,
           listingTags: updatedTags,
         }));
+        console.log('Updated Tags: ', updatedTags);
     };
 
     // Update the main tag and reset selectedTags when it changes
