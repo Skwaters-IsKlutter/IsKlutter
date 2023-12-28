@@ -41,18 +41,17 @@ export default function AllListingsPage({key}) {
 
     const renderAllListings = () => {
         return allListingsData.map((item) => {
-
             const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
-            
-            return(
+
+            return (
                 <ItemCard
-                    key={item.id}
+                    key={item.key}
                     productImage={item.listingImageURL}
                     productPrice={item.listingPrice}
                     productName={item.listingName}
                     productSeller={item.username}
                     tags={firstTag}
-                    toListing={() => navigation.navigate(Routes.LISTINGS, {item})}
+                    toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
                 />
             );
         });

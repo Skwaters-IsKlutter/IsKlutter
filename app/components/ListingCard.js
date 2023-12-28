@@ -9,18 +9,21 @@ import {
     Button,
     ButtonIcon,
     ButtonText,
-    ScrollView
 } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../config/colors.js';
 
-export default function ListingCard({ key: productID, productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat, tags }) {
+export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerImage, sellerChat, tags }) {
     return (
-        console.log('Product Image:', productImage),
         <Box p="$3" w="100%" backgroundColor="$white">
             <VStack space="md" pb="$2">
-                <Image source={productImage ? { uri: productImage } : null} h={230} w="100%" alt="item" borderRadius={3} />
+                {productImage && productImage.uri ? (
+                    <Image source={{ uri: productImage.uri }} h={230} w="100%" alt="item" borderRadius={3} />
+                ) : (
+                    // You can replace this with a placeholder image or some other content
+                    <Text>No Image</Text>
+                )}
             </VStack>
 
             {/* Item name and price */}
@@ -44,7 +47,7 @@ export default function ListingCard({ key: productID, productName, productImage,
             {/* Poster info */}
             <HStack justifyContent="space-between" flexDirection="row">
                 <HStack space="sm" p="$2" alignItems="center">
-                    <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} />
+                    {/* <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} /> */}
                     <Text color={colors.gray}>{sellerName}</Text>
 
                     <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={8} onPress={sellerChat} alignSelf="flex-end">
