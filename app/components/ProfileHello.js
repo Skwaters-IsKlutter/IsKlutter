@@ -25,7 +25,6 @@ export default function HelloCard() {
                   
                     if (!querySnapshot.empty) {
                       const userDocument = querySnapshot.docs[0];
-                      console.log('User document data:', userDocument.data());
                       setUsername(userDocument.data().username);
                     } else {
                       console.log('No such document!');

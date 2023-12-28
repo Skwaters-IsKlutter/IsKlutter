@@ -3,26 +3,12 @@ import {
     VStack,
     HStack,
     Heading,
-    Image,
     Box,
     Button,
     ButtonText,
-    FormControl,
-    FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
-    FormControlLabelText,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlErrorIcon,
-    Input,
-    InputField,
-    Icon,
     Avatar,
-    AvatarBadge,
     AvatarFallbackText,
     AvatarImage,
-    Pressable,
     Text
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -30,7 +16,7 @@ import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
 
-export default function ProfileCard ({ username, userIcon,bio, profileName}){
+export default function ProfileCard ({ username, userIcon, bio, profileName}){
     return (
         <Box bgColor="white" p={20} borderRadius={5}>
 
@@ -45,13 +31,20 @@ export default function ProfileCard ({ username, userIcon,bio, profileName}){
                         <Heading pr='$12' pt='$1.5' pl='$1' fontSize={30} color={colors.primary}>
                                 {profileName}
                         </Heading>
-                        <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={20} onPress={() => Alert.alert("Alert", "This is a dummy action")}>
-                            <ButtonText color={colors.white} fontSize="$sm">Edit Profile</ButtonText>
+                        <Button 
+                            variant="solid" 
+                            size="sm" 
+                            backgroundColor={colors.primary} 
+                            borderRadius={20} onPress={() => Alert.alert("Alert", "This is a dummy action")}
+                        >
+                            <ButtonText color={colors.white} fontSize="$sm">
+                                Edit Profile
+                            </ButtonText>
                         </Button>
                     </HStack>
 
                     <Heading px='$10' pl='$1' fontSize={20} color={colors.black} pt="0" pb="0">
-                            {username}
+                        {`@${username}`}
                     </Heading>
 
                     <Text px='$10' pl='$1' fontSize={15} color={colors.gray} pt="0" pb="0">
