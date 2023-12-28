@@ -30,7 +30,7 @@ import { Alert } from 'react-native';
 
 import colors from '../config/colors.js';
 
-export default function ProfileCard ({ key: userId, username, userIcon,bio, profileName}){
+export default function ProfileCard ({ username, userIcon,bio, profileName}){
     return (
         <Box bgColor="white" p={20} borderRadius={5}>
 
