@@ -37,7 +37,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 <Box>
                     <CheckBox
                         checkBoxLabel="Gluten-free"
-                        onValueChange={(value) => handleSecondaryTagChange(value, 'GlutenFree')}
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'Gluten Free')}
                         ariaLabel="Gluten-free Checkbox"
                     />
                 </Box>
@@ -65,14 +65,13 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     };
 
     const updateListingTags = (mainTag, secondaryTags) => {
-        const mainTagValue = Tags.find(tag => tag.key === mainTag)?.value;
-        const secondaryTagsValues = secondaryTags.map(tag => Tags.find(t => t.key === tag)?.value).filter(Boolean);
-        
-        const updatedTags = Array.from(new Set([mainTagValue, ...secondaryTagsValues]));
+        const updatedMainTag = mainTag.charAt(0).toUpperCase() + mainTag.slice(1); // Capitalize the first letter
+        const updatedTags = Array.from(new Set([updatedMainTag, ...secondaryTags]));
         setListingData((prevData) => ({
           ...prevData,
           listingTags: updatedTags,
         }));
+        console.log('Updated Tags: ', updatedTags);
     };
 
     // Update the main tag and reset selectedTags when it changes

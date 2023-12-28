@@ -29,7 +29,7 @@ export default function ListingCard({ productID, productName, productImage, prod
             {/* Item name and price */}
             <VStack space="sm" p="$2">
                 <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
-                <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{productPrice}</Text>
+                <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
 
             {/* Tags */}

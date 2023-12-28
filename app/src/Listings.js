@@ -39,22 +39,6 @@ export default function ListingsPage() {
     ]
     : [];
 
-    const listingsRepliesData = [
-        {
-            replyUser: "kuromi",
-            userIcon: require("../../assets/img/usericon.jpg"),
-            replyText: "mine!",
-            replyDate: "10/25/2023",
-            replyTime:"12:58 PM"
-        }, {
-            replyUser: "sassag0rl",
-            userIcon: require("../../assets/img/sassa.jpg"),
-            replyText: "EPAL NG NAG MINE",
-            replyDate: "10/25/2023",
-            replyTime:"1:43 PM"
-        }, 
-    ];
-
     const renderListings = () => {
       console.log('Listings Data:', listingsData);
       return listingsData.map((listings, index) => (
@@ -70,6 +54,22 @@ export default function ListingsPage() {
         />
       ));
     };
+    
+    const listingsRepliesData = [
+        {
+            replyUser: "kuromi",
+            userIcon: require("../../assets/img/usericon.jpg"),
+            replyText: "mine!",
+            replyDate: "10/25/2023",
+            replyTime:"12:58 PM"
+        }, {
+            replyUser: "sassag0rl",
+            userIcon: require("../../assets/img/sassa.jpg"),
+            replyText: "EPAL NG NAG MINE",
+            replyDate: "10/25/2023",
+            replyTime:"1:43 PM"
+        }, 
+    ];
 
     const renderListingsReply = () => {
         return listingsRepliesData.map((listing, index) =>
