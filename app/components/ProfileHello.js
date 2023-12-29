@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { auth, database } from '../../config/firebase';
-import { getFirestore, collection, doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import {
     Box,
     VStack,
     Heading,
 } from '@gluestack-ui/themed';
 
-import TagLabel from '../components/TagLabel.js';
 import colors from '../config/colors.js';
 
 export default function HelloCard() {
@@ -16,23 +15,26 @@ export default function HelloCard() {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
-                // User is signed in
-                const userDocRef = doc(database, 'users', user.uid); // search and compare id
+          
+                const userDocRef = collection(database, 'users');
+                const userQuery = query(userDocRef, where('userID', '==', user.uid)); // Corrected 'uid' to 'userID'
+
                 try {
-                    const docSnapshot = await getDoc(userDocRef);
-                    if (docSnapshot.exists()) {
-                        setUsername(docSnapshot.data().username);
+                    const querySnapshot = await getDocs(userQuery);
+                  
+                    if (!querySnapshot.empty) {
+                      const userDocument = querySnapshot.docs[0];
+                      setUsername(userDocument.data().username);
                     } else {
-                        console.log('No such document!');
+                      console.log('No such document!');
                     }
-                } catch (error) {
+                  } catch (error) {
                     console.error('Error getting document:', error);
-                }
+                  }
             } else {
-                // No user is signed in
-                setUsername(null);
+              setUsername(null);
             }
-        });
+          });
     
         return () => {
             unsubscribe(); // Cleanup the subscription when the component unmounts
