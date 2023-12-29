@@ -4,13 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import colors from '../config/colors.js';
 
-export default function ProfileCard({ userIcon, username, profileName, bio, userID, setProfileName, setUsername, setBio, loading }) {
+export default function ProfileCard({ userProfileImg, username, profileName, bio, userID, setProfileName, setUsername, setBio, loading }) {
   const navigation = useNavigation();
 
   const handleEditProfile = () => {
     // Navigate to the EditProfile screen and pass necessary data
     navigation.navigate('EditProfile', {
-      userIcon,
+      userProfileImg,
       username,
       profileName,
       bio,
@@ -27,7 +27,7 @@ export default function ProfileCard({ userIcon, username, profileName, bio, user
       {/* Avatar*/}
       <Avatar borderRadius="$full" alignSelf="center" size="2xl">
         <AvatarFallbackText>{username}</AvatarFallbackText>
-        <AvatarImage>{userIcon}</AvatarImage>
+        {/* <AvatarImage>{userIcon}</AvatarImage> */}
       </Avatar>
 
       <VStack space="xs" pb="$2" py="$3">

@@ -3,6 +3,7 @@ import {
     Box,
     ScrollView
 } from '@gluestack-ui/themed';
+import { useFocusEffect } from '@react-navigation/native';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { auth, database } from '../../config/firebase';
 import SearchHeader from '../components/SearchHeader.js';
@@ -14,38 +15,40 @@ export default function ProfilePage() {
     const [currentUser, setCurrentUser] = React.useState(null);
     const [profileName, setProfileName] = React.useState('');
     const [username, setUsername] = React.useState('');
+    const [loadingProfile, setLoadingProfile] = React.useState(true);
     const [bio, setBio] = React.useState('');
 
-    React.useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    useFocusEffect(
+        React.useCallback(() => {
+          const fetchData = async () => {
+            const user = auth.currentUser;
             if (user !== null) {
-                const q = query(collection(database, 'users'), where('userID', '==', user.uid));
-                const querySnapshot = await getDocs(q);
-                console.log('User UID:', user.uid);
-
-                if (!querySnapshot.empty) {
-                    const userDoc = querySnapshot.docs[0];
-                    const userDocSnapshot = await getDoc(doc(database, userDoc.ref.path));
-
-                    if (userDocSnapshot.exists()) {
-                        const userData = userDocSnapshot.data();
-                        console.log('User Data:', userData);
-                        setCurrentUser(userData);
-                    } else {
-                        console.log('User document does not exist.');
-                    }
+              setLoadingProfile(true);
+              const q = query(collection(database, 'users'), where('userID', '==', user.uid));
+              const querySnapshot = await getDocs(q);
+    
+              if (!querySnapshot.empty) {
+                const userDoc = querySnapshot.docs[0];
+                const userDocSnapshot = await getDoc(doc(database, userDoc.ref.path));
+    
+                if (userDocSnapshot.exists()) {
+                  const userData = userDocSnapshot.data();
+                  console.log('User Data:', userData);
+                  setCurrentUser(userData);
                 } else {
-                    console.log('User document not found.');
+                  console.log('User document does not exist.');
                 }
-            } else {
-                setCurrentUser(null);
+              } else {
+                console.log('User document not found.');
+              }
+    
+              setLoadingProfile(false);
             }
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    }, []);
+          };
+    
+          fetchData(); // Fetch data when the screen comes into focus
+        }, []) // Empty dependency array means it will only run once when the component mounts
+      );
 
     return (
         <Box w="100%" h="100%">
@@ -54,7 +57,7 @@ export default function ProfilePage() {
                 <HelloCard username={currentUser?.username} />
                 <ScrollView>
                     <ProfileCard
-                        userIcon={require("../../assets/img/item.jpg")}
+                        userProfileImg={""}
                         username={currentUser?.username}
                         profileName={currentUser?.userProfile || currentUser?.username}
                         bio={currentUser?.userBio || "I have no interesting info."}
@@ -62,6 +65,7 @@ export default function ProfilePage() {
                         setProfileName={setProfileName}
                         setUsername={setUsername}
                         setBio={setBio}
+                        loading={loadingProfile} // Pass loading state to ProfileCard
                     />
                     <Box bgColor="white" p={20} borderRadius={5} m={5}></Box>
                 </ScrollView>

@@ -70,8 +70,8 @@ export default function AddListingPage() {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
 
-            //const user = auth.currentUser; // User authenticated
-            //const uid = user.uid;
+            const user = auth.currentUser; // User authenticated
+            const uid = user.uid;
 
             // Generate a unique key for the new listing
             const docRef = doc(collection(database, 'listings'));   
@@ -100,6 +100,7 @@ export default function AddListingPage() {
 
             // Add the listing data to Firestore with the image URL
             await setDoc(docRef, {
+                sellerID: uid,
                 key: newListingId,
                 username: username,
                 ...listingData,

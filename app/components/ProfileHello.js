@@ -9,37 +9,7 @@ import {
 
 import colors from '../config/colors.js';
 
-export default function HelloCard() {
-    const [username, setUsername] = useState(null);
-
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(async (user) => {
-            if (user) {
-          
-                const userDocRef = collection(database, 'users');
-                const userQuery = query(userDocRef, where('userID', '==', user.uid)); // Corrected 'uid' to 'userID'
-
-                try {
-                    const querySnapshot = await getDocs(userQuery);
-                  
-                    if (!querySnapshot.empty) {
-                      const userDocument = querySnapshot.docs[0];
-                      setUsername(userDocument.data().username);
-                    } else {
-                      console.log('No such document!');
-                    }
-                  } catch (error) {
-                    console.error('Error getting document:', error);
-                  }
-            } else {
-              setUsername(null);
-            }
-          });
-    
-        return () => {
-            unsubscribe(); // Cleanup the subscription when the component unmounts
-        };
-    }, []);
+export default function HelloCard({username}) {
 
     return (
         <Box p="$3" w="100%">
