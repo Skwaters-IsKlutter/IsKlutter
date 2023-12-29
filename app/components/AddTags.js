@@ -14,6 +14,7 @@ import colors from '../config/colors.js';
 
 const Tags = [
     { key: 'food', value: 'Food' },
+    { key: 'beverages', value: 'Beverages' },
     { key: 'clothing', value: 'Clothing' },
     { key: 'accessories', value: 'Accessories' },
     { key: 'appliances', value: 'Appliances' },
@@ -21,6 +22,7 @@ const Tags = [
     { key: 'schoolessential', value: 'School Essentials' },
     { key: 'footwear', value: 'Footwear' },
     { key: 'kitcherware', value: 'Kitchenware' },
+    { key: 'others', value: 'Others' },
 ];
 
 const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) => {
@@ -42,13 +44,23 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                     />
                 </Box>
             );
-        } else if (['clothing', 'accessories', 'toys'].includes(mainTags)) {
+        } else if (['clothing', 'accessories', 'toys', 'others'].includes(mainTags)) {
             return (
                 <Box>
                     <CheckBox
                         checkBoxLabel="Hypoallergenic"
                         onValueChange={(value) => handleSecondaryTagChange(value, 'Hypoallergenic')}
                         ariaLabel="Hypoallergenic Checkbox"
+                    />
+                </Box>
+            );
+        } else if (['beverages'].includes(mainTags)) {
+            return (
+                <Box>
+                    <CheckBox
+                        checkBoxLabel="Alcoholic"
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'Alcoholic')}
+                        ariaLabel="Alcoholic Checkbox"
                     />
                 </Box>
             );
