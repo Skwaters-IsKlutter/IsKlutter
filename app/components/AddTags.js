@@ -13,14 +13,16 @@ import CheckBox from './CheckBox.js';
 import colors from '../config/colors.js';
 
 const Tags = [
-    { key: 'food', value: 'Food' },
-    { key: 'clothing', value: 'Clothing' },
-    { key: 'accessories', value: 'Accessories' },
-    { key: 'appliances', value: 'Appliances' },
-    { key: 'toys', value: 'Toys' },
-    { key: 'schoolessential', value: 'School Essentials' },
-    { key: 'footwear', value: 'Footwear' },
-    { key: 'kitcherware', value: 'Kitchenware' },
+    { key: 'Food', value: 'Food' },
+    { key: 'Beverages', value: 'Beverages' },
+    { key: 'Clothing', value: 'Clothing' },
+    { key: 'Accessories', value: 'Accessories' },
+    { key: 'Appliances', value: 'Appliances' },
+    { key: 'Toys', value: 'Toys' },
+    { key: 'School Essential', value: 'School Essentials' },
+    { key: 'Footwear', value: 'Footwear' },
+    { key: 'Kitcherware', value: 'Kitchenware' },
+    { key: 'Others', value: 'Others' },
 ];
 
 const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) => {
@@ -32,7 +34,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     const [listingTags, setListingTags] = React.useState(Tags.filter(tagInfo => tagInfo.key === mainTags));
 
     const renderCheckbox = () => {
-        if (mainTags === 'food') {
+        if (mainTags === 'Food') {
             return (
                 <Box>
                     <CheckBox
@@ -42,13 +44,23 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                     />
                 </Box>
             );
-        } else if (['clothing', 'accessories', 'toys'].includes(mainTags)) {
+        } else if (['Clothing', 'Accessories', 'Toys', 'Others'].includes(mainTags)) {
             return (
                 <Box>
                     <CheckBox
                         checkBoxLabel="Hypoallergenic"
                         onValueChange={(value) => handleSecondaryTagChange(value, 'Hypoallergenic')}
                         ariaLabel="Hypoallergenic Checkbox"
+                    />
+                </Box>
+            );
+        } else if (['Beverages'].includes(mainTags)) {
+            return (
+                <Box>
+                    <CheckBox
+                        checkBoxLabel="Alcoholic"
+                        onValueChange={(value) => handleSecondaryTagChange(value, 'Alcoholic')}
+                        ariaLabel="Alcoholic Checkbox"
                     />
                 </Box>
             );
@@ -65,8 +77,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     };
 
     const updateListingTags = (mainTag, secondaryTags) => {
-        const updatedMainTag = mainTag.charAt(0).toUpperCase() + mainTag.slice(1); // Capitalize the first letter
-        const updatedTags = Array.from(new Set([updatedMainTag, ...secondaryTags]));
+        const updatedTags = Array.from(new Set([mainTag, ...secondaryTags]));
         setListingData((prevData) => ({
           ...prevData,
           listingTags: updatedTags,
@@ -97,7 +108,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 setSelected={handleMainTagChange}
                 data={Tags}
                 placeholder={listingFormPlaceholder}
-                defaultOption={{ key: 'food', value: 'Food' }}
+                defaultOption={{ key: 'Food', value: 'Food' }}
             />
 
             {renderCheckbox()}

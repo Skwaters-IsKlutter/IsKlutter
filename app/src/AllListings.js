@@ -1,89 +1,129 @@
-import React, { useEffect, useState } from 'react';
-import {
-    HStack,
-    VStack,
-    Heading,
-    Box, 
-    ScrollView,
-    Button,
-    ButtonIcon,
-    ButtonText,
-} from '@gluestack-ui/themed';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useCallback } from 'react';
+import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+// Local Components
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import colors from '../config/colors.js'
 import Routes from '../components/constants/Routes.js';
-import { collection, getDocs, onSnapshot } from 'firebase/firestore';
-import { database } from '../../config/firebase'; // Firebase configuration
+import colors from '../config/colors.js';
 
-export default function AllListingsPage({key}) {
-    const navigation = useNavigation();
-    const [allListingsData, setAllListingsData] = useState([]);
+// Firebase Components
+import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
+import { database } from '../../config/firebase';
 
-    useEffect(() => {
-        // Set up a real-time listener for changes to the listings collection
-        const listingsCollection = collection(database, 'listings');
-        const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
-            const listingsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setAllListingsData(listingsData);
-        });
+export default function AllListingsPage({ key }) {
+  const navigation = useNavigation();
+  const [allListingsData, setAllListingsData] = useState([]);
 
-        // Cleanup function detach the listener when the component unmounts
-        return () => {
-            // Check if unsubscribe is a function before calling it
-            if (typeof unsubscribe === 'function') {
-                unsubscribe();
-            }
-        };
-    }, []); // Empty dependency array to run effect only once
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribeListings = onSnapshot(collection(database, 'listings'), (querySnapshot) => {
+        const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-    const renderAllListings = () => {
-        return allListingsData.map((item) => {
-            const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
+        // Fetch and update productSeller for each listing
+        const updatedListingsData = Promise.all(
+            listingsData.map(async (item) => {
+              const sellerID = item.sellerID;
+          
+              if (sellerID) {
+                try {
+                  const userDocRef = collection(database, 'users');
+                  const userQuery = query(userDocRef, where('userID', '==', sellerID));
+                  const userQuerySnapshot = await getDocs(userQuery);
+          
+                  if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
+                    const userDocument = userQuerySnapshot.docs[0];
+                    const sellerUsername = userDocument.data().username;
+          
+                    // Update the productSeller directly in the listings collection
+                    const listingsDocRef = doc(collection(database, 'listings'), item.id); // Use doc function to create DocumentReference
+                    await updateDoc(listingsDocRef, { productSeller: sellerUsername });
+          
+                    // Return the updated item
+                    return {
+                      ...item,
+                      username: sellerUsername,
+                    };
+                  } else {
+                    console.error(`User document not found for sellerID: ${sellerID}`);
+                    return item; // Return the original item if user document not found
+                  }
+                } catch (error) {
+                  console.error('Error fetching user document:', error);
+                  return item; // Return the original item in case of an error
+                }
+              }
+          
+              return item; // Return the original item if sellerID is missing
+            })
+          );
+          
 
-            return (
-                <ItemCard
-                    key={item.key}
-                    productImage={item.listingImageURL}
-                    productPrice={item.listingPrice}
-                    productName={item.listingName}
-                    productSeller={item.username}
-                    tags={firstTag}
-                    toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
-                />
-            );
-        });
-    };
+        // Update the state with the new data
+        updatedListingsData.then((updatedData) => setAllListingsData(updatedData));
+      });
 
-    return (
-        // Parent box
-        <Box w="100%" h="100%">
-            {/*Search Bar*/}
-            <SearchHeader userIcon={ require("../../assets/img/usericon.jpg") } />
+      return () => {
+        // Cleanup function to detach the listener when the component unmounts
+        if (typeof unsubscribeListings === 'function') {
+          unsubscribeListings();
+        }
+      };
+    }, []) // Empty dependency array to run effect only once
+  );
 
-            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
-                {/*Listings Label and post button */}
-                <VStack space="xs" pb="$2">
-                    <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
-                        <Button borderRadius={8} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)}>
-                            <ButtonIcon>
-                                <MaterialCommunityIcons name="post" size={15} color={colors.white} />
-                            </ButtonIcon>
-                            <ButtonText>Post</ButtonText>
-                        </Button>
-                    </HStack>
-                </VStack>
+  const renderAllListings = () => {
+    return allListingsData.map((item) => {
+      const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
 
-                {/*Listing Box Container*/}
-                <ScrollView>
-                    <HStack space="xs" flexWrap="wrap" justifyContent="center">
-                        {renderAllListings()}
-                    </HStack>
-                </ScrollView>
-            </Box>
-        </Box>
-    )
+      return (
+        <ItemCard
+          key={item.key}
+          productImage={item.listingImageURL}
+          productPrice={item.listingPrice}
+          productName={item.listingName}
+          productSeller={item.username}
+          tags={firstTag}
+          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
+        />
+      );
+    });
+  };
+
+  return (
+    // Parent box
+    <Box w="100%" h="100%">
+      {/*Search Bar*/}
+      <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+
+      <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+        {/*Listings Label and post button */}
+        <VStack space="xs" pb="$2">
+          <HStack space="xs" justifyContent="space-between" alignItems="center">
+            <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>
+              Listings
+            </Heading>
+            <Button
+              borderRadius={8}
+              backgroundColor={colors.secondary}
+              onPress={() => navigation.navigate(Routes.ADDLISTING)}
+            >
+              <ButtonIcon>
+                <MaterialCommunityIcons name="post" size={15} color={colors.white} />
+              </ButtonIcon>
+              <ButtonText>Post</ButtonText>
+            </Button>
+          </HStack>
+        </VStack>
+
+        {/*Listing Box Container*/}
+        <ScrollView>
+          <HStack space="xs" flexWrap="wrap" justifyContent="center">
+            {renderAllListings()}
+          </HStack>
+        </ScrollView>
+      </Box>
+    </Box>
+  );
 }

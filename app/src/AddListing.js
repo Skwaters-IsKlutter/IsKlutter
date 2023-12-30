@@ -102,14 +102,14 @@ export default function AddListingPage() {
             await setDoc(docRef, {
                 sellerID: uid,
                 key: newListingId,
-                username: username,
+                productSeller: username,
                 ...listingData,
                 listingImage: storagePath,
                 listingImageURL: downloadURL,
             });
 
                 console.log('Listing Data before adding to Firestore: ', {
-                    username: username,
+                    productSeller: username,
                     ...listingData,
                     listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
                     listingImage: storagePath,
