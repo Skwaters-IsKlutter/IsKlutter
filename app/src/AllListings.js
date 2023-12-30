@@ -1,13 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+// Local Components
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+import colors from '../config/colors.js';
+
+// Firebase Components
 import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
-import { database } from '../../config/firebase'; // Firebase configuration
+import { database } from '../../config/firebase';
 
 export default function AllListingsPage({ key }) {
   const navigation = useNavigation();
@@ -80,7 +83,7 @@ export default function AllListingsPage({ key }) {
           productImage={item.listingImageURL}
           productPrice={item.listingPrice}
           productName={item.listingName}
-          productSeller={item.username} // Use productSeller if available, fallback to username
+          productSeller={item.username}
           tags={firstTag}
           toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
         />
