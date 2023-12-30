@@ -13,7 +13,7 @@ import CommunityScreen from './app/components/screens/CommunityScreen.js';
 import AllMessagesScreen from './app/components/screens/AllMessagesScreen.js';
 import AddListingScreen from './app/components/screens/AddListingScreen.js';
 import PrivateMessageScreen from './app/components/screens/PrivateMessageScreen.js';
-import EditProfileScreen from './app/components/EditProfileModal.js';
+import EditProfileScreen from './app/src/EditProfileModal.js';
 
 import colors from './app/config/colors.js';
 
