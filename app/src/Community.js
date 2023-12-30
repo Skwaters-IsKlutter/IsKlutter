@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     VStack,
     HStack,
@@ -11,6 +11,7 @@ import {
     FormControl,
     Input,
     InputField,
+    View,
     ScrollView
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -19,13 +20,48 @@ import { Alert } from 'react-native';
 import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
-
+import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { TouchableOpacity } from 'react-native';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+import { FIREBASE_APP } from '../../config/firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+
+
+const db = getFirestore(FIREBASE_APP);
+const auth = getAuth();
 
 export default function CommunityPage() {
+    const [usernames, setUsernames] = useState([]);
+    const [description, setDescription] = useState([]);
     const navigation = useNavigation();
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userCollection = collection(db, 'forum');
+                const querySnapshot = await getDocs(userCollection);
+    
+                const userData = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const userDataObj = {
+                        username: data.username,
+                        description: data.description
+                    };
+                    userData.push(userDataObj);
+                });
+    
+                setDescription(userData); // Set usernames and descriptions to state
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
+            }
+        };
+    
+        fetchData();
+    }, []);
+    
     const communityData = [
         { 
             posterIcon: require("../../assets/img/sassa.jpg"),
@@ -57,6 +93,40 @@ export default function CommunityPage() {
             />
         );
     }
+    const renderDescription = () => {
+        return description.map((userData, index) => (
+            <TouchableOpacity key={index} onPress={() => handleUsernameClick(userData.description)}>
+                <View style={styles.userDataContainer}>
+                    <Box bg="white" p={3} borderRadius={8} shadow={2} mb={3}>
+                        <Text style={styles.username}>{userData.username}</Text>
+                        <Text style={styles.description}>{userData.description}</Text>
+                    </Box>
+                </View>
+</TouchableOpacity>
+        ));
+    };
+    
+    // Style definitions
+    const styles = {
+        userDataContainer: {
+            marginBottom: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: '#CCCCCC',
+            paddingBottom: 10,
+        },
+        username: {
+            fontWeight: 'bold',
+            marginBottom: 5,
+        },
+        description: {
+            fontStyle: 'italic',
+            color: 'gray',
+        },
+    };
+    
+    
+    
+    
 
     return (
         // Parent box
@@ -76,7 +146,9 @@ export default function CommunityPage() {
                 <Box bg={colors.medium} borderRadius={8} p="$5" m={5} flex={1}>
                     <ScrollView>
                         <HStack space="xs" flexWrap="wrap" justifyContent="center">
-                            {renderCommunityPosts()}
+                            {renderDescription()}
+
+
                         </HStack>
                     </ScrollView>
                 </Box>
