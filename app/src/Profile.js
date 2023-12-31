@@ -13,6 +13,7 @@ import colors from '../config/colors.js';
 
 export default function ProfilePage() {
     const [currentUser, setCurrentUser] = React.useState(null);
+    const [profileImg, setProfileImg] = React.useState('');
     const [profileName, setProfileName] = React.useState('');
     const [username, setUsername] = React.useState('');
     const [loadingProfile, setLoadingProfile] = React.useState(true);
@@ -35,6 +36,10 @@ export default function ProfilePage() {
                   const userData = userDocSnapshot.data();
                   console.log('User Data:', userData);
                   setCurrentUser(userData);
+
+                  // Set the userProfileImg URL
+                  const userProfileImg = userData?.userProfileImg || '';
+                  setProfileImg(userProfileImg);
                 } else {
                   console.log('User document does not exist.');
                 }
@@ -57,7 +62,7 @@ export default function ProfilePage() {
                 <HelloCard username={currentUser?.username} />
                 <ScrollView>
                     <ProfileCard
-                        userProfileImg={""}
+                        userProfileImg={profileImg}
                         username={currentUser?.username}
                         profileName={currentUser?.userProfile || currentUser?.username}
                         bio={currentUser?.userBio || "I have no interesting info."}

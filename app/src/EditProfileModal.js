@@ -21,14 +21,10 @@ import {
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
-import { updateDoc, doc, collection, where, getDocs, query } from 'firebase/firestore';
-import { storage, database } from '../../config/firebase';  // Import only storage
-import { uploadBytes, ref as storageRef, getDownloadURL } from 'firebase/storage';  // Import necessary storage functions
-
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, where, getDocs, query, updateDoc, doc } from 'firebase/firestore';
+import { database } from '../../config/firebase';
 import colors from '../config/colors.js';
-
-
-
 
 export default function EditProfileScreen({ route, navigation,back }) {
   const [loading, setLoading] = useState(false);
@@ -48,9 +44,10 @@ export default function EditProfileScreen({ route, navigation,back }) {
   
     const result = await ImagePicker.launchImageLibraryAsync();
   
-    if (!result.canceled) {
-      setNewProfileImage(result.uri); // Use result.uri to get the image URI
+    if (result.canceled) {
+      return;
     }
+    setNewProfileImage(result.assets[0].uri);
   };
 
   const handleSaveProfile = async () => {
@@ -79,16 +76,17 @@ export default function EditProfileScreen({ route, navigation,back }) {
       let imageUrl = '';
       if (newProfileImage) {
         console.log('Attempting to upload image to Firebase Storage...');
-        const imageRef = storage.ref(`profileImages/${userID}`);
+        const storage = getStorage(); // Get the storage instance
+        const imageRef = storageRef(storage, `profileImages/${userID}`); // Use storageRef with the storage instance
         console.log('Image Reference:', imageRef);
         const response = await fetch(newProfileImage);
         const blob = await response.blob();
-  
+
         // Use uploadBytes to upload the blob data
         const uploadTask = uploadBytes(imageRef, blob);
         const snapshot = await uploadTask;
-  
-        imageUrl = await snapshot.ref.getDownloadURL();
+
+        imageUrl = await getDownloadURL(snapshot.ref); // Use getDownloadURL with the storage instance
         console.log('Image Reference:', snapshot.ref); // Move this inside the if block
       }
   
