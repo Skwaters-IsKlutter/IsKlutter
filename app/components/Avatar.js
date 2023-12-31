@@ -1,13 +1,33 @@
-import React from "react";
-import { Avatar, AvatarFallbackText, AvatarImage } from "@gluestack-ui/themed";
+// Avatar.js
 
-import colors from "../config/colors";
+import React, {useEffect} from 'react';
+import { Avatar, AvatarFallbackText, AvatarImage } from '@gluestack-ui/themed';
+import colors from '../config/colors';
+import { Image, Text, View } from 'react-native';
 
-export default function UserAvatar( {username, userIcon} ) {
-    return (
-        <Avatar bgColor={colors.primary} size="md" borderRadius="$full" h={40} w={40} ml={10}>
-            <AvatarFallbackText color={colors.white}>{username}</AvatarFallbackText>
-            <AvatarImage source={userIcon} />
-        </Avatar>
-    )
-}
+const UserAvatar = ({ username, userIcon, userProfileImg }) => {
+  console.log('userProfileImg', userProfileImg);
+
+  useEffect(() => {
+    // Directly update the image source when userProfileImg changes
+    // This assumes that you are using a state to manage the image source
+    // For example, you might use useState to manage the image source state
+
+    // setImageSource(userProfileImg); // Uncomment and replace with your state management logic
+  }, [userProfileImg]);
+  return (
+    <View>
+      {userProfileImg ? (
+        <Image
+          source={{ uri: userProfileImg }}
+          style={{ width: 50, height: 50, borderRadius: 25 }}
+        />
+      ) : (
+        <Text>{username ? username.charAt(0).toUpperCase() : 'Username'}</Text>
+      )}
+    </View>
+  );
+};
+
+export default UserAvatar;
+

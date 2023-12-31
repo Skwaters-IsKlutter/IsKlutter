@@ -34,7 +34,6 @@ export default function ProfilePage() {
     
                 if (userDocSnapshot.exists()) {
                   const userData = userDocSnapshot.data();
-                  console.log('User Data:', userData);
                   setCurrentUser(userData);
 
                   // Set the userProfileImg URL

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
 // Local Components
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeader from '../components/SearchHeader.js';
@@ -94,11 +95,11 @@ export default function AllListingsPage({ key }) {
   return (
     // Parent box
     <Box w="100%" h="100%">
-      {/*Search Bar*/}
+      {/* Search Bar */}
       <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
 
       <Box p="$6" w="100%" maxWidth="$96" flex={1}>
-        {/*Listings Label and post button */}
+        {/* Listings Label and post button */}
         <VStack space="xs" pb="$2">
           <HStack space="xs" justifyContent="space-between" alignItems="center">
             <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>
@@ -117,7 +118,7 @@ export default function AllListingsPage({ key }) {
           </HStack>
         </VStack>
 
-        {/*Listing Box Container*/}
+        {/* Listing Box Container */}
         <ScrollView>
           <HStack space="xs" flexWrap="wrap" justifyContent="center">
             {renderAllListings()}

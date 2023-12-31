@@ -6,7 +6,6 @@ import colors from '../config/colors.js';
 
 export default function ProfileCard({ userProfileImg, username, profileName, bio, userID, setProfileName, setUsername, setBio, loading }) {
   const navigation = useNavigation();
-  console.log(userProfileImg);
   const handleEditProfile = () => {
     // Navigate to the EditProfile screen and pass necessary data
     navigation.navigate('EditProfile', {
