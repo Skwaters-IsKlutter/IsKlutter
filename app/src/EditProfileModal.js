@@ -102,7 +102,7 @@ export default function EditProfileScreen({ route, navigation,back }) {
           username: newUsername,
           userBio: newBio,
           userProfile: newProfileName,
-          userProfileImg: imageUrl || '',
+          userProfileImg: newProfileImage ? imageUrl : userProfileImg,
         });
   
         // Update the state with the new values
