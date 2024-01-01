@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     VStack,
@@ -12,17 +12,30 @@ import {
     AvatarImage,
     Pressable,
 } from '@gluestack-ui/themed';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,  useFocusEffect } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import UserAvatar from './Avatar.js';
-
+import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 export default function SearchHeaderBack({ search, username, userIcon, userProfile, back }) {
     const navigation = useNavigation();
+    const { userProfileImg } = useUser();
+    const [, setForceUpdate] = useState(false);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            //console.log('Screen is focused. Updating userProfileImg:', userProfileImg);
+            setForceUpdate(prev => !prev);
+        }, [userProfileImg])
+      );
+    
+      useEffect(() => {
+        console.log('Forcing re-render in SearchHeaderBack');
+      }, [userProfileImg]); // Log when userProfileImg changes
 
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
@@ -49,7 +62,7 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-                        <UserAvatar username={username} userIcon={userIcon}/>
+                        <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg}/>
                     </Pressable>
                 </HStack>
 
@@ -61,6 +74,7 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                         }}>Tags</ButtonText>
                     </Button>    
                 </HStack> */}
+
             </VStack>
         </Box>
     )

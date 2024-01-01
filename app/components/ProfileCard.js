@@ -3,6 +3,7 @@ import { VStack, HStack, Heading, Box, Button, ButtonText, Avatar, AvatarFallbac
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import colors from '../config/colors.js';
+import profileImgPlaceHolder from '../../assets/img/profile-holder.jpg';
 
 export default function ProfileCard({ userProfileImg, username, profileName, bio, userID, setProfileName, setUsername, setBio, loading }) {
   const navigation = useNavigation();
@@ -24,10 +25,14 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
   return (
     <Box bgColor="white" p={20} borderRadius={5}>
       {/* Avatar*/}
-      {/* Avatar*/}
       <Avatar borderRadius="$full" alignSelf="center" size="2xl">
-        {userProfileImg && <AvatarImage source={{ uri: userProfileImg }} style={{ width: '100%', height: '100%', borderRadius: 999 }} />}
-        {!userProfileImg && <AvatarFallbackText>{username}</AvatarFallbackText>}
+        {userProfileImg && (
+          <AvatarImage source={{ uri: userProfileImg }} style={{ width: '100%', height: '100%', borderRadius: 999 }} />
+        )}
+        {!userProfileImg && <AvatarFallbackText>{/* Empty Fallback Text */}</AvatarFallbackText>}
+        {!userProfileImg && (
+          <AvatarImage source={profileImgPlaceHolder} style={{ width: '100%', height: '100%', borderRadius: 999 }} />
+        )}
       </Avatar>
 
       <VStack space="xs" pb="$2" py="$3">

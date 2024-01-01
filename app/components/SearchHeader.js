@@ -24,14 +24,14 @@ export default function SearchHeader({ search, username, userIcon, userProfile }
   
     useFocusEffect(
       React.useCallback(() => {
-        console.log('Screen is focused. Updating userProfileImg:', userProfileImg);
+            //console.log('Screen is focused. Updating userProfileImg:', userProfileImg);
         setForceUpdate(prev => !prev);
       }, [userProfileImg])
     );
   
     useEffect(() => {
       console.log('Forcing re-render in SearchHeader');
-    }, [userProfileImg]); // This should log when userProfileImg changes
+    }, [userProfileImg]); // Log when userProfileImg changes
   
 
     return (

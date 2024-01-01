@@ -19,6 +19,7 @@ import {
   Pressable
 } from '@gluestack-ui/themed';
 
+import { useUser } from '../components/UserIcon.js'; // useUser hook
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -28,11 +29,12 @@ import colors from '../config/colors.js';
 
 export default function EditProfileScreen({ route, navigation,back }) {
   const [loading, setLoading] = useState(false);
-  const { userProfileImg, username, profileName, bio, userID, setProfileName, setUsername, setBio } = route.params;
+  const {username, profileName, bio, userID, setProfileName, setUsername, setBio } = route.params;
   const [newProfileName, setNewProfileName] = useState(profileName);
   const [newUsername, setNewUsername] = useState(username);
   const [newBio, setNewBio] = useState(bio);
   const [newProfileImage, setNewProfileImage] = useState(null);
+  const {userProfileImg, updateProfileImg } = useUser();
 
   const handleChooseImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -56,9 +58,9 @@ export default function EditProfileScreen({ route, navigation,back }) {
       Alert.alert('Error', 'New username is required.');
       return;
     }
-  
-    if (username !== newUsername) {
-      // Check if the new username is already taken
+    
+    // Check if the new username is already taken
+    if (username !== newUsername) {  
       const usersCollection = collection(database, 'users');
       const usernameQuery = query(usersCollection, where('username', '==', newUsername));
       const usernameQuerySnapshot = await getDocs(usernameQuery);
@@ -70,15 +72,13 @@ export default function EditProfileScreen({ route, navigation,back }) {
     }
   
     try {
-      // Set loading to true
-      setLoading(true);
+      setLoading(true); // Set loading to true
   
       let imageUrl = '';
       if (newProfileImage) {
         console.log('Attempting to upload image to Firebase Storage...');
         const storage = getStorage(); // Get the storage instance
         const imageRef = storageRef(storage, `profileImages/${userID}`); // Use storageRef with the storage instance
-        console.log('Image Reference:', imageRef);
         const response = await fetch(newProfileImage);
         const blob = await response.blob();
 
@@ -86,8 +86,8 @@ export default function EditProfileScreen({ route, navigation,back }) {
         const uploadTask = uploadBytes(imageRef, blob);
         const snapshot = await uploadTask;
 
-        imageUrl = await getDownloadURL(snapshot.ref); // Use getDownloadURL with the storage instance
-        console.log('Image Reference:', snapshot.ref); // Move this inside the if block
+        imageUrl = await getDownloadURL(snapshot.ref);
+          //console.log('Image Reference:', snapshot.ref); 
       }
   
       // Update the user document in Firestore with the new profile data
@@ -97,7 +97,7 @@ export default function EditProfileScreen({ route, navigation,back }) {
   
       if (!userQuerySnapshot.empty) {
         const userDocRef = userQuerySnapshot.docs[0].ref;
-        console.log('User Document Reference:', userDocRef);
+          //console.log('User Document Reference:', userDocRef);
         await updateDoc(userDocRef, {
           username: newUsername,
           userBio: newBio,
@@ -109,7 +109,10 @@ export default function EditProfileScreen({ route, navigation,back }) {
         route.params.setUsername(newUsername);
         route.params.setProfileName(newProfileName);
         route.params.setBio(newBio);
-  
+
+        // Call the updateProfileImg function from UserIcon
+        updateProfileImg(newProfileImage ? imageUrl : userProfileImg);
+        
         // Show a success message
         Alert.alert('Success', 'Profile updated successfully.');
   

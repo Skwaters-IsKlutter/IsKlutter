@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, database, firestore } from '../../config/firebase'; // Update the path as needed
+import { auth, database, firestore } from '../../config/firebase';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 
 const UserContext = createContext();
@@ -17,11 +17,10 @@ export const UserProvider = ({ children }) => {
         const userDocRef = query(collection(database, 'users'), where('userID', '==', uid));
         getDocs(userDocRef).then((querySnapshot) => {
           if (!querySnapshot.empty) {
-            // Assuming there's only one document with the given UID
             const doc = querySnapshot.docs[0];
             const userData = doc.data();
             // Update the profile image in the state
-            setUserProfileImg(userData.userProfileImg); // Assuming 'profileImage' is the field in Firestore
+            setUserProfileImg(userData.userProfileImg);
           } else {
             console.error('User document not found.');
           }
@@ -46,7 +45,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ userProfileImg, updateUserProfileImg }}>
+    <UserContext.Provider value={{ userProfileImg, updateProfileImg: updateUserProfileImg }}>
       {children}
     </UserContext.Provider>
   );
