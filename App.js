@@ -16,6 +16,7 @@ import PrivateMessageScreen from './app/components/screens/PrivateMessageScreen.
 import EditProfileScreen from './app/src/EditProfileModal.js';
 
 import colors from './app/config/colors.js';
+import { UserProvider } from './app/components/UserIcon.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -42,6 +43,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 	return (
+		<UserProvider>
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Login">
 				<Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
@@ -55,5 +57,6 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="EditProfile" component={EditProfileScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
+		</UserProvider>
 	);
 }
