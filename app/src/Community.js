@@ -17,7 +17,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
-import SearchHeader from '../components/SearchHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
 import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
@@ -93,62 +93,40 @@ export default function CommunityPage() {
             />
         );
     }
+
     const renderDescription = () => {
-        return description.map((userData, index) => (
-            <TouchableOpacity key={index} onPress={() => handleUsernameClick(userData.description)}>
-                <View style={styles.userDataContainer}>
-                    <Box bg="white" p={3} borderRadius={8} shadow={2} mb={3}>
-                        <Text style={styles.username}>{userData.username}</Text>
-                        <Text style={styles.description}>{userData.description}</Text>
-                    </Box>
-                </View>
-</TouchableOpacity>
-        ));
-    };
-    
-    // Style definitions
-    const styles = {
-        userDataContainer: {
-            marginBottom: 15,
-            borderBottomWidth: 1,
-            borderBottomColor: '#CCCCCC',
-            paddingBottom: 10,
-        },
-        username: {
-            fontWeight: 'bold',
-            marginBottom: 5,
-        },
-        description: {
-            fontStyle: 'italic',
-            color: 'gray',
-        },
-    };
-    
-    
-    
-    
+        return description.map((userData, index) => 
+            <PostCard
+                key={index}
+                username={userData.username}
+                description={userData.description}
+            />
+        );
+    }
 
     return (
         // Parent box
         <Box w="100%" h="100%">
 
             {/*Search Bar*/}
-            <SearchHeader posterUser="Sassa Girl" userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeaderBack 
+                    posterUser="Sassa Girl"
+                    userIcon={ require("../../assets/img/usericon.jpg") } 
+                    back={navigation.goBack} 
+                />
 
             <Box p="$6" w="100%" maxWidth="$96" flex={1}>
                 {/*Community Label */}
                 <VStack space="xs" pb={2}>
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
+                    <Heading lineHeight={40} fontSize="$4xl" color={colors.secondary}>Community</Heading>
                     <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
                 </VStack>
 
                 {/*Community Posts Container */}
                 <Box bg={colors.medium} borderRadius={8} p="$5" m={5} flex={1}>
                     <ScrollView>
-                        <HStack space="xs" flexWrap="wrap" justifyContent="center">
+                        <HStack space="xs" flexWrap="wrap" justifyContent="center" >
                             {renderDescription()}
-
-
                         </HStack>
                     </ScrollView>
                 </Box>
