@@ -80,11 +80,12 @@ export default function AllListingsPage({ key }) {
 
       return (
         <ItemCard
-          key={item.key}
+          key={item.id}
           productImage={item.listingImageURL}
           productPrice={item.listingPrice}
           productName={item.listingName}
           productSeller={item.username}
+          sellerID={item.sellerID}
           tags={firstTag}
           toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
         />
