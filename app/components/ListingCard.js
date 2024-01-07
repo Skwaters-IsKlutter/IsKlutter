@@ -16,7 +16,6 @@ import { useNavigation } from '@react-navigation/native';
 import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
 import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
 
 const getCurrentUserID = () => {
     const currentUser = auth.currentUser;
@@ -33,6 +32,10 @@ export default function ListingCard({ productID, productName, productImage, prod
     const navigation = useNavigation();
     const currentUserId = getCurrentUserID();
     console.log(productID);
+
+    const handleChatPress = () => {
+        navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: sellerName });
+    };
 
     const isCurrentUserSeller = () => {
         const result = sellerID === currentUserId;
@@ -129,7 +132,16 @@ export default function ListingCard({ productID, productName, productImage, prod
                         </Button>
                     )}
 
-                    <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={8} onPress={sellerChat} alignSelf="flex-end">
+                    {/* Chat button */}
+                    <Button
+                        variant="solid"
+                        size="sm"
+                        backgroundColor={colors.primary}
+                        borderRadius={8}
+                        onPress={handleChatPress} // Use the function to navigate and pass sellerName
+                        alignSelf="flex-end"
+                    >
+                        {/* Chat button content */}
                         <ButtonIcon>
                             <MaterialCommunityIcons name="chat" size={13} color={colors.white} />
                         </ButtonIcon>
