@@ -17,7 +17,7 @@ import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader({ search, username, userIcon, userProfile }) {
+export default function SearchHeader({ search, username, userIcon, onSearchChange }) {
     const navigation = useNavigation();
     const { userProfileImg } = useUser();
     const [, setForceUpdate] = useState(false);
@@ -36,26 +36,30 @@ export default function SearchHeader({ search, username, userIcon, userProfile }
 
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
-            <VStack>
-                <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
-                    <Input w="70%" bg={colors.white} borderColor={colors.primary} size="sm">
-                        <InputField placeholder="Search" />
-                        <InputSlot>
-                            <InputIcon>
-                                <MaterialCommunityIcons name="magnify" color={colors.primary} />
-                            </InputIcon>
-                        </InputSlot>
-                    </Input>
-
-                    <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
-                        <MaterialCommunityIcons name="message" color={colors.white} size={25} />
-                    </Pressable>
-
-                    <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-                        <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} />
-                    </Pressable>
-                </HStack>
-            </VStack>
+          <VStack>
+            <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
+              <Input w="70%" bg={colors.white} borderColor={colors.primary} size="sm">
+                <InputField
+                  placeholder="Search"
+                  value={search}
+                  onChangeText={onSearchChange} // Add this line to handle text changes
+                />
+                <InputSlot>
+                  <InputIcon>
+                    <MaterialCommunityIcons name="magnify" color={colors.primary} />
+                  </InputIcon>
+                </InputSlot>
+              </Input>
+    
+              <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
+                <MaterialCommunityIcons name="message" color={colors.white} size={25} />
+              </Pressable>
+    
+              <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
+                <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} />
+              </Pressable>
+            </HStack>
+          </VStack>
         </Box>
-    );
-}
+      );
+    }
