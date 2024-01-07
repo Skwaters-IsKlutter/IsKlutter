@@ -71,18 +71,21 @@ export default function ProfilePage() {
       );
 
       const renderUserListings = () => {
-        return userListings.map((item) => (
-          console.log(item),
+        return userListings.map((item) => {
+          const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
+
+          return (
             <ItemCard
                 key={item.id}
                 productImage={item.listingImageURL}
                 productPrice={item.listingPrice}
                 productName={item.listingName}
                 productSeller={currentUser?.username}
-                tags={item.listingTags}
+                tags={firstTag}
                 toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
             />
-        ));
+          );
+        });
     };
 
     return (
