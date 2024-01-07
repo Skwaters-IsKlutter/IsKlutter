@@ -15,6 +15,8 @@ import { doc, deleteDoc } from 'firebase/firestore'
 import { useNavigation } from '@react-navigation/native';
 import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
+
+import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 
 const getCurrentUserID = () => {
