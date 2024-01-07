@@ -1,6 +1,10 @@
+// React
 import React, { useState, useCallback } from 'react';
-import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
+// Gluestack UI
+import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
+
 
 // Local Components
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
