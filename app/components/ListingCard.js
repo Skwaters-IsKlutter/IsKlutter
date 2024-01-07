@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
 const getCurrentUserID = () => {
     const currentUser = auth.currentUser;
