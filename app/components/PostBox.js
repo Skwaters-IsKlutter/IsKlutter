@@ -21,6 +21,15 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
+const generateRandomId = (length = 10) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomId = '';
+  for (let i = 0; i < length; i++) {
+    randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return randomId;
+};
+
 export default function PostBox({ post, posterUser, posterIcon }) {
     const [listingDescription, setListingDescription] = useState('');
     const [username, setUsername] = useState('');
@@ -53,14 +62,16 @@ export default function PostBox({ post, posterUser, posterIcon }) {
         if (username) {
           // Add data to Firestore collection 'forum'
           const docRef = await addDoc(collection(db, 'forum'), {
+            key: generateRandomId(), // Assuming generateRandomId is defined
             description: listingDescription,
             username: username,
           });
-  
+    
           // Clear input fields after posting
           setListingDescription('');
           alert('Posted');
           console.log('Document written with ID: ', docRef.id);
+          console.log('Generated ID: ', docRef.id); // Display the generated ID
         } else {
           // Handle case where username is not fetched yet
           console.error('Username not fetched');
@@ -69,6 +80,7 @@ export default function PostBox({ post, posterUser, posterIcon }) {
         console.error('Error adding document: ', error);
       }
     };
+    
 
     return (
         <Box m={10}>
