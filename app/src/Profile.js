@@ -1,6 +1,7 @@
 // React
 import * as React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+
 
 // Gluestack UI
 import {Box, ScrollView, Heading } from '@gluestack-ui/themed';
@@ -19,6 +20,7 @@ import { auth, database } from '../../config/firebase';
 
 
 export default function ProfilePage() {
+    const navigation = useNavigation();
     const [currentUser, setCurrentUser] = React.useState(null);
     const [profileImg, setProfileImg] = React.useState('');
     const [profileName, setProfileName] = React.useState('');
