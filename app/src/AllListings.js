@@ -16,6 +16,7 @@ import { database } from '../../config/firebase';
 export default function AllListingsPage({ key }) {
   const navigation = useNavigation();
   const [allListingsData, setAllListingsData] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -74,17 +75,29 @@ export default function AllListingsPage({ key }) {
     }, []) // Empty dependency array to run effect only once
   );
 
+  const handleSearchChange = (text) => {
+    setSearchInput(text);
+  };
+
+  const filteredListings = allListingsData.filter((item) => {
+    const lowerCaseSearch = searchInput.toLowerCase();
+    const listingName = item.listingName.toLowerCase();
+    const username = item.username.toLowerCase();
+    return listingName.includes(lowerCaseSearch) || username.includes(lowerCaseSearch);
+  });
+
   const renderAllListings = () => {
-    return allListingsData.map((item) => {
+    return filteredListings.map((item) => {
       const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
 
       return (
         <ItemCard
-          key={item.key}
+          key={item.id}
           productImage={item.listingImageURL}
           productPrice={item.listingPrice}
           productName={item.listingName}
           productSeller={item.username}
+          sellerID={item.sellerID}
           tags={firstTag}
           toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
         />
@@ -96,7 +109,11 @@ export default function AllListingsPage({ key }) {
     // Parent box
     <Box w="100%" h="100%">
       {/* Search Bar */}
-      <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+      <SearchHeader 
+        userIcon={require("../../assets/img/usericon.jpg")} 
+        search={searchInput}
+        onSearchChange={handleSearchChange}
+      />
 
       <Box p="$6" w="100%" maxWidth="$96" flex={1}>
         {/* Listings Label and post button */}

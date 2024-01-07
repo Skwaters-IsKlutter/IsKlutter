@@ -23,13 +23,13 @@ import { useUser } from '../components/UserIcon.js'; // useUser hook
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, where, getDocs, query, updateDoc, doc } from 'firebase/firestore';
-import { database } from '../../config/firebase';
+import { collection, where, getDocs, query, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { database, auth } from '../../config/firebase';
 import colors from '../config/colors.js';
 
-export default function EditProfileScreen({ route, navigation,back }) {
+export default function EditProfileScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false);
-  const {username, profileName, bio, userID, setProfileName, setUsername, setBio } = route.params;
+  const {username, profileName, bio, userID,} = route.params;
   const [newProfileName, setNewProfileName] = useState(profileName);
   const [newUsername, setNewUsername] = useState(username);
   const [newBio, setNewBio] = useState(bio);
@@ -58,9 +58,9 @@ export default function EditProfileScreen({ route, navigation,back }) {
       Alert.alert('Error', 'New username is required.');
       return;
     }
-    
+  
     // Check if the new username is already taken
-    if (username !== newUsername) {  
+    if (username !== newUsername) {
       const usersCollection = collection(database, 'users');
       const usernameQuery = query(usersCollection, where('username', '==', newUsername));
       const usernameQuerySnapshot = await getDocs(usernameQuery);
@@ -74,6 +74,12 @@ export default function EditProfileScreen({ route, navigation,back }) {
     try {
       setLoading(true); // Set loading to true
   
+      let updatedProfileData = {
+        username: newUsername,
+        userBio: newBio,
+        userProfile: newProfileName,
+      };
+  
       let imageUrl = '';
       if (newProfileImage) {
         console.log('Attempting to upload image to Firebase Storage...');
@@ -81,13 +87,16 @@ export default function EditProfileScreen({ route, navigation,back }) {
         const imageRef = storageRef(storage, `profileImages/${userID}`); // Use storageRef with the storage instance
         const response = await fetch(newProfileImage);
         const blob = await response.blob();
-
+  
         // Use uploadBytes to upload the blob data
         const uploadTask = uploadBytes(imageRef, blob);
         const snapshot = await uploadTask;
-
+  
         imageUrl = await getDownloadURL(snapshot.ref);
-          //console.log('Image Reference:', snapshot.ref); 
+        updatedProfileData = {
+          ...updatedProfileData,
+          userProfileImg: imageUrl,
+        };
       }
   
       // Update the user document in Firestore with the new profile data
@@ -97,22 +106,17 @@ export default function EditProfileScreen({ route, navigation,back }) {
   
       if (!userQuerySnapshot.empty) {
         const userDocRef = userQuerySnapshot.docs[0].ref;
-          //console.log('User Document Reference:', userDocRef);
-        await updateDoc(userDocRef, {
-          username: newUsername,
-          userBio: newBio,
-          userProfile: newProfileName,
-          userProfileImg: newProfileImage ? imageUrl : userProfileImg,
-        });
+  
+        await updateDoc(userDocRef, updatedProfileData);
   
         // Update the state with the new values
         route.params.setUsername(newUsername);
         route.params.setProfileName(newProfileName);
         route.params.setBio(newBio);
-
+  
         // Call the updateProfileImg function from UserIcon
         updateProfileImg(newProfileImage ? imageUrl : userProfileImg);
-        
+  
         // Show a success message
         Alert.alert('Success', 'Profile updated successfully.');
   
@@ -128,14 +132,79 @@ export default function EditProfileScreen({ route, navigation,back }) {
     } catch (error) {
       console.error('Error updating user profile:', error);
       Alert.alert('Error', 'Failed to update user profile. Please try again.');
+    } finally {
+      // Set loading back to false
+      setLoading(false);
     }
   };
+  
 
   const handleCancel = () => {
     // Go back to the previous screen (listings page)
     navigation.goBack();
-  }; 
+  };   
 
+  const handleDeleteAccount = async () => {
+    // Show a confirmation dialog
+    Alert.alert(
+      'Confirm Account Deletion',
+      'Are you sure you want to delete your account? This action is irreversible.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              setLoading(true);
+  
+              // Query the users collection to get the document reference for the user
+              const usersCollection = collection(database, 'users');
+              const userQuery = query(usersCollection, where('userID', '==', userID));
+              const userQuerySnapshot = await getDocs(userQuery);
+              const user = auth.currentUser;
+  
+              if (!userQuerySnapshot.empty) {
+                const userDocRef = userQuerySnapshot.docs[0].ref;
+  
+                // Delete all listings where the sellerID matches the user's ID
+                const listingsCollection = collection(database, 'listings');
+                const listingsQuery = query(listingsCollection, where('sellerID', '==', userID));
+                const listingsQuerySnapshot = await getDocs(listingsQuery);
+  
+                // Use Promise.all to delete all listings in parallel
+                await Promise.all(listingsQuerySnapshot.docs.map(async (listingDoc) => {
+                  await deleteDoc(listingDoc.ref);
+                }));
+  
+                // Delete the user document
+                await deleteDoc(userDocRef);
+                await user.delete();
+  
+                // Show a success message
+                Alert.alert('Account Deleted', 'Your account and associated listings have been deleted successfully.');
+  
+                // Navigate back to the login screen
+                navigation.navigate('Login');
+              } else {
+                console.log('User document not found.');
+                Alert.alert('Error', 'User document not found. Please try again.');
+              }
+            } catch (error) {
+              console.error('Error deleting account:', error);
+              Alert.alert('Error', 'Failed to delete account. Please try again.');
+            } finally {
+              // Set loading back to false
+              setLoading(false);
+            }
+          },
+          style: 'destructive',
+        },
+      ]
+    );
+  };
   
 
   return (
@@ -144,9 +213,6 @@ export default function EditProfileScreen({ route, navigation,back }) {
       <Box p="$6" w="100%"maxWidth="$96">
         {/* Heading */}
         <VStack space="xs" pb="$3">
-            <Pressable onPress={back}>
-              <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.secondary} size={25} />
-            </Pressable>
             <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Edit Profile</Heading>
         </VStack>
 
@@ -225,9 +291,9 @@ export default function EditProfileScreen({ route, navigation,back }) {
 
       {/* Delete Account Button */}
       <VStack space="lg" pt="$4">
-                <Button size="sm" backgroundColor={colors.gray} onPress={handleCancel} disabled={loading}>
-                    <ButtonText>Delete Account</ButtonText>
-                </Button>
+          <Button size="sm" backgroundColor={colors.gray} onPress={handleDeleteAccount} disabled={loading}>
+            <ButtonText>{loading ? 'Deleting...' : 'Delete Account'}</ButtonText>
+          </Button>
       </VStack>
       
       </Box>

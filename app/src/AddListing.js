@@ -21,7 +21,7 @@ import colors from '../config/colors.js'
 export default function AddListingPage() {
     const navigation = useNavigation();
     const [listingData, setListingData] = useState({
-        listingImage: require("../../assets/img/item.jpg"),
+        listingImage: "",
         listingName: "",
         listingPrice: "",
         listingDescription: "",
@@ -68,6 +68,12 @@ export default function AddListingPage() {
         try {
             if (!isFirestoreOnline) {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
+            }
+
+            // Check if required fields are filled
+            if (!listingData.listingName || !listingData.listingPrice || !listingData.listingDescription || Object.keys(listingData.listingImage).length === 0) {
+                throw new Error('Please fill in all required fields (Listing Title, Price, Description, and Image).');
+                // TODO: add a
             }
 
             const user = auth.currentUser; // User authenticated

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, VStack, HStack, Heading, Text, Image, Pressable } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
 
-export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags }) {
+export default function ItemCard({ productImage, productPrice, productName, productSeller, sellerID, toListing, tags }) {
     const isImageUrl = typeof productImage === 'string';
 
     return (

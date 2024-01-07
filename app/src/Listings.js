@@ -25,12 +25,14 @@ export default function ListingsPage() {
 
     const listingsData = selectedItem
     ? [
-        {
+        {   
+            productID: selectedItem.id,
             productImage: { uri: selectedItem.listingImageURL },
             productName: selectedItem.listingName,
             productPrice: selectedItem.listingPrice,
             productDesc: selectedItem.listingDescription,
             sellerName: selectedItem.username,
+            sellerID: selectedItem.sellerID,
             tags: selectedItem.listingTags.map((tag, index) => (
               <TagLabel key={index} tagName={tag} />
             )),
@@ -44,16 +46,20 @@ export default function ListingsPage() {
       return listingsData.map((listings, index) => (
         <ListingCard
           key={index}
+          productID={selectedItem.id}
           productImage={listings.productImage?.uri ? listings.productImage : { uri: 'fallback_image_url' }}
           productName={listings.productName}
           productPrice={listings.productPrice}
           productDesc={listings.productDesc}
           sellerName={listings.sellerName}
+          sellerID={listings.sellerID}
           tags={listings.tags}
           //sellerImage={listing.sellerImage}
         />
       ));
     };
+
+    
     
     const listingsRepliesData = [
         {
