@@ -24,10 +24,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, where, getDocs, query, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { database } from '../../config/firebase';
+import { database, auth } from '../../config/firebase';
 import colors from '../config/colors.js';
 
-export default function EditProfileScreen({ route, navigation,back }) {
+export default function EditProfileScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const {username, profileName, bio, userID,} = route.params;
   const [newProfileName, setNewProfileName] = useState(profileName);
@@ -58,9 +58,9 @@ export default function EditProfileScreen({ route, navigation,back }) {
       Alert.alert('Error', 'New username is required.');
       return;
     }
-    
+  
     // Check if the new username is already taken
-    if (username !== newUsername) {  
+    if (username !== newUsername) {
       const usersCollection = collection(database, 'users');
       const usernameQuery = query(usersCollection, where('username', '==', newUsername));
       const usernameQuerySnapshot = await getDocs(usernameQuery);
@@ -74,6 +74,12 @@ export default function EditProfileScreen({ route, navigation,back }) {
     try {
       setLoading(true); // Set loading to true
   
+      let updatedProfileData = {
+        username: newUsername,
+        userBio: newBio,
+        userProfile: newProfileName,
+      };
+  
       let imageUrl = '';
       if (newProfileImage) {
         console.log('Attempting to upload image to Firebase Storage...');
@@ -81,13 +87,16 @@ export default function EditProfileScreen({ route, navigation,back }) {
         const imageRef = storageRef(storage, `profileImages/${userID}`); // Use storageRef with the storage instance
         const response = await fetch(newProfileImage);
         const blob = await response.blob();
-
+  
         // Use uploadBytes to upload the blob data
         const uploadTask = uploadBytes(imageRef, blob);
         const snapshot = await uploadTask;
-
+  
         imageUrl = await getDownloadURL(snapshot.ref);
-          //console.log('Image Reference:', snapshot.ref); 
+        updatedProfileData = {
+          ...updatedProfileData,
+          userProfileImg: imageUrl,
+        };
       }
   
       // Update the user document in Firestore with the new profile data
@@ -97,22 +106,17 @@ export default function EditProfileScreen({ route, navigation,back }) {
   
       if (!userQuerySnapshot.empty) {
         const userDocRef = userQuerySnapshot.docs[0].ref;
-          //console.log('User Document Reference:', userDocRef);
-        await updateDoc(userDocRef, {
-          username: newUsername,
-          userBio: newBio,
-          userProfile: newProfileName,
-          userProfileImg: newProfileImage ? imageUrl : userProfileImg,
-        });
+  
+        await updateDoc(userDocRef, updatedProfileData);
   
         // Update the state with the new values
         route.params.setUsername(newUsername);
         route.params.setProfileName(newProfileName);
         route.params.setBio(newBio);
-
+  
         // Call the updateProfileImg function from UserIcon
         updateProfileImg(newProfileImage ? imageUrl : userProfileImg);
-        
+  
         // Show a success message
         Alert.alert('Success', 'Profile updated successfully.');
   
@@ -128,8 +132,12 @@ export default function EditProfileScreen({ route, navigation,back }) {
     } catch (error) {
       console.error('Error updating user profile:', error);
       Alert.alert('Error', 'Failed to update user profile. Please try again.');
+    } finally {
+      // Set loading back to false
+      setLoading(false);
     }
   };
+  
 
   const handleCancel = () => {
     // Go back to the previous screen (listings page)
@@ -156,6 +164,7 @@ export default function EditProfileScreen({ route, navigation,back }) {
               const usersCollection = collection(database, 'users');
               const userQuery = query(usersCollection, where('userID', '==', userID));
               const userQuerySnapshot = await getDocs(userQuery);
+              const user = auth.currentUser;
   
               if (!userQuerySnapshot.empty) {
                 const userDocRef = userQuerySnapshot.docs[0].ref;
@@ -172,6 +181,7 @@ export default function EditProfileScreen({ route, navigation,back }) {
   
                 // Delete the user document
                 await deleteDoc(userDocRef);
+                await user.delete();
   
                 // Show a success message
                 Alert.alert('Account Deleted', 'Your account and associated listings have been deleted successfully.');
