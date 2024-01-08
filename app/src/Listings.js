@@ -1,22 +1,43 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     VStack,
     Heading,
     Box,
     ScrollView,
+    HStack,
+    Image,
+    Button,
+    ButtonText,
+    Text,
+    Input,
+    InputField,
 } from '@gluestack-ui/themed';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
-import CommentBox from '../components/CommentBox.js';
 import ReplyBox from '../components/ReplyBox.js';
+import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
+import { TouchableOpacity } from 'react-native';
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
+import { FIREBASE_APP } from '../../config/firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+const db = getFirestore(FIREBASE_APP);
+const auth = getAuth();
 
 export default function ListingsPage() {
+    const [username, setUsername] = useState(''); 
     const navigation = useNavigation();
-    const route = useRoute(); // Move this line up
+    const [comment, setComment] = useState(''); 
+    const [comments, setComments] = useState([]);
+    const route = useRoute();
+    const [description, setDescription] = useState([]);
+    const [allComments, setAllComments] = useState([]); // State to hold all comments
+
+
 
     // Access the selected item data from the route parameters
     console.log('Route:', route);
@@ -25,14 +46,12 @@ export default function ListingsPage() {
 
     const listingsData = selectedItem
     ? [
-        {   
-            productID: selectedItem.id,
+        {
             productImage: { uri: selectedItem.listingImageURL },
-            productName: selectedItem.listingName,
+            productName: selectedItem.listingPrice,
             productPrice: selectedItem.listingPrice,
             productDesc: selectedItem.listingDescription,
             sellerName: selectedItem.username,
-            sellerID: selectedItem.sellerID,
             tags: selectedItem.listingTags.map((tag, index) => (
               <TagLabel key={index} tagName={tag} />
             )),
@@ -46,19 +65,16 @@ export default function ListingsPage() {
       return listingsData.map((listings, index) => (
         <ListingCard
           key={index}
-          productID={selectedItem.id}
           productImage={listings.productImage?.uri ? listings.productImage : { uri: 'fallback_image_url' }}
           productName={listings.productName}
           productPrice={listings.productPrice}
           productDesc={listings.productDesc}
           sellerName={listings.sellerName}
-          sellerID={listings.sellerID}
           tags={listings.tags}
           //sellerImage={listing.sellerImage}
         />
       ));
     };
-
     
     
     const listingsRepliesData = [
@@ -90,37 +106,178 @@ export default function ListingsPage() {
         );
     }
 
-    return (
-        // Parent box
-        <Box w="100%" h="100%">
-            {/*Search Bar*/}
-            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                if (!auth || !auth.currentUser) {
+                    setTimeout(fetchUserData, 1000);
+                    return;
+                }
+    
+                const currentUser = auth.currentUser; // Reference auth.currentUser
+                const userCollection = collection(db, 'users');
+                const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
+    
+                querySnapshot.forEach((doc) => {
+                    setUsername(doc.data().username); // Assuming 'username' field exists in the user document
+                });
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
+            }
+        };
+    
+        fetchUserData();
+    }, []);
 
-            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
-                {/*Listings Label */}
-                <VStack space="xs" pb="$2">
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
+
+    
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userCollection = collection(db, 'listings');
+                const querySnapshot = await getDocs(userCollection);
+    
+                const userData = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const userDataObj = {
+                        key: data.key, 
+                        username: productSeller
+                        
+                    };
+                    userData.push(userDataObj);
+                });
+    
+                setDescription(userData); 
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
+            }
+                };
+            
+                fetchData();
+            }, []);
+     
+
+   
+    const addListingComment = async (key, comment) => {
+        try {
+            const currentUser = username; 
+            const userDocRef = await addDoc(collection(db, 'ListingsComment'), {
+                username: currentUser,
+                Primary: key,
+                comment: comment
+            });
+            console.log('Document written with ID:', userDocRef.id);
+        } catch (error) {
+            console.error('Error adding document:', error);
+            setError('Error creating user. Please try again.');
+        }
+    };
+
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            const commentsData = {};
+            for (const userData of description) {
+                try {
+                    const commentQuery = query(
+                        collection(db, 'ListingsComment'),
+                        where('Primary', '==', userData.key)
+                    );
+                    const commentSnapshot = await getDocs(commentQuery);
+                    const comments = [];
+                    commentSnapshot.forEach((commentDoc) => {
+                        const commentData = commentDoc.data();
+                        comments.push({
+                            username: commentData.username,
+                            comment: commentData.comment
+                        });
+                    });
+                    commentsData[userData.key] = comments;
+                } catch (error) {
+                    console.error('Error fetching comments:', error.message);
+                    commentsData[userData.key] = [];
+                }
+            }
+            setComments(commentsData);
+        };
+    
+        fetchComments();
+    }, [description]);
+
+    const renderComments = () => {
+        return Object.keys(comments).map((commentKey) => (
+          <VStack key={commentKey} space="md">
+            <Heading fontSize="lg" color={colors.primary}>
+              comments {commentKey}
+            </Heading>
+            {comments[commentKey].map((comment, index) => (
+              <Box key={index} borderWidth={1} borderRadius={8} p={4} my={2}>
+                <Heading fontSize="md">{comment.username}</Heading>
+                <Text>{comment.comment}</Text>
+              </Box>
+            ))}
+          </VStack>
+        ));
+      };
+
+    const initialCommentState = {};
+    description.forEach(userData => {
+        initialCommentState[userData.key] = ''; // Use a unique identifier as the key
+    });
+
+    const [commentTexts, setCommentTexts] = useState(initialCommentState);
+
+
+return (
+    // Parent box
+    <Box w="100%" h="100%">
+        {/*Search Bar*/}
+        <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+
+        <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+            {/*Listings Label */}
+            <VStack space="xs" pb="$2">
+            <Heading fontSize={30} color={colors.secondary}>Listings</Heading>
+            </VStack>
+
+            <ScrollView>
+                <VStack space="xs" flexWrap="wrap">
+                    {renderListings()}
                 </VStack>
 
-                <ScrollView>
-                    <VStack space="xs" flexWrap="wrap">
-                        {renderListings()}
-                    </VStack>
+                {/* Added a comment */}
+                <Input bg={colors.white} borderColor={colors.secondary} h={80} w="75%">
+                    <InputField
+                        multiline={true}
+                        size="md"
+                        placeholder="Write a comment..."
+                        value={comment}
+                        onChangeText={(text) => setComment(text)} // Update the comment value in the state
+                    />
+                </Input>
+                <Button
+                    variant="solid"
+                    size="sm"
+                    bg={colors.secondary}
+                    borderRadius={12}
+                    onPress={addListingComment} // Attach onClick handler here
+                >
+                    <ButtonText color={colors.white} fontSize="$sm">
+                        Comment
+                    </ButtonText>
+                </Button>
 
-                    {/* Added a comment */}
-                    <VStack space="xs">
-                        <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") } comment={() => Alert.alert("Alert", "This is a dummy action")} />
-                    </VStack>
-                    
-                    {/* Replies */}
-                    <VStack space="xs">
-                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
-                        <VStack space="xs">
-                            {renderListingsReply()}
-                        </VStack>
-                    </VStack>
-                </ScrollView>
-            </Box>
+                {/* Replies */}
+                <VStack space="md" mt={4}>
+                <Heading fontSize="xl" color={colors.secondary}>Listing Comments</Heading>
+                {renderComments()}
+            </VStack>
+            
+                
+            </ScrollView>
         </Box>
-    );
+    </Box>
+ )
 }

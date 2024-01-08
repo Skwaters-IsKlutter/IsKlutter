@@ -17,7 +17,6 @@ import { getDownloadURL } from 'firebase/storage';
 
 import colors from '../config/colors.js'
 
-
 export default function AddListingPage() {
     const navigation = useNavigation();
     const [listingData, setListingData] = useState({
