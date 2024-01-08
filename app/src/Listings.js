@@ -106,6 +106,23 @@ export default function ListingsPage() {
         );
     }
 
+    const renderListingComments = () => {
+        if (!selectedItem || !comments[selectedItem.key]) {
+            return null; // Return null or a message if no comments are available for the selected item
+        }
+
+        return comments[selectedItem.key].comments.map((commentData, index) => (
+            <Box key={index} bg={colors.lightGray} p={4} borderRadius={12} mt={4}>
+                <Text fontSize={16} fontWeight="bold">
+                    {commentData.username}
+                </Text>
+                <Text fontSize={14} mt={2}>
+                    {commentData.comment}
+                </Text>
+            </Box>
+        ));
+    };
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -142,21 +159,21 @@ export default function ListingsPage() {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const userDataObj = {
-                        key: data.key, 
-                        username: productSeller
-                        
+                        key: data.key,
+                        username: data.username
                     };
                     userData.push(userDataObj);
                 });
     
-                setDescription(userData); 
+                setDescription(userData);
             } catch (error) {
                 console.error('Error fetching user data:', error.message);
             }
-                };
-            
-                fetchData();
-            }, []);
+        };
+    
+        fetchData();
+    }, []);
+    
      
 
    
@@ -169,6 +186,7 @@ export default function ListingsPage() {
                 comment: comment
             });
             console.log('Document written with ID:', userDocRef.id);
+            Alert.alert('Comment Posted', 'Your comment has been posted successfully.');
         } catch (error) {
             console.error('Error adding document:', error);
             setError('Error creating user. Please try again.');
@@ -179,14 +197,16 @@ export default function ListingsPage() {
     useEffect(() => {
         const fetchComments = async () => {
             const commentsData = {};
-            for (const userData of description) {
-                try {
+    
+            try {
+                for (const userData of description) {
                     const commentQuery = query(
                         collection(db, 'ListingsComment'),
                         where('Primary', '==', userData.key)
                     );
                     const commentSnapshot = await getDocs(commentQuery);
                     const comments = [];
+    
                     commentSnapshot.forEach((commentDoc) => {
                         const commentData = commentDoc.data();
                         comments.push({
@@ -194,33 +214,23 @@ export default function ListingsPage() {
                             comment: commentData.comment
                         });
                     });
-                    commentsData[userData.key] = comments;
-                } catch (error) {
-                    console.error('Error fetching comments:', error.message);
-                    commentsData[userData.key] = [];
+    
+                    commentsData[userData.key] = {
+                        username: userData.username,
+                        comments: comments
+                    };
                 }
+    
+                setComments(commentsData);
+            } catch (error) {
+                console.error('Error fetching comments:', error.message);
             }
-            setComments(commentsData);
         };
     
         fetchComments();
     }, [description]);
 
-    const renderComments = () => {
-        return Object.keys(comments).map((commentKey) => (
-          <VStack key={commentKey} space="md">
-            <Heading fontSize="lg" color={colors.primary}>
-              comments {commentKey}
-            </Heading>
-            {comments[commentKey].map((comment, index) => (
-              <Box key={index} borderWidth={1} borderRadius={8} p={4} my={2}>
-                <Heading fontSize="md">{comment.username}</Heading>
-                <Text>{comment.comment}</Text>
-              </Box>
-            ))}
-          </VStack>
-        ));
-      };
+    
 
     const initialCommentState = {};
     description.forEach(userData => {
@@ -258,23 +268,27 @@ return (
                     />
                 </Input>
                 <Button
-                    variant="solid"
-                    size="sm"
-                    bg={colors.secondary}
-                    borderRadius={12}
-                    onPress={addListingComment} // Attach onClick handler here
-                >
-                    <ButtonText color={colors.white} fontSize="$sm">
-                        Comment
-                    </ButtonText>
-                </Button>
+                variant="solid"
+                size="sm"
+                bg={colors.secondary}
+                borderRadius={12}
+                onPress={() => {
+                    console.log('Key of the file:', selectedItem.key); // Log the key
+                    addListingComment(selectedItem.key, comment); // Call addListingComment with key and comment
+                }}
+            >
+                <ButtonText color={colors.white} fontSize="$sm">
+                    Comment
+                </ButtonText>
+            </Button>
 
-                {/* Replies */}
-                <VStack space="md" mt={4}>
-                <Heading fontSize="xl" color={colors.secondary}>Listing Comments</Heading>
-                {renderComments()}
-            </VStack>
-            
+            <VStack space="md" mt={4}>
+                    <Heading fontSize="$xl" color={colors.secondary}>Listing Comments</Heading>
+                    {renderListingComments()}
+                </VStack>
+
+
+             
                 
             </ScrollView>
         </Box>
