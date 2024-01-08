@@ -4,8 +4,8 @@ import colors from '../config/colors.js';
 import { getFirestore, doc, getDocs, collection, where, query } from 'firebase/firestore';
 
 export default function ReplyBox({ replyID, replyText, replyUser, replyDate, replyTime, userIcon }) {
-  const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -18,7 +18,7 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
       
           if (!userQuerySnapshot.empty) {
             const userData = userQuerySnapshot.docs[0].data();
-            setUsername(userData.username);
+            setUserData(userData);
           } else {
             console.log('User not found for ID:', replyUser);
           }
@@ -41,7 +41,7 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
     <Box p="$2" h="auto" bg={colors.white} flex={1}>
       <VStack space="sm" m={6}>
         <HStack justifyContent="space-between" alignItems="center">
-          <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{username}</Text>
+          <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{userData.username}</Text>
           <HStack space="sm">
             <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
             <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
@@ -50,7 +50,7 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
       </VStack>
 
       <HStack space="sm" justifyContent="center" alignItems="center">
-        {/* <Image source={userIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
+        <Image source={{ uri: userData.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
         <Box h="$10" w="75%">
           <Input bg={colors.white} p={10}>
             <Text>{replyText}</Text>
