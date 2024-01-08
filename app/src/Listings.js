@@ -29,6 +29,7 @@ export default function ListingsPage() {
     const route = useRoute();
     const [currentUser, setCurrentUser] = useState(null);
     const [currentUserProfileImg, setCurrentUserProfileImg] = useState('');
+    const [listingComments, setListingComments] = useState([]);
 
     // Add the useEffect hook to fetch the current user's profile image
     useEffect(() => {
@@ -67,6 +68,37 @@ export default function ListingsPage() {
             }
         };
     }, []); // Empty dependency array to run effect only once
+
+    // Function to fetch listing comments from Firestore
+    const fetchListingComments = async () => {
+        console.log('Fetching comments for listing ID:', selectedItem.id);
+        const firestore = getFirestore();
+
+        const commentsCollectionRef = collection(firestore, 'ListingsComments');
+        const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
+
+        try {
+            const listingCommentsSnapshot = await getDocs(listingCommentsQuery);
+
+            if (!listingCommentsSnapshot.empty) {
+                const commentsData = listingCommentsSnapshot.docs.map((commentDoc) => commentDoc.data());
+                console.log('Fetched comments:', commentsData);
+                setListingComments(commentsData);
+            } else {
+                console.log('No comments found.');
+                setListingComments([]);
+            }
+        } catch (error) {
+            console.error('Error fetching listing comments:', error);
+        }
+    };
+
+    // UseEffect to fetch listing comments when selectedItem changes
+    useEffect(() => {
+        if (selectedItem) {
+            fetchListingComments();
+        }
+    }, [selectedItem]);
 
     // Access the selected item data from the route parameters
         //console.log('Route:', route);
@@ -111,6 +143,19 @@ export default function ListingsPage() {
       ));
     };
 
+    const renderListingComments = () => {
+        return listingComments.map((comment, index) => (
+          <ReplyBox
+            key={index}
+            replyUser={comment.userId}  // Assuming userId is the user ID for the comment
+            //userIcon={comment.userIcon}  // Assuming userIcon is the user's profile image
+            replyText={comment.comment}
+            replyDate={comment.timestamp.toDate().toLocaleDateString()}  // Convert timestamp to date string
+            replyTime={comment.timestamp.toDate().toLocaleTimeString()}  // Convert timestamp to time string
+          />
+        ));
+      };
+
     return (
         // Parent box
         <Box w="100%" h="100%">
@@ -137,10 +182,11 @@ export default function ListingsPage() {
                         />
                     </VStack>
                     
-                    {/* Replies */}
+                    {/* Listing Comments */}
                     <VStack space="xs">
-                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
+                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Listing Comments</Heading>
                         <VStack space="xs">
+                            {renderListingComments()}
                         </VStack>
                     </VStack>
                 </ScrollView>

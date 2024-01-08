@@ -1,41 +1,62 @@
-import React from 'react';
-import {
-    Box,
-    Text,
-    VStack,
-    HStack,
-    Image,
-    Button,
-    ButtonText,
-    Input,
-    InputField,
-} from '@gluestack-ui/themed';
-
+import React, { useEffect, useState } from 'react';
+import { Box, Text, VStack, HStack, Image, Input } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
+import { getFirestore, doc, getDocs, collection, where, query } from 'firebase/firestore';
 
-export default function CommentBox( {key : replyID, replyText, replyUser, replyDate, replyTime, userIcon} ) {
-    return (
-        <Box p="$2" h="auto" bg={colors.white} flex={1}>
-            <Box w="100%" maxWidth="$60" pb="$2">
-                <VStack space="sm" pl="21%" m={6}>
-                    <HStack space="sm">
-                        <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{replyUser}</Text>
-                        <HStack space="sm" pl="30%">
-                            <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
-                            <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
-                        </HStack>
-                    </HStack>
-                </VStack>
+export default function ReplyBox({ replyID, replyText, replyUser, replyDate, replyTime, userIcon }) {
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(true);
 
-                <HStack space="sm" justifyContent="center" alignItems="center">
-                    <Image source={userIcon} h={45} w={45} alt="icon" borderRadius={100} />
-                    <Box h="$10" w="75%">
-                        <Input bg={colors.white} borderColor={colors.secondary} p={10}>
-                            <Text>{replyText}</Text>
-                        </Input>
-                    </Box>
-                </HStack>
-            </Box>
+  useEffect(() => {
+    const fetchUsername = async () => {
+        const firestore = getFirestore();
+        const usersCollectionRef = collection(firestore, 'users');
+        const userQuery = query(usersCollectionRef, where('userID', '==', replyUser));
+      
+        try {
+          const userQuerySnapshot = await getDocs(userQuery);
+      
+          if (!userQuerySnapshot.empty) {
+            const userData = userQuerySnapshot.docs[0].data();
+            setUsername(userData.username);
+          } else {
+            console.log('User not found for ID:', replyUser);
+          }
+        } catch (error) {
+          console.error('Error fetching user document:', error);
+        } finally {
+          setLoading(false); // Set loading to false whether successful or not
+        }
+      };
+      
+
+    fetchUsername();
+  }, [replyUser]);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  return (
+    <Box p="$2" h="auto" bg={colors.white} flex={1}>
+      <VStack space="sm" pl="21%" m={6}>
+        <HStack space="sm">
+          <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{username}</Text>
+          <HStack space="sm" pl="30%">
+            <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
+            <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
+          </HStack>
+        </HStack>
+      </VStack>
+
+      <HStack space="sm" justifyContent="center" alignItems="center">
+        {/* <Image source={userIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
+        <Box h="$10" w="75%">
+          <Input bg={colors.white} p={10}>
+            <Text>{replyText}</Text>
+          </Input>
         </Box>
-    )
+      </HStack>
+    </Box>
+  );
 }
