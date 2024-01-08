@@ -39,10 +39,10 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
 
   return (
     <Box p="$2" h="auto" bg={colors.white} flex={1}>
-      <VStack space="sm" pl="21%" m={6}>
-        <HStack space="sm">
+      <VStack space="sm" m={6}>
+        <HStack justifyContent="space-between" alignItems="center">
           <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{username}</Text>
-          <HStack space="sm" pl="30%">
+          <HStack space="sm">
             <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
             <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
           </HStack>
