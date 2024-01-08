@@ -21,7 +21,7 @@ import colors from '../config/colors.js';
 
 // Firebase components
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs, query, where, database, getFirestore } from 'firebase/firestore';
+import { collection, getDocs, query, where, database, getFirestore, onSnapshot } from 'firebase/firestore';
 
 
 export default function ListingsPage() {
@@ -30,6 +30,7 @@ export default function ListingsPage() {
     const [currentUser, setCurrentUser] = useState(null);
     const [currentUserProfileImg, setCurrentUserProfileImg] = useState('');
     const [listingComments, setListingComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
 
     // Add the useEffect hook to fetch the current user's profile image
     useEffect(() => {
@@ -69,17 +70,17 @@ export default function ListingsPage() {
         };
     }, []); // Empty dependency array to run effect only once
 
-    // Function to fetch listing comments from Firestore
-    const fetchListingComments = async () => {
+     // Function to fetch listing comments from Firestore
+     const fetchListingComments = async () => {
         console.log('Fetching comments for listing ID:', selectedItem.id);
         const firestore = getFirestore();
-
+    
         const commentsCollectionRef = collection(firestore, 'ListingsComments');
         const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
-
+    
         try {
             const listingCommentsSnapshot = await getDocs(listingCommentsQuery);
-
+    
             if (!listingCommentsSnapshot.empty) {
                 const commentsData = listingCommentsSnapshot.docs.map((commentDoc) => commentDoc.data());
                 console.log('Fetched comments:', commentsData);
@@ -88,17 +89,72 @@ export default function ListingsPage() {
                 console.log('No comments found.');
                 setListingComments([]);
             }
+    
+            // Set up the listener for real-time updates
+            const unsubscribeListener = setupCommentsListener();
+    
+            // Clean up the listener when the component is unmounted or selectedItem changes
+            return () => {
+                unsubscribeListener();
+            };
         } catch (error) {
             console.error('Error fetching listing comments:', error);
         }
     };
 
+    // Function to set up a Firestore listener for listing comments
+    const setupCommentsListener = () => {
+    const firestore = getFirestore();
+    const commentsCollectionRef = collection(firestore, 'ListingsComments');
+    const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
+
+    const unsubscribe = onSnapshot(listingCommentsQuery, (snapshot) => {
+        const commentsData = snapshot.docs.map((commentDoc) => commentDoc.data());
+        console.log('Updated comments:', commentsData);
+        setListingComments(commentsData);
+    });
+
+    return unsubscribe;
+};
+
     // UseEffect to fetch listing comments when selectedItem changes
     useEffect(() => {
         if (selectedItem) {
+            // Initial fetch
             fetchListingComments();
         }
     }, [selectedItem]);
+
+    // Function to add a new comment
+    const addComment = async () => {
+        const firestore = getFirestore();
+
+        try {
+            const newCommentRef = await addDoc(collection(firestore, 'ListingsComments'), {
+                itemId: selectedItem.id,
+                userId: currentUser.uid,
+                comment: newComment,
+                timestamp: serverTimestamp(),
+            });
+
+            console.log('New comment added with ID:', newCommentRef.id);
+
+            // Update the local state with the new comment
+            setListingComments((prevComments) => [
+                ...prevComments,
+                {
+                    userId: currentUser.uid,
+                    comment: newComment,
+                    timestamp: new Date(),
+                },
+            ]);
+
+            // Clear the input field after adding the comment
+            setNewComment('');
+        } catch (error) {
+            console.error('Error adding new comment:', error);
+        }
+    };
 
     // Access the selected item data from the route parameters
         //console.log('Route:', route);
@@ -150,8 +206,8 @@ export default function ListingsPage() {
             replyUser={comment.userId}  // Assuming userId is the user ID for the comment
             //userIcon={comment.userIcon}  // Assuming userIcon is the user's profile image
             replyText={comment.comment}
-            replyDate={comment.timestamp.toDate().toLocaleDateString()}  // Convert timestamp to date string
-            replyTime={comment.timestamp.toDate().toLocaleTimeString()}  // Convert timestamp to time string
+            replyDate={comment.timestamp ? comment.timestamp.toDate().toLocaleDateString() : 'N/A'}
+            replyTime={comment.timestamp ? comment.timestamp.toDate().toLocaleTimeString() : 'N/A'}
           />
         ));
       };
@@ -175,12 +231,16 @@ export default function ListingsPage() {
 
                     {/* Added a comment */}
                     <VStack space="xs">
-                        <CommentBox
-                            selectedItem={selectedItem}
-                            posterUserId={currentUser ? currentUser.uid : null}
-                            posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
-                        />
+                    <CommentBox
+                        selectedItem={selectedItem}
+                        posterUserId={currentUser ? currentUser.uid : null}
+                        posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
+                        onCommentChange={(comment) => setNewComment(comment)}  // Added callback to update new comment
+                        onAddComment={addComment}  // Added callback to add new comment
+                    />
                     </VStack>
+
+                    
                     
                     {/* Listing Comments */}
                     <VStack space="xs">
