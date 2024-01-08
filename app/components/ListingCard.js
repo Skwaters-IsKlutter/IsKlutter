@@ -91,25 +91,22 @@ export default function ListingCard({ productID, productName, productImage, prod
 
             {/* Item name and price */}
             <VStack space="sm" p="$2">
-                <HStack>
-                <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
-                {/* Conditionally render the delete button */}
-                {isCurrentUserSeller() && (
+                <HStack w="100%" justifyContent="space-between">
+                    <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
+                    {/* Conditionally render the delete button */}
+                    {isCurrentUserSeller() && (
                         <Button
                             variant="solid"
                             size="sm"
-                            backgroundColor={colors.red}
+                            backgroundColor={colors.secondary}
                             borderRadius={8}
                             onPress={() => onDelete(productID)}
                             alignSelf="flex-end"
-                            style={{ marginLeft: 'auto' }}
                         >
                             <ButtonIcon>
                                 <MaterialCommunityIcons name="delete" size={13} color={colors.black} />
                             </ButtonIcon>
-                            <ButtonText color={colors.white} fontSize="$md">
-                                Delete
-                            </ButtonText>
+                            <ButtonText color={colors.black} fontSize="$sm">Delete</ButtonText>
                         </Button>
                     )}
                 </HStack>
@@ -130,10 +127,11 @@ export default function ListingCard({ productID, productName, productImage, prod
 
             {/* Poster info */}
             <HStack justifyContent="space-between" flexDirection="row">
-                <HStack space="sm" p="$2" alignItems="center">
-                     <Image source={sellerImageURL} h={35} w={35} alt="icon" borderRadius={100} /> 
-                    <Text color={colors.gray}>{sellerName}</Text>
-
+                <HStack w="100%" justifyContent="space-between">
+                    <HStack space="sm" p="$2" alignItems="center">   
+                        <Image source={sellerImageURL} h={35} w={35} alt="icon" borderRadius={100} /> 
+                        <Text color={colors.gray}>{sellerName}</Text>
+                    </HStack>
                     {/* Chat button */}
                     <Button
                         variant="solid"
