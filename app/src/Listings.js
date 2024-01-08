@@ -39,7 +39,8 @@ export default function ListingsPage() {
             if (user) {
                 const userCollectionRef = collection(firestore, 'users');  // Corrected line
                 const userQuery = query(userCollectionRef, where('userID', '==', user.uid));
-
+                setCurrentUser(user);
+                
                 try {
                     const userQuerySnapshot = await getDocs(userQuery);
 
@@ -110,37 +111,6 @@ export default function ListingsPage() {
       ));
     };
 
-    
-    
-    const listingsRepliesData = [
-        {
-            replyUser: "kuromi",
-            userIcon: require("../../assets/img/usericon.jpg"),
-            replyText: "mine!",
-            replyDate: "10/25/2023",
-            replyTime:"12:58 PM"
-        }, {
-            replyUser: "sassag0rl",
-            userIcon: require("../../assets/img/sassa.jpg"),
-            replyText: "EPAL NG NAG MINE",
-            replyDate: "10/25/2023",
-            replyTime:"1:43 PM"
-        }, 
-    ];
-
-    const renderListingsReply = () => {
-        return listingsRepliesData.map((listing, index) =>
-            <ReplyBox
-                key={index}
-                replyUser={listing.replyUser}
-                userIcon={listing.userIcon}
-                replyText={listing.replyText}
-                replyDate={listing.replyDate}
-                replyTime={listing.replyTime}
-            />
-        );
-    }
-
     return (
         // Parent box
         <Box w="100%" h="100%">
@@ -161,8 +131,8 @@ export default function ListingsPage() {
                     {/* Added a comment */}
                     <VStack space="xs">
                         <CommentBox
+                            posterUserId={currentUser ? currentUser.uid : null}
                             posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
-                            comment={() => Alert.alert("Alert", "This is a dummy action")}
                         />
                     </VStack>
                     
@@ -170,7 +140,6 @@ export default function ListingsPage() {
                     <VStack space="xs">
                         <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
                         <VStack space="xs">
-                            {renderListingsReply()}
                         </VStack>
                     </VStack>
                 </ScrollView>
