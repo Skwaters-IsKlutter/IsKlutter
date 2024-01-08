@@ -184,7 +184,7 @@ export default function ListingsPage() {
                     
                     {/* Listing Comments */}
                     <VStack space="xs">
-                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Listing Comments</Heading>
+                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Comments</Heading>
                         <VStack space="xs">
                             {renderListingComments()}
                         </VStack>
