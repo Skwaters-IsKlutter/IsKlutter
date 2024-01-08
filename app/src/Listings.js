@@ -1,12 +1,17 @@
-import * as React from 'react';
+// React components
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Alert } from 'react-native';
+
+// Gluestack-ui components
 import {
     VStack,
     Heading,
     Box,
     ScrollView,
 } from '@gluestack-ui/themed';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Alert } from 'react-native';
+
+// Local components
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
@@ -14,9 +19,53 @@ import CommentBox from '../components/CommentBox.js';
 import ReplyBox from '../components/ReplyBox.js';
 import colors from '../config/colors.js';
 
+// Firebase components
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, query, where, database, getFirestore } from 'firebase/firestore';
+
+
 export default function ListingsPage() {
     const navigation = useNavigation();
-    const route = useRoute(); // Move this line up
+    const route = useRoute();
+    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUserProfileImg, setCurrentUserProfileImg] = useState('');
+
+    // Add the useEffect hook to fetch the current user's profile image
+    useEffect(() => {
+        const auth = getAuth();
+        const firestore = getFirestore();  // Corrected line
+
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userCollectionRef = collection(firestore, 'users');  // Corrected line
+                const userQuery = query(userCollectionRef, where('userID', '==', user.uid));
+
+                try {
+                    const userQuerySnapshot = await getDocs(userQuery);
+
+                    if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
+                        const userDocument = userQuerySnapshot.docs[0];
+                        const userProfileImg = userDocument.data().userProfileImg || '';
+                        setCurrentUserProfileImg(userProfileImg);
+                    } else {
+                        setCurrentUserProfileImg('');
+                        console.error(`User document not found for uid: ${user.uid}`);
+                    }
+                } catch (error) {
+                    setCurrentUserProfileImg('');
+                    console.error('Error fetching user document:', error);
+                }
+            } else {
+                setCurrentUserProfileImg('');
+            }
+        });
+
+        return () => {
+            if (typeof unsubscribeAuth === 'function') {
+                unsubscribeAuth();
+            }
+        };
+    }, []); // Empty dependency array to run effect only once
 
     // Access the selected item data from the route parameters
         //console.log('Route:', route);
@@ -111,7 +160,10 @@ export default function ListingsPage() {
 
                     {/* Added a comment */}
                     <VStack space="xs">
-                        <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") } comment={() => Alert.alert("Alert", "This is a dummy action")} />
+                        <CommentBox
+                            posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
+                            comment={() => Alert.alert("Alert", "This is a dummy action")}
+                        />
                     </VStack>
                     
                     {/* Replies */}

@@ -104,7 +104,6 @@ export default function AllListingsPage({ key }) {
           productName={item.listingName}
           productSeller={item.username}
           sellerID={item.sellerID}
-          //sellerImage={item.sellerImageURL}
           tags={firstTag}
           toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
         />
