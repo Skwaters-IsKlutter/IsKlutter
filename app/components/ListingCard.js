@@ -12,7 +12,7 @@ import {
 } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { doc, deleteDoc } from 'firebase/firestore'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
 
@@ -33,12 +33,19 @@ const getCurrentUserID = () => {
 
 export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags }) {
     const navigation = useNavigation();
+    const route = useRoute();
     const currentUserId = getCurrentUserID();
-    console.log(productID);
+    console.log(sellerID);
 
     const handleChatPress = () => {
         navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: sellerName });
     };
+
+    const handleSellerProfilePress = () => {
+        console.log("Seller ID: ", sellerID);
+        navigation.navigate(Routes.VIEWPROFILE, { sellerID });
+    };
+    
 
     const isCurrentUserSeller = () => {
         const result = sellerID === currentUserId;
@@ -132,7 +139,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                 <HStack w="100%" justifyContent="space-between">
                     <HStack space="sm" p="$2" alignItems="center">   
                         <Image source={sellerImageURL} h={35} w={35} alt="icon" borderRadius={100} /> 
-                        <Text color={colors.gray}>{sellerName}</Text>
+                        <Text color={colors.gray} onPress={handleSellerProfilePress}>{sellerName}</Text>
                     </HStack>
                     {/* Chat button */}
                     <Button

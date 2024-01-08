@@ -7,5 +7,6 @@ export default Object.freeze({
     PROFILE: "Profile",
     MESSAGES: "Messages",
     ADDLISTING: "AddListing",
-    PRIVATEMESSAGE: "PrivateMessage"
+    PRIVATEMESSAGE: "PrivateMessage",
+    VIEWPROFILE: "ViewProfile"
 });

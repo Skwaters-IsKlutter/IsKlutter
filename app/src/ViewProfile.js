@@ -1,120 +1,98 @@
-// React
-import * as React from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-
-
-// Gluestack UI
-import {Box, ScrollView, Heading } from '@gluestack-ui/themed';
-
-// Local Components
+import React, { useEffect, useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { Box, ScrollView, Heading, Text } from '@gluestack-ui/themed';
 import SearchHeader from '../components/SearchHeader.js';
-import HelloCard from '../components/ProfileHello.js'; 
-// import ProfileCard from '../components/ProfileCard.js';
 import ViewProfileCard from '../components/ViewProfileCard.js';
 import ItemCard from '../components/ItemCard.js';
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { database } from '../../config/firebase';
 
-// Firebase Components
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-import { auth, database } from '../../config/firebase';
+export default function ViewProfile() {
+  const route = useRoute();
+  const [sellerProfile, setSellerProfile] = useState(null);
+  const [userListings, setUserListings] = useState([]);
 
+  useEffect(() => {
+    console.log(route);
+    const sellerID = route.params?.sellerID;
 
-export default function ViewProfilePage() {
-    const navigation = useNavigation();
-    const [currentUser, setCurrentUser] = React.useState(null);
-    const [profileImg, setProfileImg] = React.useState('');
-    const [profileName, setProfileName] = React.useState('');
-    const [username, setUsername] = React.useState('');
-    const [loadingProfile, setLoadingProfile] = React.useState(true);
-    const [bio, setBio] = React.useState('');
-    const [userListings, setUserListings] = React.useState([]);
+    if (!sellerID) {
+      console.error("Seller ID is undefined in route params");
+      return;
+    }
 
-    useFocusEffect(
-        React.useCallback(() => {
-          const fetchData = async () => {
-            const user = auth.currentUser;
-            if (user !== null) {
-              setLoadingProfile(true);
-              const q = query(collection(database, 'users'), where('userID', '==', user.uid));
-              const querySnapshot = await getDocs(q);
-    
-              if (!querySnapshot.empty) {
-                const userDoc = querySnapshot.docs[0];
-                const userDocSnapshot = await getDoc(doc(database, userDoc.ref.path));
-    
-                if (userDocSnapshot.exists()) {
-                  const userData = userDocSnapshot.data();
-                  setCurrentUser(userData);
+    const fetchSellerProfile = async () => {
+      const q = query(collection(database, 'users'), where('userID', '==', sellerID));
+      const querySnapshot = await getDocs(q);
 
-                  // Set the userProfileImg URL
-                  const userProfileImg = userData?.userProfileImg || '';
-                  setProfileImg(userProfileImg);
-                } else {
-                  console.log('User document does not exist.');
-                }
-              } else {
-                console.log('User document not found.');
-              }
+      if (!querySnapshot.empty) {
+        const sellerDoc = querySnapshot.docs[0];
+        const sellerDocSnapshot = await getDoc(doc(database, sellerDoc.ref.path));
 
-              // Fetch user listings
-              const userListingQuery = query(collection(database, 'listings'), where('sellerID', '==', user.uid));
-              const userListingQuerySnapshot = await getDocs(userListingQuery);
-              const userListingData = userListingQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-              setUserListings(userListingData);
-    
-              setLoadingProfile(false);
-            }
-          };
-    
-          fetchData(); // Fetch data when the screen comes into focus
-        }, []) // Empty dependency array means it will only run once when the component mounts
-      );
-
-      const renderUserListings = () => {
-        return userListings.map((item) => {
-          const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
-
-          return (
-            <ItemCard
-                key={item.id}
-                productImage={item.listingImageURL}
-                productPrice={item.listingPrice}
-                productName={item.listingName}
-                productSeller={currentUser?.username}
-                tags={firstTag}
-                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
-            />
-          );
-        });
+        if (sellerDocSnapshot.exists()) {
+          const sellerData = sellerDocSnapshot.data();
+          setSellerProfile(sellerData);
+        } else {
+          console.error('Seller document does not exist.');
+        }
+      } else {
+        console.error('Seller document not found.');
+      }
     };
 
-    return (
-        <Box w="100%" h="100%">
-            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
-            <Box p="$6" w="100%" maxWidth="$96">
-                <HelloCard username={currentUser?.username} />
-                <ScrollView>
-                    <ViewProfileCard
-                        userProfileImg={profileImg}
-                        username={currentUser?.username}
-                        profileName={currentUser?.userProfile || currentUser?.username}
-                        bio={currentUser?.userBio || "I have no interesting info."}
-                        userID={currentUser?.userID}
-                        setProfileName={setProfileName}
-                        setUsername={setUsername}
-                        setBio={setBio}
-                        loading={loadingProfile} // Pass loading state to ProfileCard
-                    />
-                    <Box bgColor="white" p={20} borderRadius={5} m={5}>
-                      {/* Display user listings */}
-                      <Heading lineHeight={40} fontSize="$4xl" color={colors.secondary}>
-                            Your Listings
-                        </Heading>
-                        {renderUserListings()}
-                    </Box>
-                </ScrollView>
-            </Box>
-        </Box>
-    );
+    const fetchSellerListings = async () => {
+      const sellerListingQuery = query(collection(database, 'listings'), where('sellerID', '==', sellerID));
+      const sellerListingQuerySnapshot = await getDocs(sellerListingQuery);
+      const sellerListingData = sellerListingQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setUserListings(sellerListingData);
+    };
+
+    fetchSellerProfile();
+    fetchSellerListings();
+  }, [route.params]);
+
+  const renderUserListings = () => {
+    return userListings.map((item) => {
+      const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
+
+      return (
+        <ItemCard
+          key={item.id}
+          productImage={item.listingImageURL}
+          productPrice={item.listingPrice}
+          productName={item.listingName}
+          productSeller={sellerProfile?.username}
+          tags={firstTag}
+          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
+        />
+      );
+    });
+  };
+
+  return (
+    <Box w="100%" h="100%">
+      <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+      <Box p="$6" w="100%" maxWidth="$96">
+        {sellerProfile && (
+          <ViewProfileCard
+            userProfileImg={sellerProfile.userProfileImg}
+            username={sellerProfile.username}
+            profileName={sellerProfile.userProfile || sellerProfile.username}
+            bio={sellerProfile.userBio || "I have no interesting info."}
+            userID={sellerProfile.userID}
+          />
+        )}
+        <ScrollView>
+          <Box bgColor="white" p={20} borderRadius={5} m={5}>
+            <Heading lineHeight={40} fontSize="$4xl" color={colors.secondary}>
+              {`${sellerProfile?.username}'s Listings`}
+            </Heading>
+            {renderUserListings()}
+          </Box>
+        </ScrollView>
+      </Box>
+    </Box>
+  );
 }
