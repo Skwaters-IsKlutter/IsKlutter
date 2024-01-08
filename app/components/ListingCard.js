@@ -29,7 +29,7 @@ const getCurrentUserID = () => {
     }
 };
 
-export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerChat, tags }) {
+export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags }) {
     const navigation = useNavigation();
     const currentUserId = getCurrentUserID();
     console.log(productID);
@@ -91,8 +91,28 @@ export default function ListingCard({ productID, productName, productImage, prod
 
             {/* Item name and price */}
             <VStack space="sm" p="$2">
+                <HStack>
                 <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
-                
+                {/* Conditionally render the delete button */}
+                {isCurrentUserSeller() && (
+                        <Button
+                            variant="solid"
+                            size="sm"
+                            backgroundColor={colors.red}
+                            borderRadius={8}
+                            onPress={() => onDelete(productID)}
+                            alignSelf="flex-end"
+                            style={{ marginLeft: 'auto' }}
+                        >
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="delete" size={20} color={colors.black} />
+                            </ButtonIcon>
+                            <ButtonText color={colors.white} fontSize="$sm">
+                                Delete
+                            </ButtonText>
+                        </Button>
+                    )}
+                </HStack>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
 
@@ -111,27 +131,8 @@ export default function ListingCard({ productID, productName, productImage, prod
             {/* Poster info */}
             <HStack justifyContent="space-between" flexDirection="row">
                 <HStack space="sm" p="$2" alignItems="center">
-                    {/* <Image source={sellerImage} h={35} w={35} alt="icon" borderRadius={100} /> */}
+                     <Image source={sellerImageURL} h={35} w={35} alt="icon" borderRadius={100} /> 
                     <Text color={colors.gray}>{sellerName}</Text>
-
-                    {/* Conditionally render the delete button */}
-                    {isCurrentUserSeller() && (
-                        <Button
-                            variant="solid"
-                            size="sm"
-                            backgroundColor={colors.red}
-                            borderRadius={8}
-                            onPress={() => onDelete(productID)}
-                            alignSelf="flex-end"
-                        >
-                            <ButtonIcon>
-                                <MaterialCommunityIcons name="delete" size={13} color={colors.white} />
-                            </ButtonIcon>
-                            <ButtonText color={colors.white} fontSize="$sm">
-                                Delete
-                            </ButtonText>
-                        </Button>
-                    )}
 
                     {/* Chat button */}
                     <Button
