@@ -41,6 +41,7 @@ export default function AllListingsPage({ key }) {
                   if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
                     const userDocument = userQuerySnapshot.docs[0];
                     const sellerUsername = userDocument.data().username;
+                    const sellerImageURL = userDocument.data().userProfileImg || '';
           
                     // Update the productSeller directly in the listings collection
                     const listingsDocRef = doc(collection(database, 'listings'), item.id); // Use doc function to create DocumentReference
@@ -50,6 +51,7 @@ export default function AllListingsPage({ key }) {
                     return {
                       ...item,
                       username: sellerUsername,
+                      sellerImageURL,
                     };
                   } else {
                     console.error(`User document not found for sellerID: ${sellerID}`);
@@ -102,8 +104,9 @@ export default function AllListingsPage({ key }) {
           productName={item.listingName}
           productSeller={item.username}
           sellerID={item.sellerID}
+          //sellerImage={item.sellerImageURL}
           tags={firstTag}
-          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
+          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
         />
       );
     });

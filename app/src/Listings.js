@@ -19,9 +19,10 @@ export default function ListingsPage() {
     const route = useRoute(); // Move this line up
 
     // Access the selected item data from the route parameters
-    console.log('Route:', route);
-    const selectedItem = route?.params?.selectedItem;
-    console.log('Selected Item:', selectedItem);
+        //console.log('Route:', route);
+    const { selectedItem, sellerImageURL } = route?.params || {};
+        //console.log('Selected Item:', selectedItem);
+        // console.log('Seller Image URL:', sellerImageURL)
 
     const listingsData = selectedItem
     ? [
@@ -36,13 +37,14 @@ export default function ListingsPage() {
             tags: selectedItem.listingTags.map((tag, index) => (
               <TagLabel key={index} tagName={tag} />
             )),
-            //sellerImage: { uri: selectedItem.userIconURL }, // Use userIconURL as sellerImage
+            
         },
     ]
     : [];
 
     const renderListings = () => {
       console.log('Listings Data:', listingsData);
+      
       return listingsData.map((listings, index) => (
         <ListingCard
           key={index}
@@ -53,8 +55,8 @@ export default function ListingsPage() {
           productDesc={listings.productDesc}
           sellerName={listings.sellerName}
           sellerID={listings.sellerID}
+          sellerImageURL={sellerImageURL}
           tags={listings.tags}
-          //sellerImage={listing.sellerImage}
         />
       ));
     };
