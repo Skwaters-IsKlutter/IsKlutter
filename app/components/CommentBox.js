@@ -14,7 +14,7 @@ import {
 import colors from '../config/colors.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-export default function CommentBox({ comment, posterUserId, posterIcon }) {
+export default function CommentBox({ posterUserId, posterIcon, selectedItem }) {
     const [commentText, setCommentText] = useState('');
 
     const handleComment = async () => {
@@ -25,6 +25,12 @@ export default function CommentBox({ comment, posterUserId, posterIcon }) {
             // For example, you could show an error message to the user
             return;
         }
+
+        // Check if selectedItem is available
+        if (!selectedItem) {
+            console.error('No selected item data provided');
+            return;
+        }
     
         // Get Firestore instance
         const firestore = getFirestore();
@@ -33,6 +39,7 @@ export default function CommentBox({ comment, posterUserId, posterIcon }) {
          try {
             const commentsCollectionRef = collection(firestore, 'ListingsComments');
             const newCommentDocRef = await addDoc(commentsCollectionRef, {
+                itemId: selectedItem.id,
                 userId: posterUserId,
                 comment: commentText,
                 timestamp: serverTimestamp(),

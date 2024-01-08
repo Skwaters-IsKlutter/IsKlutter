@@ -131,6 +131,7 @@ export default function ListingsPage() {
                     {/* Added a comment */}
                     <VStack space="xs">
                         <CommentBox
+                            selectedItem={selectedItem}
                             posterUserId={currentUser ? currentUser.uid : null}
                             posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
                         />
