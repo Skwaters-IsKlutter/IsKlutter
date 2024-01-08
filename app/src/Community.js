@@ -15,21 +15,25 @@ import {
     ScrollView
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 
 import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
 import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
+
 export default function CommunityPage() {
     const [usernames, setUsernames] = useState([]);
     const [description, setDescription] = useState([]);
@@ -145,27 +149,6 @@ export default function CommunityPage() {
 
     
     
-    
-    const communityData = [
-        { 
-            posterIcon: require("../../assets/img/sassa.jpg"),
-            posterName: "Sassa",
-            postDate: "11/20/2023",
-            postContent: "avail na po ang neon balls"
-        }, { 
-            posterIcon: require("../../assets/img/usericon.jpg"),
-            posterName: "Rawr",
-            postDate: "11/19/2023",
-            postContent: "Hello."
-        }, {
-            posterIcon: require("../../assets/img/sassa.jpg"),
-            posterName: "Sassa",
-            postDate: "11/17/2023",
-            postContent: "sapaka niyo ko b"
-        }
-        
-    ]
-
     const addComment = async (key, commentText) => {
         try {
           const userDocRef = doc(db, 'forum', key);
@@ -185,17 +168,15 @@ export default function CommunityPage() {
       };
       
       
-      
-    
-
     const renderCommunityPosts = () => {
-        return communityData.map((post, index) => 
+        return description.map((userData, index) => 
             <PostCard
                 key={index}
-                posterIcon={post.posterIcon}
-                posterName={post.posterName}
-                postDate={post.postDate}
-                postContent={post.postContent}
+                // posterIcon={userData.posterIcon}
+                username={userData.username}
+                // postDate={userData.postDate}
+                description={userData.description}
+                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
             />
         );
     }
@@ -209,9 +190,12 @@ export default function CommunityPage() {
 
     const renderDescription = () => {
     return description.map((userData, index) => (
-        <TouchableOpacity key={index} onPress={() => handleUsernameClick(userData.description)}> 
+
+       
+        
+        <Pressable key={index} onPress={() => handleUsernameClick(userData.description)}> 
             <View style={styles.userDataContainer}>
-                <Box bg="white" p={3} borderRadius={8} shadow={2} mb={3}>
+                <Box p={15} w="100%" backgroundColor={colors.white} borderRadius={8}>
                     <Text style={styles.username}>{userData.username}</Text>
                     <Text style={styles.description}>{userData.description}</Text>
                         
@@ -249,9 +233,13 @@ export default function CommunityPage() {
                     ))}
                 </Box>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     ));
 };
+
+<Box>
+
+</Box>
 
     
 
@@ -271,7 +259,7 @@ export default function CommunityPage() {
         },
         description: {
             fontStyle: 'italic',
-            color: 'gray',
+            color: 'black',
         },
     };
     
@@ -286,20 +274,19 @@ export default function CommunityPage() {
             {/*Search Bar*/}
             <SearchHeader posterUser="Sassa Girl" userIcon={require("../../assets/img/usericon.jpg")} />
 
-            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+            <Box p="$6" >
                 {/*Community Label */}
-                <VStack space="xs" pb={2}>
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Community</Heading>
+                <VStack pb={2}>
+                    <Heading lineHeight={60} fontSize="$4xl" color={colors.secondary}>Community</Heading>
                     <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
                 </VStack>
 
                 {/*Community Posts Container */}
-                <Box bg={colors.medium} borderRadius={8} p="$5" m={5} flex={1}>
+                <Box p="$5">
                     <ScrollView>
-                        <HStack space="xs" flexWrap="wrap" justifyContent="center">
+                        <HStack space="xs" flexWrap="wrap">
+                            {renderCommunityPosts()}
                             {renderDescription()}
-
-
                         </HStack>
                     </ScrollView>
                 </Box>
