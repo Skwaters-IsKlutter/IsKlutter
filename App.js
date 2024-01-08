@@ -14,9 +14,11 @@ import AllMessagesScreen from './app/components/screens/AllMessagesScreen.js';
 import AddListingScreen from './app/components/screens/AddListingScreen.js';
 import PrivateMessageScreen from './app/components/screens/PrivateMessageScreen.js';
 import EditProfileScreen from './app/src/EditProfileModal.js';
+import IndividualPostScreen from './app/components/screens/IndividualPostScreen.js';
 
 import colors from './app/config/colors.js';
 import { UserProvider } from './app/components/UserIcon.js';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -46,8 +48,8 @@ export default function App() {
 		<UserProvider>
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Login">
-				<Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
-				<Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} />
+				{/* <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
+				<Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} /> */}
 				<Stack.Screen options={{headerShown:false}} name="Homepage" component={HomepageScreenTabs} />
 				<Stack.Screen options={{headerShown:false}} name="Listings" component={ListingsScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} />
@@ -55,6 +57,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="PrivateMessage" component={PrivateMessageScreen} />
 				<Stack.Screen options={{headerShown:false}} name="AddListing" component={AddListingScreen} />
 				<Stack.Screen options={{headerShown:false}} name="EditProfile" component={EditProfileScreen} />
+				<Stack.Screen options={{headerShown:false}} name="IndividualPost" component={IndividualPostScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 		</UserProvider>
