@@ -105,9 +105,9 @@ export default function ListingCard({ productID, productName, productImage, prod
                             style={{ marginLeft: 'auto' }}
                         >
                             <ButtonIcon>
-                                <MaterialCommunityIcons name="delete" size={20} color={colors.black} />
+                                <MaterialCommunityIcons name="delete" size={13} color={colors.black} />
                             </ButtonIcon>
-                            <ButtonText color={colors.white} fontSize="$sm">
+                            <ButtonText color={colors.white} fontSize="$md">
                                 Delete
                             </ButtonText>
                         </Button>
