@@ -8,5 +8,6 @@ export default Object.freeze({
     MESSAGES: "Messages",
     ADDLISTING: "AddListing",
     PRIVATEMESSAGE: "PrivateMessage",
+    VIEWPROFILE: "ViewProfile",
     INDIVIDUALPOST: "IndividualPost"
 });
