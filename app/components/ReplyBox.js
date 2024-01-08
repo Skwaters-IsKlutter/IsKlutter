@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Box, Text, VStack, HStack, Image, Input } from '@gluestack-ui/themed';
+
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
+
 import { getFirestore, doc, getDocs, collection, where, query } from 'firebase/firestore';
 
+
 export default function ReplyBox({ replyID, replyText, replyUser, replyDate, replyTime, userIcon }) {
+    const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    console.log("rep", replyUser);
+    const handleViewProfile = () => {
+        navigation.navigate(Routes.VIEWPROFILE, { sellerID: replyUser });
+    };
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -41,7 +53,9 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
     <Box p="$2" h="auto" bg={colors.white} flex={1}>
       <VStack space="sm" m={6}>
         <HStack justifyContent="space-between" alignItems="center">
+        <TouchableOpacity onPress={handleViewProfile}>
           <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{userData.username}</Text>
+        </TouchableOpacity>
           <HStack space="sm">
             <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
             <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
