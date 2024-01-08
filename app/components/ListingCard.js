@@ -18,7 +18,7 @@ import { Alert } from 'react-native';
 
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
+// import Routes from '../components/constants/Routes.js';
 
 const getCurrentUserID = () => {
     const currentUser = auth.currentUser;
