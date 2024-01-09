@@ -28,8 +28,10 @@ export default function IndividualPostCard({username, description}) {
             <VStack>
                     <HStack space="sm" alignItems="center">
                         <UserAvatar/> 
-                        <Heading color={colors.secondary}size="md" bold={true}>Username</Heading>
-                        {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
+                        <Heading color={colors.secondary} size="md" bold={true}>
+                            {username}
+                        </Heading>                       
+                         {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
                     </HStack>
 
                     <Text color="black" pb="$3" size="xl" mt="$3">{description}</Text>
