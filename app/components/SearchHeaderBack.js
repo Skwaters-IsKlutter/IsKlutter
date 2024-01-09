@@ -41,7 +41,7 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
                 <HStack p="$2" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
-                    <Pressable onPress={back}>
+                    <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.white} size={30} p={5} />
                     </Pressable>
                     <Input w="60%" bg={colors.white} borderColor={colors.primary} size="sm">

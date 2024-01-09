@@ -196,7 +196,7 @@ export default function PrivateMessagePage() {
             <View key={index}>
               {messageData.message && (
                 <View style={{ 
-                  backgroundColor: messageData.currentUserSent ? 'red' : 'white', // Set background color based on currentUserSent
+                  backgroundColor: messageData.currentUserSent ? 'green' : 'white', // Set background color based on currentUserSent
                   padding: 10, 
                   marginVertical: 5,
                   alignSelf: messageData.currentUserSent ? 'flex-end' : 'flex-start', // Align sender's message to the right, receiver's to the left
@@ -216,48 +216,46 @@ export default function PrivateMessagePage() {
     return(
         // Parent box
         <Box w="100%" h="100%">
-
-            {/*Search Bar*/}
-            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg") } back={navigation.goBack} />
-
-             {/* Messages Title */}
-            <VStack space="xs" alignItems="left" bgColor="$amber200" p="$3" width="100%">
-             <Heading lineHeight={40} fontSize="$3xl" fontWeight="$extrabold" color={colors.secondary} m={2}>
-                To: {recipient}
-            </Heading>
-            </VStack>
+ 
+            <SenderBox recipientName={recipient} back={navigation.goBack} />
 
             {/* Container */}
-            <ScrollView>
-            <HStack space={0} flexWrap="wrap">
-            {renderSpecificMessage()}
+            <Box h="75%">
+              <ScrollView>
+                <HStack space={0} flexWrap="wrap" m={10}>
+                  {renderSpecificMessage()}
+                    {/* Render message components or sender boxes */}
+                </HStack>
+              </ScrollView>
+            </Box>
 
-                {/* Render message components or sender boxes */}
-            </HStack>
+            <HStack m={20}>
 
-            <Input bg={colors.white} borderColor={colors.secondary} h={75} w="72%" zIndex={0}>
-                    <InputField
-                        multiline={true}
-                        size="md"
-                        placeholder="Chat here..."
-                        value={messageContent}
-                        onChangeText={(text) => setMessageContent(text)} // Update message content state
-                            />
-                </Input>
-                        
+              <Input bg={colors.white} borderColor={colors.secondary} h={50} w="75%" zIndex={0}>
+                      <InputField
+                          multiline={true}
+                          size="md"
+                          placeholder="Chat here..."
+                          value={messageContent}
+                          onChangeText={(text) => setMessageContent(text)} // Update message content state
+                              />
+                  </Input>
 
-                <Button
+                  <Button
                     variant="solid"
                     size="sm"
                     bg={colors.secondary}
                     borderRadius={8}
                     onPress={sendMessage}
-                    ml={3}
+                    m={10}
                 >
                     <Text color={colors.white} fontSize="$sm">Send</Text>
                 </Button>
+            </HStack>        
+
+                
                         
-    </ScrollView>
+    {/* </ScrollView> */}
     
         </Box>
     )

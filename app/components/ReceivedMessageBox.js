@@ -18,7 +18,7 @@ import UserAvatar from './Avatar.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function ReceivedMessageBox( { senderIcon, senderName, message, senderUsername} ) {
+export default function ReceivedMessageBox( { senderIcon, senderName, message, senderUsername, username} ) {
     const navigation = useNavigation();
     return (
         <Pressable onPress={() => navigation.navigate(Routes.PRIVATEMESSAGE)} >
