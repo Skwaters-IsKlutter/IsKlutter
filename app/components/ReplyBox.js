@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Box, Text, VStack, HStack, Image, Input } from '@gluestack-ui/themed';
 
@@ -65,11 +65,18 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
 
       <HStack space="sm" justifyContent="center" alignItems="center">
         <Image source={{ uri: userData.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
-        <Box h="$10" w="75%">
-          <Input bg={colors.white} p={10}>
-            <Text>{replyText}</Text>
-          </Input>
-        </Box>
+        <ScrollView style={{ flex: 1, maxHeight: 100 }}>
+          <Box h="auto" w="75%">
+            <Input
+              bg={colors.white}
+              p={10}
+              multiline
+              numberOfLines={3} // Adjust the number of lines based on your design
+            >
+              <Text>{replyText}</Text>
+            </Input>
+          </Box>
+        </ScrollView>
       </HStack>
     </Box>
   );

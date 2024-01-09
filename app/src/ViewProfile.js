@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Box, ScrollView, Heading, Text } from '@gluestack-ui/themed';
 import SearchHeader from '../components/SearchHeader.js';
 import ViewProfileCard from '../components/ViewProfileCard.js';
@@ -10,6 +10,7 @@ import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firesto
 import { database } from '../../config/firebase';
 
 export default function ViewProfile() {
+  const navigation = useNavigation();
   const route = useRoute();
   const [sellerProfile, setSellerProfile] = useState(null);
   const [userListings, setUserListings] = useState([]);
