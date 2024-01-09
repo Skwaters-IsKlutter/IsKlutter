@@ -234,7 +234,7 @@ export default function ListingsPage() {
                     <CommentBox
                         selectedItem={selectedItem}
                         posterUserId={currentUser ? currentUser.uid : null}
-                        posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
+                        posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/profile-holder.jpg")}
                         onCommentChange={(comment) => setNewComment(comment)}  // Added callback to update new comment
                         onAddComment={addComment}  // Added callback to add new comment
                     />

@@ -193,15 +193,15 @@ export default function PrivateMessagePage() {
       return (
         <View>
           {messages.map((messageData, index) => (
-            <View key={index}>
+              <View key={index} style={{alignContent: 'center', alignSelf: messageData.currentUserSent ? 'flex-end' : 'flex-start', // Align sender's message to the right, receiver's to the left
+            }}>
               {messageData.message && (
                 <View style={{ 
-                  backgroundColor: messageData.currentUserSent ? 'green' : 'white', // Set background color based on currentUserSent
+                  backgroundColor: messageData.currentUserSent ? 'green' : 'white', // Set background color based on currentUserSent'
                   padding: 10, 
                   marginVertical: 5,
-                  alignSelf: messageData.currentUserSent ? 'flex-end' : 'flex-start', // Align sender's message to the right, receiver's to the left
                   }}>
-                  <Text>{messageData.message}</Text>
+                  <Text color={messageData.currentUserSent ? 'white' : 'black'}>{messageData.message}</Text>
                 </View>
               )}
             </View>
