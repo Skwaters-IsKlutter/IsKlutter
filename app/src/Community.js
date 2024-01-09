@@ -21,68 +21,91 @@ import {
   onSnapshot,
   query,
   where,
+  getDocs
 } from 'firebase/firestore';
 
+import { getAuth } from 'firebase/auth';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 import { FIREBASE_APP } from '../../config/firebase';
 
 const db = getFirestore(FIREBASE_APP);
+const auth = getAuth();
 
 export default function CommunityPage() {
-  const [description, setDescription] = useState([]);
-  const [comments, setComments] = useState({});
-  const [username, setUsername] = useState('');
+    const [description, setDescription] = useState([]);
+    const [comments, setComments] = useState({});
+    const [username, setUsername] = useState('');
+    const [userProfileImg, setUserProfileImg] = useState('');  // Add this line
 
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  const fetchUserData = async () => {
-    // Implement fetching user data
-  };
+    const fetchUserData = async () => {
+        try {
+            if (!auth || !auth.currentUser) {
+                setTimeout(fetchUserData, 1000);
+                return;
+            }
 
-  const fetchComments = async () => {
-    // Implement fetching comments
-  };
+            const currentUser = auth.currentUser;
+            const userCollection = collection(db, 'users');
+            const userQuery = query(userCollection, where('userID', '==', currentUser.uid));
+            const querySnapshot = await getDocs(userQuery);
 
-  useEffect(() => {
-    // Set up Firebase listener for real-time updates
-    const unsubscribe = onSnapshot(
-      query(collection(db, 'forum')),
-      (snapshot) => {
-        const newPosts = snapshot.docs.map((doc) => ({
-          key: doc.id,
-          ...doc.data(),
-        }));
-        setDescription(newPosts);
-      }
-    );
-
-    return () => {
-      // Cleanup function to unsubscribe when the component unmounts
-      unsubscribe();
-    };
-  }, []); // Empty dependency array to ensure it runs once on mount and cleans up on unmount
-
-  useEffect(() => {
-    fetchUserData();
-    fetchComments();
-  }, []); // Dependency array depends on your specific dependencies
-
-  const renderCommunityPosts = () => {
-    return description.map((userData, index) => (
-      <PostCard
-        key={index}
-        username={userData.username}
-        description={userData.description}
-        toIndividualPost={() =>
-          navigation.navigate(Routes.INDIVIDUALPOST, {
-            selectedPost: userData,
-          })
+            if (querySnapshot && querySnapshot.docs.length > 0) {
+                const userDoc = querySnapshot.docs[0];
+                setUserProfileImg(userDoc.data().userProfileImg);
+            } else {
+                console.error('User document not found for the current user.');
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error.message);
         }
-      />
-    ));
-  };
+    };
+
+    useEffect(() => {
+        // Set up Firebase listener for real-time updates
+        const unsubscribe = onSnapshot(
+            query(collection(db, 'forum')),
+            (snapshot) => {
+                const newPosts = snapshot.docs.map((doc) => ({
+                    key: doc.id,
+                    ...doc.data(),
+                }));
+                setDescription(newPosts);
+            }
+        );
+
+        return () => {
+            // Cleanup function to unsubscribe when the component unmounts
+            unsubscribe();
+        };
+    }, []); // Empty dependency array to ensure it runs once on mount and cleans up on unmount
+
+    useEffect(() => {
+        fetchUserData();
+        // You can add the call to fetchComments() here if needed
+    }, []); // Dependency array depends on your specific dependencie
+
+    const renderCommunityPosts = () => {
+        return description.map((userData, index) => (
+            console.log("Community img", userData.userProfileImg),
+          <PostCard
+            key={index}
+            username={userData.username}
+            
+            description={userData.description}
+            toIndividualPost={() =>
+              navigation.navigate(Routes.INDIVIDUALPOST, {
+                selectedPost: userData,
+              })
+            }
+          />
+        ));
+      };
+
+  console.log('userProfileImg', userProfileImg);
 
   return (
     <Box w="100%" h="100%">
@@ -99,8 +122,9 @@ export default function CommunityPage() {
         </VStack>
 
         <PostBox
-          posterIcon={require('../../assets/img/usericon.jpg')}
-          post={() => Alert.alert('Alert', 'This is a dummy action')}
+            posterIcon={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/usericon.jpg')}
+            userProfileImg={userProfileImg}  // Add this line to pass userProfileImg as a prop
+            //post={() => Alert.alert('Alert', 'This is a dummy action')}
         />
 
         <Box height="100%" bgColor={'$lightgray'}>
