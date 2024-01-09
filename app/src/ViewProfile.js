@@ -66,7 +66,7 @@ export default function ViewProfile() {
           productName={item.listingName}
           productSeller={sellerProfile?.username}
           tags={firstTag}
-          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item })}
+          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg  })}
         />
       );
     });
