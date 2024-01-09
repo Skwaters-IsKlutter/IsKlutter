@@ -82,7 +82,7 @@ export default function ProfilePage() {
                 productName={item.listingName}
                 productSeller={currentUser?.username}
                 tags={firstTag}
-                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: setProfileImg })}
+                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}
             />
           );
         });
