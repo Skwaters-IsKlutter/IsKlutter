@@ -39,6 +39,8 @@ const auth = getAuth();
 export default function IndividualPostPage() {
     const navigation = useNavigation();
     const route = useRoute();
+    const username = route?.params?.username; // Retrieve the username from route params
+    const selectedPost = route?.params?.selectedPost;
     const [currentUser, setCurrentUser] = useState(null);
     const [currentUserProfileImg, setCurrentUserProfileImg] = useState('');
     const [postComments, setPostComments] = useState([]);
@@ -131,11 +133,12 @@ export default function IndividualPostPage() {
 
     // UseEffect to fetch listing comments when selectedPostchanges
     useEffect(() => {
-        if (selectedPost) {
+        if (selectedPost && selectedPost.id) {
             // Initial fetch
             fetchPostComments();
         }
     }, [selectedPost]);
+    
 
     // Function to add a new comment
     const addComment = async () => {
@@ -169,7 +172,6 @@ export default function IndividualPostPage() {
     };
 
     console.log('Route:', route);
-    const selectedPost = route?.params?.selectedPost;
     console.log('Selected Post:', selectedPost);
 
     const postsData = selectedPost
@@ -184,11 +186,11 @@ export default function IndividualPostPage() {
     const renderPosts = () => {
         console.log('Posts Data:', postsData);
         return postsData.map((userData, index) => 
-          <IndividualPostCard
+            <IndividualPostCard
             key={index}
-            username={userData.username}
+            username={username} // Pass the retrieved username to IndividualPostCard
             description={userData.description}
-          />
+        />
         );
       };
 
@@ -216,6 +218,7 @@ export default function IndividualPostPage() {
             <Box p="$6" w="100%" maxWidth="$96" flex={1} h="100%">
                     <ScrollView>
                         <VStack space="xs">
+                        
                             {renderPosts()}
                         </VStack>
 
