@@ -3,6 +3,7 @@ import {
     Box,
     VStack,
     HStack,
+    Text,
     Input,
     InputField,
     InputSlot,
@@ -21,18 +22,18 @@ import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 
-export default function SenderBox( { senderIcon, senderName, senderUsername} ) {
+export default function SenderBox( {recipientName} ) {
     const navigation = useNavigation();
     return (
-        <Box>
-            <HStack>
-                <Pressable>
-                    <MaterialCommunityIcons name= "arrow-left" color={colors.black} size={40}/> 
+        <Box w="100%" maxHeight={150} bg={colors.primary}>
+            <HStack p="$2" w="100%"  alignItems="center" mt={30}>
+                <Pressable onPress={navigation.goBack}>
+                    <MaterialCommunityIcons name= "arrow-left-circle-outline" color={colors.white} size={30} /> 
                 </Pressable>
-                <UserAvatar username={senderUsername} userIcon={senderIcon} />
+                {/* <UserAvatar username={recipientName} /> */}
                 <VStack>
-                    <Text color={colors.black}size="l" bold={true}>{senderName}</Text>
-                    <Text olor={colors.black} size="xs">{senderUsername}</Text>  
+                    <Text color={colors.white} m={10} size='xl' bold={true}>{recipientName}</Text>
+                    {/* <Text color={colors.black} size="xs">{senderUsername}</Text>   */}
                 </VStack>
             </HStack>
         </Box>

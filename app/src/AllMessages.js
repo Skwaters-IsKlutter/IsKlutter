@@ -25,6 +25,7 @@ import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebas
 import Routes from '../components/constants/Routes.js';
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import UserAvatar from '../components/Avatar.js';
 
 
 const db = getFirestore(FIREBASE_APP);
@@ -104,7 +105,7 @@ export default function AllMessagesPage( { user } ) {
       
             messagesSnapshot.forEach((doc) => {
               const messageData = doc.data();
-              if (messageData.recipient === loggedInUsername) {
+              if (messageData.recipient === loggedInUsername || messageData.sender === loggedInUsername) {
                 const sender = messageData.sender;
                 const message = messageData.message;
       
@@ -129,28 +130,33 @@ export default function AllMessagesPage( { user } ) {
       
         fetchSenderandMessage();
       }, [auth]);
-      
-
-      
     
-    
-      const renderUsernames = () => {
-        return usernames.map((username, index) => (
-          <TouchableOpacity key={index} onPress={() => handleUsernameClick(username)}>
-            <View style={{ 
-              width: 50, 
-              height: 50, 
-              borderRadius: 25, 
-              backgroundColor: 'lightblue', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              margin: 5,
-            }}>
-              <Text>{username}</Text>
-            </View>
-          </TouchableOpacity>
-        ));
-      };
+      // const renderUsernames = () => {
+      //   return usernames.map((username, index) => (
+      //         <TouchableOpacity key={index} onPress={() => handleUsernameClick(username)}>
+      //           <ScrollView>
+      //           <VStack width={380} backgroundColor={colors.white}  m={5}>
+      //               <View style={{ 
+      //                 // width: 50, 
+      //                 // height: 50, 
+      //                 // borderRadius: 25, 
+      //                 // backgroundColor: 'lightblue', 
+      //                 justifyContent: 'center',
+      //                 fontSize: 10,
+      //                 margin: 5,
+      //                 padding:10
+      //               }}>
+      //                 <HStack>
+      //                   <UserAvatar></UserAvatar>
+      //                   <Text p={10}>{username}</Text>
+      //                 </HStack>
+      //               </View>
+      //             </VStack>
+      //           </ScrollView>
+      //         </TouchableOpacity>
+             
+      //   ));
+      // };
       
       const renderSender = () => {
         return sender.map((senderName, index) => (
@@ -170,25 +176,19 @@ export default function AllMessagesPage( { user } ) {
         ));
       };
       
-
-    
-      
-
- 
-      
       const renderSpecificMessage = () => {
         return (
           <View>
             {messages.map((senderData, index) => (
               <TouchableOpacity key={index} onPress={() => handleUsernameClick(senderData.sender)}>
-                <View>
-                  <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 10 }}>
-                    Sender: {senderData.sender}
+                <View style={{ backgroundColor: 'white', borderRadius: 9, padding: 10, marginVertical: 5, w: '100%'}}>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5, marginBottom: 5 }}>
+                    {senderData.sender}
                   </Text>
                   <View>
                     {senderData.messages.map((message, msgIndex) => (
-                      <View key={msgIndex} style={{ backgroundColor: 'white', padding: 10, marginVertical: 5 }}>
-                        <Text>Message: {message}</Text>
+                      <View key={msgIndex}>
+                        <Text>{message}</Text>
                       </View>
                     ))}
                   </View>
@@ -199,87 +199,32 @@ export default function AllMessagesPage( { user } ) {
         );
       };
       
-      
-      
-      
-      
-      
-    
       const handleUsernameClick = (selectedUsername) => {
         navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: selectedUsername });
       };
-      
-
-
-
-    const messagesData = [
-        { 
-            senderIcon: require("../../assets/img/sassa.jpg"),
-            senderName: "Sassa",
-            senderUsername: "@sassagurl",
-            message: "avail na po ang neon balls"
-        }, { 
-            senderIcon: require("../../assets/img/sassa.jpg"),
-            senderName: "Yasmin Marie Asistido",
-            senderUsername: "@kweenyasmin",
-            message: "hahhahaha"
-        }, { 
-            senderIcon: require("../../assets/img/sassa.jpg"),
-            senderName: "Juniper",
-            senderUsername: "@leng",
-            message: "mhine q"
-        },{ 
-            senderIcon: require("../../assets/img/sassa.jpg"),
-            senderName: "Ychan",
-            senderUsername: "@adele",
-            message: "ayaw q na"
-        },{ 
-            senderIcon: require("../../assets/img/sassa.jpg"),
-            senderName: "Ychan",
-            senderUsername: "@adele",
-            message: "hatdog"
-        }
-    ]
-
-    const renderAllMessages = () => {
-        return messagesData.map((message, index) =>
-            <ReceivedMessageBox 
-                key = {index}
-                senderIcon={message.senderIcon}
-                senderName={message.senderName}
-                senderUsername={message.senderUsername}
-                message={message.message}
-
-            />
-        );
-    }
 
     return(
         // Parent box
         <Box w="100%" h="100%">
         
             {/*Search Bar*/}
-            <SearchHeaderBack posterUser="Sassa Girl" 
-            userIcon={require("../../assets/img/usericon.jpg")} />
+            <SearchHeaderBack />
 
             {/* Messages Title */}
-            <VStack space="xs" alignItems="left" bgColor="$amber200" p="$3" width="100%">
+            <VStack space="xs" alignItems="left" p="$3" width="100%">
                 <Heading lineHeight={40} fontSize="$3xl" fontWeight="$extrabold" 
                     color={colors.secondary} m={2} >Messages</Heading>
             </VStack>
 
             {/* Container */}
-            <Box p="$0" maxWidth="100%" flex={0} bgColor="#cfcfcf">
+            <Box p="$4" maxWidth="100%" flex={0} bgColor="#cfcfcf">
                 <ScrollView>
-                    <HStack space={0} flexWrap="wrap">
-                                {renderUsernames()}
+                    <HStack space="4xl" flexWrap="wrap">
+                                {/* {renderUsernames()} */}
                                 {renderSpecificMessage()}
-                    
-
                     </HStack>
                 </ScrollView> 
           </Box>
         </Box>
     )
-
 }
