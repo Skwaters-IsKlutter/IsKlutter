@@ -24,19 +24,18 @@ export default function IndividualPostCard({username, description}) {
     const navigation = useNavigation();
 
     return (
-        <Box p="$3" w="100%" backgroundColor="$white">
-            <VStack width="100%">
+        <Box w="100%" backgroundColor="$white" p={10}>
+            <VStack>
                     <HStack space="sm" alignItems="center">
                         <UserAvatar/> 
-                        <Heading color={colors.secondary}size="sm" bold={true}>{username}</Heading>
+                        <Heading color={colors.secondary}size="md" bold={true}>Username</Heading>
                         {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
                     </HStack>
 
-                    <Text color="black" pb="$3" size="sm" ml="$3" mt="$3">{description}</Text>
-
-                    <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} />
-               
+                    <Text color="black" pb="$3" size="xl" mt="$3">{description}</Text>
+    
             </VStack>
+            {/* <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
         </Box>
     )
 }

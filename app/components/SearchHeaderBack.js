@@ -40,15 +40,15 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
             <VStack>
-                <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
+                <HStack p="$2" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
                     <Pressable onPress={back}>
-                        <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.white} size={25} />
+                        <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.white} size={30} p={5} />
                     </Pressable>
                     <Input w="60%" bg={colors.white} borderColor={colors.primary} size="sm">
                         <InputField placeholder="Search" />
                         <InputSlot>
                             <InputIcon>
-                                <MaterialCommunityIcons name="magnify" color={colors.primary} />
+                                <MaterialCommunityIcons name="magnify" color={colors.primary} size={15} m={5} />
                             </InputIcon>
                         </InputSlot>
                     </Input>
@@ -58,11 +58,11 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                     </Button> */}
 
                     <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
-                        <MaterialCommunityIcons name="message" color={colors.white} size={25}  />
+                        <MaterialCommunityIcons name="message" color={colors.medium} size={25}  />
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-                        <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg}/>
+                        <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} size={25}/>
                     </Pressable>
                 </HStack>
 

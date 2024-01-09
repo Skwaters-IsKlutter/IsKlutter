@@ -22,17 +22,23 @@ export default function PostCard( { username, description, toIndividualPost} ) {
 
     return (
         <Pressable onPress={toIndividualPost} >
-            <VStack width="100%">
-                <Box p="$3" backgroundColor={colors.white} borderRadius={5} m={5}>
-                    <HStack space="sm" alignItems="center">
+            <VStack>
+                <Box 
+                    backgroundColor={colors.white} 
+                    borderRadius={5} 
+                    width={370}
+                    ml={10}
+                    mt={10}>
+
+                    <HStack space="sm" alignItems="center" p={5} m={5}>
                         <UserAvatar/> 
-                        <Text color={colors.secondary}size="sm" bold={true}>{username}</Text>
+                        <Text color={colors.secondary}size="md" bold={true}>{username}</Text>
                         {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
                     </HStack>
 
-                    <Text color="black" pb="$3" size="sm" ml="$3" mt="$3">{description}</Text>
+                    <Text color="black" pb="$3" size="sm" ml="$3" mt={2}>{description}</Text>
 
-                    <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} />
+                    {/* <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
                 </Box>
             </VStack>
         </Pressable>
