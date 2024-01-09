@@ -158,7 +158,7 @@ export default function ListingsPage() {
 
     // Access the selected item data from the route parameters
         //console.log('Route:', route);
-    const { selectedItem, sellerImageURL } = route?.params || {};
+        const { selectedItem, sellerImageURL, sellerName } = route?.params || {};
         //console.log('Selected Item:', selectedItem);
         // console.log('Seller Image URL:', sellerImageURL)
 
@@ -170,7 +170,7 @@ export default function ListingsPage() {
             productName: selectedItem.listingName,
             productPrice: selectedItem.listingPrice,
             productDesc: selectedItem.listingDescription,
-            sellerName: selectedItem.username,
+            sellerName: selectedItem.username || sellerName,
             sellerID: selectedItem.sellerID,
             tags: selectedItem.listingTags.map((tag, index) => (
               <TagLabel key={index} tagName={tag} />
