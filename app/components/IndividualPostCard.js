@@ -16,25 +16,27 @@ import UserAvatar from './Avatar.js';
 
 import colors from '../config/colors.js';
 import CommunityCommentBox from './CommunityCommentBox.js';
+import { useNavigation } from '@react-navigation/native';
 
 
-export default function PostCard( { username, description, toIndividualPost} ) {
+export default function IndividualPostCard({username, description}) {
+
+    const navigation = useNavigation();
 
     return (
-        <Pressable onPress={toIndividualPost} >
+        <Box p="$3" w="100%" backgroundColor="$white">
             <VStack width="100%">
-                <Box p="$3" backgroundColor={colors.white} borderRadius={5} m={5}>
                     <HStack space="sm" alignItems="center">
                         <UserAvatar/> 
-                        <Text color={colors.secondary}size="sm" bold={true}>{username}</Text>
+                        <Heading color={colors.secondary}size="sm" bold={true}>{username}</Heading>
                         {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
                     </HStack>
 
                     <Text color="black" pb="$3" size="sm" ml="$3" mt="$3">{description}</Text>
 
                     <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} />
-                </Box>
+               
             </VStack>
-        </Pressable>
+        </Box>
     )
 }
