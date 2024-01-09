@@ -83,11 +83,11 @@ export default function PostBox({ post, posterUser, posterIcon }) {
     
 
     return (
-        <Box m={10}>
-            <HStack space="lg" justifyContent="space-evenly" alignItems="center">
+        <Box  bgColor={colors.white} p={20}>
+            <HStack space="sm" justifyContent="space-evenly" alignItems="center">
                 <UserAvatar username={posterUser} userIcon={posterIcon} />
 
-                <Input bg={colors.white} borderColor={colors.secondary} h={75} w="72%" zIndex={0}>
+                <Input bg={colors.white} borderColor={colors.secondary} h={75} w="65%" zIndex={0}>
                     <InputField
                         multiline={true}
                         size="md"

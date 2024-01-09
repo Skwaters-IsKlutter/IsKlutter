@@ -1,18 +1,21 @@
 // React
 import * as React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 
 // Gluestack UI
-import {Box, ScrollView, Heading } from '@gluestack-ui/themed';
+import {Box, ScrollView, Heading, HStack } from '@gluestack-ui/themed';
 
 // Local Components
-import SearchHeader from '../components/SearchHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import HelloCard from '../components/ProfileHello.js'; 
 import ProfileCard from '../components/ProfileCard.js';
 import ItemCard from '../components/ItemCard.js';
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+
 
 // Firebase Components
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
@@ -90,9 +93,11 @@ export default function ProfilePage() {
 
     return (
         <Box w="100%" h="100%">
-            <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
-            <Box p="$6" w="100%" maxWidth="$96">
-                <HelloCard username={currentUser?.username} />
+
+            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+            
+            <Box p="$6" w="100%"  flex={1}>
+                <HelloCard  username={currentUser?.username} />
                 <ScrollView>
                     <ProfileCard
                         userProfileImg={profileImg}
@@ -105,12 +110,41 @@ export default function ProfilePage() {
                         setBio={setBio}
                         loading={loadingProfile} // Pass loading state to ProfileCard
                     />
-                    <Box bgColor="white" p={20} borderRadius={5} m={5}>
-                      {/* Display user listings */}
-                      <Heading lineHeight={40} fontSize="$4xl" color={colors.secondary}>
-                            Your Listings
-                        </Heading>
-                        {renderUserListings()}
+                
+                    <Box bgColor="white" 
+                          p="$6"
+                          borderRadius={5} 
+                          m={5} alignItems="center" 
+                          h="100%" 
+                    >
+                    <HStack bgColor={colors.secondary} 
+                              pl={20}
+                              pr={20}
+                              alignItems="center"
+                              borderRadius={30} >
+                        <MaterialCommunityIcons 
+                                  name="view-grid" 
+                                  color={colors.medium} 
+                                  size={20}
+                        />
+                        {/* Display user listings */}
+                        <Heading lineHeight={40}
+                                fontSize={20} 
+                                color={colors.medium} 
+                                pl={10}>
+                                My Listings
+                                
+                          </Heading>
+                      </HStack>
+
+                    {/* Listing Box Container */}
+                      <ScrollView>
+                        <HStack space="xs" flexWrap="wrap">
+                          {renderUserListings()}
+                        </HStack>
+                      </ScrollView>
+                     
+                        
                     </Box>
                 </ScrollView>
             </Box>

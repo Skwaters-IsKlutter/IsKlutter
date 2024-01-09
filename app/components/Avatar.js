@@ -16,12 +16,12 @@ const UserAvatar = ({ username, userIcon, userProfileImg }) => {
       {userProfileImg ? (
         <Image
           source={{ uri: userProfileImg }}
-          style={{ width: 50, height: 50, borderRadius: 25 }}
+          style={{ width: 40, height: 40, borderRadius: 25 }}
         />
       ) : (
         <Image
           source={iconPlaceHolder}
-          style={{ width: 50, height: 50, borderRadius: 25 }}
+          style={{ width: 40, height: 40, borderRadius: 25 }}
         />
       )}
     </View>
