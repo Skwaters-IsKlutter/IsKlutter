@@ -1,140 +1,490 @@
 import React, { useEffect, useState } from 'react';
 import {
-  VStack,
-  HStack,
-  Text,
-  Heading,
-  Image,
-  Box,
-  ScrollView,
-  Alert,
+    VStack,
+    HStack,
+    Text,
+    Heading,
+    Image,
+    Box,
+    Button,
+    ButtonText,
+    FormControl,
+    Input,
+    InputField,
+    View,
+    ScrollView
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { Alert, Pressable } from 'react-native';
 
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
+import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
+import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
+import { TouchableOpacity } from 'react-native';
 
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  query,
-  where,
-  getDocs
-} from 'firebase/firestore';
-
-import { getAuth } from 'firebase/auth';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 import { FIREBASE_APP } from '../../config/firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
+
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
 export default function CommunityPage() {
+    const [usernames, setUsernames] = useState([]);
     const [description, setDescription] = useState([]);
-    const [comments, setComments] = useState({});
+    const [comment, setComment] = useState('');
+    const [comments, setComments] = useState({}); // New state for comments
     const [username, setUsername] = useState('');
-    const [userProfileImg, setUserProfileImg] = useState('');  // Add this line
+
 
     const navigation = useNavigation();
 
-    const fetchUserData = async () => {
+    
+    const addCommmunityComment = async (key, comment) => {
         try {
-            if (!auth || !auth.currentUser) {
-                setTimeout(fetchUserData, 1000);
-                return;
-            }
+            const currentUser = username; 
+            const userDocRef = await addDoc(collection(db, 'CommunityComment'), {
+                username: currentUser,
+                Primary: key,
+                comment: comment
+            });
+            alert("Comment is posted");
+            console.log('Document written with ID:', userDocRef.id);
 
-            const currentUser = auth.currentUser;
-            const userCollection = collection(db, 'users');
-            const userQuery = query(userCollection, where('userID', '==', currentUser.uid));
-            const querySnapshot = await getDocs(userQuery);
-
-            if (querySnapshot && querySnapshot.docs.length > 0) {
-                const userDoc = querySnapshot.docs[0];
-                setUserProfileImg(userDoc.data().userProfileImg);
-            } else {
-                console.error('User document not found for the current user.');
-            }
         } catch (error) {
-            console.error('Error fetching user data:', error.message);
+            console.error('Error adding document:', error);
+            setError('Error creating user. Please try again.');
         }
     };
+    
+    
 
     useEffect(() => {
-        // Set up Firebase listener for real-time updates
-        const unsubscribe = onSnapshot(
-            query(collection(db, 'forum')),
-            (snapshot) => {
-                const newPosts = snapshot.docs.map((doc) => ({
-                    key: doc.id,
-                    ...doc.data(),
-                }));
-                setDescription(newPosts);
+        const fetchData = async () => {
+            try {
+                const userCollection = collection(db, 'forum');
+                const querySnapshot = await getDocs(userCollection);
+    
+                const userData = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const userDataObj = {
+                        key: data.key, 
+                        postusername: data.username, 
+                        description: data.description,
+                    };
+                    userData.push(userDataObj);
+                });
+    
+                setDescription(userData); 
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
             }
-        );
-
-        return () => {
-            // Cleanup function to unsubscribe when the component unmounts
-            unsubscribe();
         };
-    }, []); // Empty dependency array to ensure it runs once on mount and cleans up on unmount
+    
+        fetchData();
+    }, []);
+    
+    
+
+    
 
     useEffect(() => {
-        fetchUserData();
-        // You can add the call to fetchComments() here if needed
-    }, []); // Dependency array depends on your specific dependencie
-
-    const renderCommunityPosts = () => {
-        return description.map((userData, index) => (
-            console.log("Community img", userData.userProfileImg),
-          <PostCard
-            key={index}
-            username={userData.username}
-            
-            description={userData.description}
-            toIndividualPost={() =>
-              navigation.navigate(Routes.INDIVIDUALPOST, {
-                selectedPost: userData,
-              })
+        const fetchUserData = async () => {
+            try {
+                if (!auth || !auth.currentUser) {
+                    setTimeout(fetchUserData, 1000);
+                    return;
+                }
+    
+                const currentUser = auth.currentUser; // Reference auth.currentUser
+                const userCollection = collection(db, 'users');
+                const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
+    
+                querySnapshot.forEach((doc) => {
+                    setUsername(doc.data().username); // Assuming 'username' field exists in the user document
+                });
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
             }
-          />
-        ));
+        };
+    
+        fetchUserData();
+    }, []);
+    
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            const commentsData = {};
+            for (const userData of description) {
+                try {
+                    const commentQuery = query(
+                        collection(db, 'CommunityComment'),
+                        where('Primary', '==', userData.key)
+                    );
+                    const commentSnapshot = await getDocs(commentQuery);
+                    const comments = [];
+                    commentSnapshot.forEach((commentDoc) => {
+                        const commentData = commentDoc.data();
+                        comments.push({
+                            username: commentData.username,
+                            comment: commentData.comment
+                        });
+                    });
+                    commentsData[userData.key] = comments;
+                } catch (error) {
+                    console.error('Error fetching comments:', error.message);
+                    commentsData[userData.key] = [];
+                }
+            }
+            setComments(commentsData);
+        };
+    
+        fetchComments();
+    }, [description]);
+    
+
+    
+    
+    const addComment = async (key, commentText) => {
+        try {
+          const userDocRef = doc(db, 'forum', key);
+          const docSnap = await getDoc(userDocRef);
+        
+          if (docSnap.exists()) {
+            await updateDoc(userDocRef, {
+              comments: arrayUnion({ text: commentText, date: new Date() }),
+            });
+            fetchData();
+          } else {
+            console.error('Document does not exist');
+          }
+        } catch (error) {
+          console.error('Error adding comment:', error.message);
+        }
       };
+      
+      
+    const renderCommunityPosts = () => {
+        return description.map((userData, index) => 
+            <PostCard
+                key={index}
+                // posterIcon={userData.posterIcon}
+                username={userData.username}
+                // postDate={userData.postDate}
+                description={userData.description}
+                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
+            />
+        );
+    }
 
-  console.log('userProfileImg', userProfileImg);
+    const initialCommentState = {};
+    description.forEach(userData => {
+        initialCommentState[userData.key] = ''; // Use a unique identifier as the key
+    });
 
-  return (
+    const [commentTexts, setCommentTexts] = useState(initialCommentState);
+
+    // const inputComment = () => {
+    //     return description.map((userData, index) => (
+    //     <Box w="$64" flex={1}>
+    //         <Input bg={colors.white} borderColor={colors.secondary} h={75} w="72%" zIndex={0}>
+    //         <InputField
+    //             multiline={true}
+    //             size="md"
+    //             value={commentTexts[userData.comment]} // Use specific commentText based on user key
+    //             placeholder="Comment."
+    //             onChangeText={(text) => {
+    //                 setCommentTexts(prevState => ({
+    //                     ...prevState,
+    //                     [userData.key]: text // Update specific commentText based on user key
+    //                 }));
+    //             }}                   
+    //         />
+    //             </Input>
+    //             <Button
+    //                 variant="solid"
+    //                 size="sm"
+    //                 bg={colors.secondary}
+    //                 borderRadius={8}
+    //                 ml={3}
+    //                 onPress={() => addCommmunityComment(userData.key, commentTexts[userData.key])}
+    //             >
+    //                 <Text color={colors.white} fontSize="$sm">Comment</Text>
+    //             </Button>
+    //     </Box>
+
+    //     )
+    // };
+
+
+//     const renderDescription = () => {
+//     return description.map((userData, index) => (
+
+       
+        
+//         <Pressable key={index} onPress={() => handleUsernameClick(userData.description)}> 
+//             <View style={styles.userDataContainer}>
+//                 <Box p={15} w="100%" backgroundColor={colors.white} borderRadius={8}>
+//                     <Text style={styles.username}>{userData.username}</Text>
+//                     <Text style={styles.description}>{userData.description}</Text>
+                        
+//                     <Input bg={colors.white} borderColor={colors.secondary} h={75} w="72%" zIndex={0}>
+//                         <InputField
+//                             multiline={true}
+//                             size="md"
+//                             value={commentTexts[userData.comment]} // Use specific commentText based on user key
+//                             placeholder="Comment."
+//                             onChangeText={(text) => {
+//                                 setCommentTexts(prevState => ({
+//                                     ...prevState,
+//                                     [userData.key]: text // Update specific commentText based on user key
+//                                 }));
+//                             }}                   
+//                         />
+//                     </Input>
+//                     <Button
+//                         variant="solid"
+//                         size="sm"
+//                         bg={colors.secondary}
+//                         borderRadius={8}
+//                         ml={3}
+//                         onPress={() => addCommmunityComment(userData.key, commentTexts[userData.key])}
+//                     >
+//                         <Text color={colors.white} fontSize="$sm">Comment</Text>
+//                     </Button>
+                    
+//                     {/* Display comments with usernames */}
+//                     {comments[userData.key] && comments[userData.key].map((comment, commentIndex) => (
+//                         <Box key={commentIndex} mt={2}>
+//                         <Text style={styles.username}>{comment.username}</Text>
+//                         <Text>{comment.comment}</Text>
+//                     </Box>
+//                     ))}
+//                 </Box>
+//             </View>
+//         </Pressable>
+//     ));
+// };
+
+// <Box>
+
+// </Box>
+
+    
+
+    
+    
+    // Style definitions
+    const styles = {
+        userDataContainer: {
+            marginBottom: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: '#CCCCCC',
+            paddingBottom: 10,
+        },
+        username: {
+            fontWeight: 'bold',
+            marginBottom: 5,
+        },
+        description: {
+            // fontStyle: 'italic',
+            color: 'black',
+        },
+    };
+    
+    
+    
+    
+
+    // return (
+    //     // Parent box
+    //     <Box w="100%" h="100%">
+
+    //         {/*Search Bar*/}
+    //         <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+
+    //         <Box width="100%">
+                
+    //             {/*Community Label */}
+    //             <VStack pb={2} bgColor={colors.secondary}>
+    //                 <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>Community</Heading>
+    //             </VStack>
+
+    //             <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
+
+    //             {/*Community Posts Container */}
+    //             <Box height="100%" bgColor={'$lightgray'}>
+    //                 <ScrollView width="100%">
+    //                     <HStack space="xs" flexWrap="wrap" alignItems='center'>
+    //                         {/* {renderCommunityPosts()} */}
+    //                         {/* {renderDescription()} */}
+    //                     </HStack>
+    //                 </ScrollView>
+    //             </Box>
+    //         </Box>
+    //     </Box>
+    // )
+
+    const renderDescription = () => {
+        return description.map((userData, index) => (
+            <Pressable key={index}> 
+                <View style={styles.userDataContainer}>
+                    <Box p={5} w="100%"  borderRadius={8}>
+                        <Text style={styles.username}>{userData.postusername}</Text> 
+                        <Text color={colors.secondary}size="xl" bold={true} style={styles.description}>{userData.username}</Text>
+                        <Text fontSize="$md"style={styles.description}>{userData.description}</Text>
+                        
+                        <HStack>
+                            <Input bg={colors.white} borderColor={colors.secondary} h={50} w="70%" zIndex={0}>
+                                <InputField
+                                    multiline={true}
+                                    size="md"
+                                    value={commentTexts[userData.comment]} // Use specific commentText based on user key
+                                    placeholder="Comment."
+                                    onChangeText={(text) => {
+                                        setCommentTexts(prevState => ({
+                                            ...prevState,
+                                            [userData.key]: text // Update specific commentText based on user key
+                                        }));
+                                    }}                   
+                                />
+                            </Input>
+                            <Button
+                                variant="solid"
+                                size="sm"
+                                bg={colors.secondary}
+                                borderRadius={8}
+                                ml={3}
+                                mt={5}
+                                onPress={() => addCommmunityComment(userData.key, commentTexts[userData.key])}
+                            >
+                            <Text color={colors.white} fontSize="$sm">Comment</Text>
+                            </Button>
+                        </HStack>
+                        
+                        {/* Display comments with usernames */}
+                        {comments[userData.key] && comments[userData.key].map((comment, commentIndex) => (
+                            <Box key={commentIndex} mt={10} bgColor={colors.white} p={10}>
+                                <HStack>
+                                    {/* <UserAvatar></UserAvatar> */}
+                                    <Text style={styles.username}>{comment.username}</Text>
+                                </HStack>
+                                <Text>{comment.comment}</Text>
+                            </Box>
+                        ))}
+                    </Box>
+                </View>
+            </Pressable>
+        ));
+    };
+
+
+
+return (
+    // Parent box
     <Box w="100%" h="100%">
-      <SearchHeaderBack
-        userIcon={require('../../assets/img/usericon.jpg')}
-        back={navigation.goBack}
-      />
 
-      <Box width="100%">
+        {/*Search Bar*/}
+        <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+
+        {/*Community Label */}
         <VStack pb={2} bgColor={colors.secondary}>
-          <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>
-            Community
-          </Heading>
-        </VStack>
+                    <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>Community</Heading>
+                </VStack>
 
-        <PostBox
-            posterIcon={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/usericon.jpg')}
-            userProfileImg={userProfileImg}  // Add this line to pass userProfileImg as a prop
-            //post={() => Alert.alert('Alert', 'This is a dummy action')}
-        />
+                <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
 
-        <Box height="100%" bgColor={'$lightgray'}>
-          <ScrollView width="100%">
-            <HStack space="xs" flexWrap="wrap" alignItems="center">
-              {renderCommunityPosts()}
-            </HStack>
-          </ScrollView>
+
+        <Box p="$6" w="100%" maxWidth="$96" flex={1} h="100%">
+                <ScrollView>
+                    <VStack space="xs">
+                        {/* {renderPosts()} */}
+                    </VStack>
+
+                <VStack space="xs">
+                {/* <CommentBox
+                    selectedPost={selectedPost}
+                    posterUserId={currentUser ? currentUser.uid : null}
+                    // posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
+                    onCommentChange={(comment) => setNewComment(comment)}  // Added callback to update new comment
+                    onAddComment={addComment}  // Added callback to add new comment
+                /> */}
+                </VStack>
+           
+            
+                {/* Listing Comments */}
+                <VStack space="xs">
+                    <VStack space="xs">
+                        {renderDescription()}
+                    </VStack>
+                </VStack>
+            
+
+                {/* Added a comment
+                <VStack space="xs">
+                    {/* <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") } comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
+                {/* </VStack> */}
+                 
+                {/* Replies */}
+                {/* <VStack space="xs">
+                    <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
+                    <VStack space="xs">
+                        {/* {renderListingsReply()} */}
+                    {/* </VStack> */}
+                {/* </VStack> */} 
+            </ScrollView> 
+
         </Box>
-      </Box>
-    </Box>
-  );
-}
+      </Box>  
+   
+);  
+            }
+
+            // Style definitions
+const styles = {
+    userDataContainer: {
+        marginBottom: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#CCCCCC',
+        paddingBottom: 10,
+    },
+    username: {
+        fontWeight: 'bold',
+        margin: 10
+        
+    },
+    description: {
+        // fontStyle: 'italic',
+        color: 'black'
+    },
+};
+
+
+
+/* // return ( 
+//     <Box w="100%" h="100%">
+//          <SearchHeaderBack></SearchHeaderBack>
+//         <Box>
+//             <ScrollView>
+//                 <HStack>
+//                     {renderCommunityPosts()}
+//                 </HStack>
+
+//             </ScrollView>
+//         </Box>
+
+       
+
+//         <Heading>Hello</Heading>
+//     </Box>
+// )
+} */
+
+
+
