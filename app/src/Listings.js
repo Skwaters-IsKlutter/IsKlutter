@@ -1,297 +1,256 @@
+// React components
 import React, { useEffect, useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Alert } from 'react-native';
+
+// Gluestack-ui components
 import {
     VStack,
     Heading,
     Box,
     ScrollView,
-    HStack,
-    Image,
-    Button,
-    ButtonText,
-    Text,
-    Input,
-    InputField,
 } from '@gluestack-ui/themed';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Alert } from 'react-native';
+
+// Local components
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import ListingCard from '../components/ListingCard.js';
 import TagLabel from '../components/TagLabel.js';
+import CommentBox from '../components/CommentBox.js';
 import ReplyBox from '../components/ReplyBox.js';
-import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
-import { TouchableOpacity } from 'react-native';
 import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
-import { FIREBASE_APP } from '../../config/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-const db = getFirestore(FIREBASE_APP);
-const auth = getAuth();
+// Firebase components
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, query, where, database, getFirestore, onSnapshot } from 'firebase/firestore';
+
 
 export default function ListingsPage() {
-    const [username, setUsername] = useState(''); 
     const navigation = useNavigation();
-    const [comment, setComment] = useState(''); 
-    const [comments, setComments] = useState([]);
     const route = useRoute();
-    const [description, setDescription] = useState([]);
-    const [allComments, setAllComments] = useState([]); // State to hold all comments
+    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUserProfileImg, setCurrentUserProfileImg] = useState('');
+    const [listingComments, setListingComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
 
+    // Add the useEffect hook to fetch the current user's profile image
+    useEffect(() => {
+        const auth = getAuth();
+        const firestore = getFirestore();  // Corrected line
 
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userCollectionRef = collection(firestore, 'users');  // Corrected line
+                const userQuery = query(userCollectionRef, where('userID', '==', user.uid));
+                setCurrentUser(user);
+                
+                try {
+                    const userQuerySnapshot = await getDocs(userQuery);
+
+                    if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
+                        const userDocument = userQuerySnapshot.docs[0];
+                        const userProfileImg = userDocument.data().userProfileImg || '';
+                        setCurrentUserProfileImg(userProfileImg);
+                    } else {
+                        setCurrentUserProfileImg('');
+                        console.error(`User document not found for uid: ${user.uid}`);
+                    }
+                } catch (error) {
+                    setCurrentUserProfileImg('');
+                    console.error('Error fetching user document:', error);
+                }
+            } else {
+                setCurrentUserProfileImg('');
+            }
+        });
+
+        return () => {
+            if (typeof unsubscribeAuth === 'function') {
+                unsubscribeAuth();
+            }
+        };
+    }, []); // Empty dependency array to run effect only once
+
+     // Function to fetch listing comments from Firestore
+     const fetchListingComments = async () => {
+        console.log('Fetching comments for listing ID:', selectedItem.id);
+        const firestore = getFirestore();
+    
+        const commentsCollectionRef = collection(firestore, 'ListingsComments');
+        const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
+    
+        try {
+            const listingCommentsSnapshot = await getDocs(listingCommentsQuery);
+    
+            if (!listingCommentsSnapshot.empty) {
+                const commentsData = listingCommentsSnapshot.docs.map((commentDoc) => commentDoc.data());
+                console.log('Fetched comments:', commentsData);
+                setListingComments(commentsData);
+            } else {
+                console.log('No comments found.');
+                setListingComments([]);
+            }
+    
+            // Set up the listener for real-time updates
+            const unsubscribeListener = setupCommentsListener();
+    
+            // Clean up the listener when the component is unmounted or selectedItem changes
+            return () => {
+                unsubscribeListener();
+            };
+        } catch (error) {
+            console.error('Error fetching listing comments:', error);
+        }
+    };
+
+    // Function to set up a Firestore listener for listing comments
+    const setupCommentsListener = () => {
+    const firestore = getFirestore();
+    const commentsCollectionRef = collection(firestore, 'ListingsComments');
+    const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
+
+    const unsubscribe = onSnapshot(listingCommentsQuery, (snapshot) => {
+        const commentsData = snapshot.docs.map((commentDoc) => commentDoc.data());
+        console.log('Updated comments:', commentsData);
+        setListingComments(commentsData);
+    });
+
+    return unsubscribe;
+};
+
+    // UseEffect to fetch listing comments when selectedItem changes
+    useEffect(() => {
+        if (selectedItem) {
+            // Initial fetch
+            fetchListingComments();
+        }
+    }, [selectedItem]);
+
+    // Function to add a new comment
+    const addComment = async () => {
+        const firestore = getFirestore();
+
+        try {
+            const newCommentRef = await addDoc(collection(firestore, 'ListingsComments'), {
+                itemId: selectedItem.id,
+                userId: currentUser.uid,
+                comment: newComment,
+                timestamp: serverTimestamp(),
+            });
+
+            console.log('New comment added with ID:', newCommentRef.id);
+
+            // Update the local state with the new comment
+            setListingComments((prevComments) => [
+                ...prevComments,
+                {
+                    userId: currentUser.uid,
+                    comment: newComment,
+                    timestamp: new Date(),
+                },
+            ]);
+
+            // Clear the input field after adding the comment
+            setNewComment('');
+        } catch (error) {
+            console.error('Error adding new comment:', error);
+        }
+    };
 
     // Access the selected item data from the route parameters
-    console.log('Route:', route);
-    const selectedItem = route?.params?.selectedItem;
-    console.log('Selected Item:', selectedItem);
+        //console.log('Route:', route);
+    const { selectedItem, sellerImageURL } = route?.params || {};
+        //console.log('Selected Item:', selectedItem);
+        // console.log('Seller Image URL:', sellerImageURL)
 
     const listingsData = selectedItem
     ? [
-        {
+        {   
+            productID: selectedItem.id,
             productImage: { uri: selectedItem.listingImageURL },
-            productName: selectedItem.listingPrice,
+            productName: selectedItem.listingName,
             productPrice: selectedItem.listingPrice,
             productDesc: selectedItem.listingDescription,
             sellerName: selectedItem.username,
+            sellerID: selectedItem.sellerID,
             tags: selectedItem.listingTags.map((tag, index) => (
               <TagLabel key={index} tagName={tag} />
             )),
-            //sellerImage: { uri: selectedItem.userIconURL }, // Use userIconURL as sellerImage
+            
         },
     ]
     : [];
 
     const renderListings = () => {
       console.log('Listings Data:', listingsData);
+      
       return listingsData.map((listings, index) => (
         <ListingCard
           key={index}
+          productID={selectedItem.id}
           productImage={listings.productImage?.uri ? listings.productImage : { uri: 'fallback_image_url' }}
           productName={listings.productName}
           productPrice={listings.productPrice}
           productDesc={listings.productDesc}
           sellerName={listings.sellerName}
+          sellerID={listings.sellerID}
+          sellerImageURL={sellerImageURL}
           tags={listings.tags}
-          //sellerImage={listing.sellerImage}
         />
       ));
     };
-    
-    
-    const listingsRepliesData = [
-        {
-            replyUser: "kuromi",
-            userIcon: require("../../assets/img/usericon.jpg"),
-            replyText: "mine!",
-            replyDate: "10/25/2023",
-            replyTime:"12:58 PM"
-        }, {
-            replyUser: "sassag0rl",
-            userIcon: require("../../assets/img/sassa.jpg"),
-            replyText: "EPAL NG NAG MINE",
-            replyDate: "10/25/2023",
-            replyTime:"1:43 PM"
-        }, 
-    ];
-
-    const renderListingsReply = () => {
-        return listingsRepliesData.map((listing, index) =>
-            <ReplyBox
-                key={index}
-                replyUser={listing.replyUser}
-                userIcon={listing.userIcon}
-                replyText={listing.replyText}
-                replyDate={listing.replyDate}
-                replyTime={listing.replyTime}
-            />
-        );
-    }
 
     const renderListingComments = () => {
-        if (!selectedItem || !comments[selectedItem.key]) {
-            return null; // Return null or a message if no comments are available for the selected item
-        }
-
-        return comments[selectedItem.key].comments.map((commentData, index) => (
-            <Box key={index} bg={colors.lightGray} p={4} borderRadius={12} mt={4}>
-                <Text fontSize={16} fontWeight="bold">
-                    {commentData.username}
-                </Text>
-                <Text fontSize={14} mt={2}>
-                    {commentData.comment}
-                </Text>
-            </Box>
+        return listingComments.map((comment, index) => (
+          <ReplyBox
+            key={index}
+            replyUser={comment.userId}  // Assuming userId is the user ID for the comment
+            //userIcon={comment.userIcon}  // Assuming userIcon is the user's profile image
+            replyText={comment.comment}
+            replyDate={comment.timestamp ? comment.timestamp.toDate().toLocaleDateString() : 'N/A'}
+            replyTime={comment.timestamp ? comment.timestamp.toDate().toLocaleTimeString() : 'N/A'}
+          />
         ));
-    };
+      };
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                if (!auth || !auth.currentUser) {
-                    setTimeout(fetchUserData, 1000);
-                    return;
-                }
-    
-                const currentUser = auth.currentUser; // Reference auth.currentUser
-                const userCollection = collection(db, 'users');
-                const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
-    
-                querySnapshot.forEach((doc) => {
-                    setUsername(doc.data().username); // Assuming 'username' field exists in the user document
-                });
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
-            }
-        };
-    
-        fetchUserData();
-    }, []);
+    return (
+        // Parent box
+        <Box w="100%" h="100%">
+            {/*Search Bar*/}
+            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
 
-
-    
-    
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userCollection = collection(db, 'listings');
-                const querySnapshot = await getDocs(userCollection);
-    
-                const userData = [];
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const userDataObj = {
-                        key: data.key,
-                        username: data.username
-                    };
-                    userData.push(userDataObj);
-                });
-    
-                setDescription(userData);
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
-            }
-        };
-    
-        fetchData();
-    }, []);
-    
-     
-
-   
-    const addListingComment = async (key, comment) => {
-        try {
-            const currentUser = username; 
-            const userDocRef = await addDoc(collection(db, 'ListingsComment'), {
-                username: currentUser,
-                Primary: key,
-                comment: comment
-            });
-            console.log('Document written with ID:', userDocRef.id);
-            Alert.alert('Comment Posted', 'Your comment has been posted successfully.');
-        } catch (error) {
-            console.error('Error adding document:', error);
-            setError('Error creating user. Please try again.');
-        }
-    };
-
-
-    useEffect(() => {
-        const fetchComments = async () => {
-            const commentsData = {};
-    
-            try {
-                for (const userData of description) {
-                    const commentQuery = query(
-                        collection(db, 'ListingsComment'),
-                        where('Primary', '==', userData.key)
-                    );
-                    const commentSnapshot = await getDocs(commentQuery);
-                    const comments = [];
-    
-                    commentSnapshot.forEach((commentDoc) => {
-                        const commentData = commentDoc.data();
-                        comments.push({
-                            username: commentData.username,
-                            comment: commentData.comment
-                        });
-                    });
-    
-                    commentsData[userData.key] = {
-                        username: userData.username,
-                        comments: comments
-                    };
-                }
-    
-                setComments(commentsData);
-            } catch (error) {
-                console.error('Error fetching comments:', error.message);
-            }
-        };
-    
-        fetchComments();
-    }, [description]);
-
-    
-
-    const initialCommentState = {};
-    description.forEach(userData => {
-        initialCommentState[userData.key] = ''; // Use a unique identifier as the key
-    });
-
-    const [commentTexts, setCommentTexts] = useState(initialCommentState);
-
-
-return (
-    // Parent box
-    <Box w="100%" h="100%">
-        {/*Search Bar*/}
-        <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
-
-        <Box p="$6" w="100%" maxWidth="$96" flex={1}>
-            {/*Listings Label */}
-            <VStack space="xs" pb="$2">
-            <Heading fontSize={30} color={colors.secondary}>Listings</Heading>
-            </VStack>
-
-            <ScrollView>
-                <VStack space="xs" flexWrap="wrap">
-                    {renderListings()}
+            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+                {/*Listings Label */}
+                <VStack space="xs" pb="$2">
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
                 </VStack>
 
-                {/* Added a comment */}
-                <Input bg={colors.white} borderColor={colors.secondary} h={80} w="75%">
-                    <InputField
-                        multiline={true}
-                        size="md"
-                        placeholder="Write a comment..."
-                        value={comment}
-                        onChangeText={(text) => setComment(text)} // Update the comment value in the state
+                <ScrollView>
+                    <VStack space="xs" flexWrap="wrap">
+                        {renderListings()}
+                    </VStack>
+
+                    {/* Added a comment */}
+                    <VStack space="xs">
+                    <CommentBox
+                        selectedItem={selectedItem}
+                        posterUserId={currentUser ? currentUser.uid : null}
+                        posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
+                        onCommentChange={(comment) => setNewComment(comment)}  // Added callback to update new comment
+                        onAddComment={addComment}  // Added callback to add new comment
                     />
-                </Input>
-                <Button
-                variant="solid"
-                size="sm"
-                bg={colors.secondary}
-                borderRadius={12}
-                onPress={() => {
-                    console.log('Key of the file:', selectedItem.key); // Log the key
-                    addListingComment(selectedItem.key, comment); // Call addListingComment with key and comment
-                }}
-            >
-                <ButtonText color={colors.white} fontSize="$sm">
-                    Comment
-                </ButtonText>
-            </Button>
+                    </VStack>
 
-            <VStack space="md" mt={4}>
-                    <Heading fontSize="$xl" color={colors.secondary}>Listing Comments</Heading>
-                    {renderListingComments()}
-                </VStack>
-
-
-             
-                
-            </ScrollView>
+                    
+                    
+                    {/* Listing Comments */}
+                    <VStack space="xs">
+                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Comments</Heading>
+                        <VStack space="xs">
+                            {renderListingComments()}
+                        </VStack>
+                    </VStack>
+                </ScrollView>
+            </Box>
         </Box>
-    </Box>
- )
+    );
 }

@@ -82,20 +82,25 @@ export default function AllListingsPage({ key }) {
   );
 
   const handleSearchChange = (text) => {
-    setSearchInput(text);
+    setSearchInput(text.toLowerCase());
   };
-
+  
   const filteredListings = allListingsData.filter((item) => {
-    const lowerCaseSearch = searchInput.toLowerCase();
     const listingName = item.listingName.toLowerCase();
     const username = item.username.toLowerCase();
-    return listingName.includes(lowerCaseSearch) || username.includes(lowerCaseSearch);
+    const tags = item.listingTags.map(tag => tag.toLowerCase()); // Convert tags to lowercase
+  
+    return (
+      listingName.includes(searchInput) ||
+      username.includes(searchInput) ||
+      tags.some(tag => tag.includes(searchInput))
+    );
   });
-
+  
   const renderAllListings = () => {
     return filteredListings.map((item) => {
       const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
-
+  
       return (
         <ItemCard
           key={item.id}
@@ -104,7 +109,6 @@ export default function AllListingsPage({ key }) {
           productName={item.listingName}
           productSeller={item.username}
           sellerID={item.sellerID}
-          //sellerImage={item.sellerImageURL}
           tags={firstTag}
           toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
         />
