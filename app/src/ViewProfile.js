@@ -8,6 +8,7 @@ import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { database } from '../../config/firebase';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
 export default function ViewProfile() {
   const navigation = useNavigation();
@@ -74,7 +75,7 @@ export default function ViewProfile() {
 
   return (
     <Box w="100%" h="100%">
-      <SearchHeader userIcon={require("../../assets/img/usericon.jpg")} />
+      <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
       <Box p="$6" w="100%" maxWidth="$96">
         {sellerProfile && (
           <ViewProfileCard
@@ -87,7 +88,7 @@ export default function ViewProfile() {
         )}
         <ScrollView>
           <Box bgColor="white" p={20} borderRadius={5} m={5}>
-            <Heading lineHeight={40} fontSize="$4xl" color={colors.secondary}>
+            <Heading lineHeight={40} fontSize="$3xl" color={colors.secondary}>
               {`${sellerProfile?.username}'s Listings`}
             </Heading>
             {renderUserListings()}
