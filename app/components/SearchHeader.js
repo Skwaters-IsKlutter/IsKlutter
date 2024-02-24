@@ -37,8 +37,8 @@ export default function SearchHeader({ search, username, userIcon, onSearchChang
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
           <VStack>
-            <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
-              <Input w="70%" bg={colors.white} borderColor={colors.primary} size="sm">
+            <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" >
+              <Input w="80%" bg={colors.white}  size="sm" borderRadius={20} left={-5} h={40}>
                 <InputField
                   placeholder="Search"
                   value={search}
@@ -46,14 +46,14 @@ export default function SearchHeader({ search, username, userIcon, onSearchChang
                 />
                 <InputSlot>
                   <InputIcon>
-                    <MaterialCommunityIcons name="magnify" color={colors.primary} />
+                    <MaterialCommunityIcons name="magnify" color={colors.primary} size={15} right={15} />
                   </InputIcon>
                 </InputSlot>
               </Input>
     
-              <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
+              {/* <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
                 <MaterialCommunityIcons name="message" color={colors.white} size={25} />
-              </Pressable>
+              </Pressable> */}
     
               <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
                 <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} />

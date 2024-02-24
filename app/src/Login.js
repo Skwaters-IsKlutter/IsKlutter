@@ -55,32 +55,39 @@ export default function LoginPage() {
     // };
 
     return (
+        // justifyContent="center" alignItems="center"
         // Parent box
-        <Box w="100%" h="100%" justifyContent="center" alignItems="center">
+        <Box w="100%" h="100%" alignItems="center">
             {/* Logo */}
             {/* <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
             </VStack> */}
 
-            {/* Form control for login */}
+            {/* Welcome back */}
             <Box
                 p="$6"
                 w="100%"
-                maxWidth="$96"
+                height={400}
+                backgroundColor={colors.primary}
+                borderBottomEndRadius={100}
+                borderBottomLeftRadius={100}
             >
-                {/* Heading */}
-                <VStack space="xs" pb="$12">
-                    <Heading lineHeight={60} fontSize="$5xl">Welcome back</Heading>
-                    <Heading lineHeight={30} fontSize="$2xl">Sign in to IsKlutter now.</Heading>
+                <VStack space="xs"mt={90} alignItems='center' >
+                    <Heading lineHeight={60} fontSize="$5xl" color={colors.white}>Welcome back!</Heading>
+                    <Heading lineHeight={30} fontSize="$2xl" color={colors.white}>Log in to IsKlutter now.</Heading>
                 </VStack>
+            </Box>
 
+            {/* Login Form */}
+            <Box p="$6" w="100%" maxWidth="$96 " top={-180}>
+                <Box backgroundColor={colors.white} p="$2" borderRadius={10}>
                 {/* Email input */}
-                <VStack space="xl" py="$3">
-                    <FormControl size="md">
+                <VStack space="xl">
+                    <FormControl size="md" p="$2" pt="$5">
                         <FormControlLabel mb="$2">
-                            <FormControlLabelText>Email</FormControlLabelText>
+                            <FormControlLabelText color={colors.secondary}>Email</FormControlLabelText>
                         </FormControlLabel>
-                        <Input w="100%">
+                        <Input w="100%" borderRadius={10}>
                             <InputField
                                 type="email"
                                 placeholder="Enter email"
@@ -92,12 +99,12 @@ export default function LoginPage() {
                 </VStack>
 
                 {/* Password input */}
-                <VStack space="xl" py="$2">
-                    <FormControl size="md">
+                <VStack space="xl " p="$2">
+                    <FormControl size="md" py="$2">
                         <FormControlLabel mb="$2">
-                            <FormControlLabelText>Password</FormControlLabelText>
+                            <FormControlLabelText color={colors.secondary}>Password</FormControlLabelText>
                         </FormControlLabel>
-                        <Input w="100%">
+                        <Input w="100%" borderRadius={10}>
                             <InputField
                                 type="password"
                                 placeholder="Enter password"
@@ -109,18 +116,25 @@ export default function LoginPage() {
                 </VStack>
 
                 {/* Submit button */}
-                <VStack space="lg" pt="$4">
-                    <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin}>
-                        <ButtonText>Sign In</ButtonText>
+                <VStack space="lg" pt="$10" pb="$5" width="$80">
+                    <Button size="sm" 
+                            backgroundColor={colors.primary} 
+                            onPress={handleLogin}
+                            borderRadius={10}>
+                        <ButtonText>Log In</ButtonText>
                     </Button>
                 </VStack>
             </Box>
+            </Box>
+           
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={700} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)}>
+                <Button variant="solid" 
+                        m="$7" 
+                        size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)}>
                     <ButtonText sx={{
-                        color: colors.medium
+                        color: colors.white
                     }}>Don't have an account yet? Sign up</ButtonText>
                 </Button>
             </Box>

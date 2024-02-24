@@ -1,7 +1,7 @@
 // App color palette
 export default {
-    primary: "#9C0002",
-    secondary: "#094900",
+    primary: "#EB781E",
+    secondary: "#285656",
     black: "#000000",
     white: "#FFFFFF",
     gray: "#8A8A8A",

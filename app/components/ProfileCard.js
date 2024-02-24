@@ -78,6 +78,7 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
                 Edit Profile
               </ButtonText>
             </Button>
+            
             <Button 
               variant="solid" 
               size="xs" backgroundColor={colors.gray} borderRadius={20} mt={10} ml={10}onPress={handleLogout}>

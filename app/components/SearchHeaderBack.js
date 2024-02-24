@@ -42,13 +42,13 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
             <VStack>
                 <HStack p="$2" w="100%" mt={50} justifyContent="space-evenly" alignItems="center">
                     <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-circle-outline" color={colors.white} size={30} p={5} />
+                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Input w="60%" bg={colors.white} borderColor={colors.primary} size="sm">
+                    <Input w="70%" bg={colors.white}  size="sm" borderRadius={20} left={-5} h={40}>
                         <InputField placeholder="Search" />
                         <InputSlot>
                             <InputIcon>
-                                <MaterialCommunityIcons name="magnify" color={colors.primary} size={15} m={5} />
+                                <MaterialCommunityIcons name="magnify" color={colors.primary} size={15} right={15} />
                             </InputIcon>
                         </InputSlot>
                     </Input>
@@ -57,9 +57,9 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                         <ButtonText sx={{color: colors.white}}>Search</ButtonText>
                     </Button> */}
 
-                    <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
+                    {/* <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
                         <MaterialCommunityIcons name="message" color={colors.medium} size={25}  />
-                    </Pressable>
+                    </Pressable> */}
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
                         <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} size={25}/>
