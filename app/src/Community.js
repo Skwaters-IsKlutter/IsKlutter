@@ -170,12 +170,12 @@ export default function CommunityPage() {
       };
       
       
-    const renderCommunityPosts = () => {
+    const renderAllCommunityPosts = () => {
         return description.map((userData, index) => 
             <PostCard
                 key={index}
                 // posterIcon={userData.posterIcon}
-                username={userData.username}
+                username={userData.postusername}
                 // postDate={userData.postDate}
                 description={userData.description}
                 toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
@@ -190,146 +190,6 @@ export default function CommunityPage() {
 
     const [commentTexts, setCommentTexts] = useState(initialCommentState);
 
-    // const inputComment = () => {
-    //     return description.map((userData, index) => (
-    //     <Box w="$64" flex={1}>
-    //         <Input bg={colors.white} borderColor={colors.secondary} h={75} w="72%" zIndex={0}>
-    //         <InputField
-    //             multiline={true}
-    //             size="md"
-    //             value={commentTexts[userData.comment]} // Use specific commentText based on user key
-    //             placeholder="Comment."
-    //             onChangeText={(text) => {
-    //                 setCommentTexts(prevState => ({
-    //                     ...prevState,
-    //                     [userData.key]: text // Update specific commentText based on user key
-    //                 }));
-    //             }}                   
-    //         />
-    //             </Input>
-    //             <Button
-    //                 variant="solid"
-    //                 size="sm"
-    //                 bg={colors.secondary}
-    //                 borderRadius={8}
-    //                 ml={3}
-    //                 onPress={() => addCommmunityComment(userData.key, commentTexts[userData.key])}
-    //             >
-    //                 <Text color={colors.white} fontSize="$sm">Comment</Text>
-    //             </Button>
-    //     </Box>
-
-    //     )
-    // };
-
-
-//     const renderDescription = () => {
-//     return description.map((userData, index) => (
-
-       
-        
-//         <Pressable key={index} onPress={() => handleUsernameClick(userData.description)}> 
-//             <View style={styles.userDataContainer}>
-//                 <Box p={15} w="100%" backgroundColor={colors.white} borderRadius={8}>
-//                     <Text style={styles.username}>{userData.username}</Text>
-//                     <Text style={styles.description}>{userData.description}</Text>
-                        
-//                     <Input bg={colors.white} borderColor={colors.secondary} h={75} w="72%" zIndex={0}>
-//                         <InputField
-//                             multiline={true}
-//                             size="md"
-//                             value={commentTexts[userData.comment]} // Use specific commentText based on user key
-//                             placeholder="Comment."
-//                             onChangeText={(text) => {
-//                                 setCommentTexts(prevState => ({
-//                                     ...prevState,
-//                                     [userData.key]: text // Update specific commentText based on user key
-//                                 }));
-//                             }}                   
-//                         />
-//                     </Input>
-//                     <Button
-//                         variant="solid"
-//                         size="sm"
-//                         bg={colors.secondary}
-//                         borderRadius={8}
-//                         ml={3}
-//                         onPress={() => addCommmunityComment(userData.key, commentTexts[userData.key])}
-//                     >
-//                         <Text color={colors.white} fontSize="$sm">Comment</Text>
-//                     </Button>
-                    
-//                     {/* Display comments with usernames */}
-//                     {comments[userData.key] && comments[userData.key].map((comment, commentIndex) => (
-//                         <Box key={commentIndex} mt={2}>
-//                         <Text style={styles.username}>{comment.username}</Text>
-//                         <Text>{comment.comment}</Text>
-//                     </Box>
-//                     ))}
-//                 </Box>
-//             </View>
-//         </Pressable>
-//     ));
-// };
-
-// <Box>
-
-// </Box>
-
-    
-
-    
-    
-    // Style definitions
-    const styles = {
-        userDataContainer: {
-            marginBottom: 15,
-            borderBottomWidth: 1,
-            borderBottomColor: '#CCCCCC',
-            paddingBottom: 10,
-        },
-        username: {
-            fontWeight: 'bold',
-            marginBottom: 5,
-        },
-        description: {
-            // fontStyle: 'italic',
-            color: 'black',
-        },
-    };
-    
-    
-    
-    
-
-    // return (
-    //     // Parent box
-    //     <Box w="100%" h="100%">
-
-    //         {/*Search Bar*/}
-    //         <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
-
-    //         <Box width="100%">
-                
-    //             {/*Community Label */}
-    //             <VStack pb={2} bgColor={colors.secondary}>
-    //                 <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>Community</Heading>
-    //             </VStack>
-
-    //             <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
-
-    //             {/*Community Posts Container */}
-    //             <Box height="100%" bgColor={'$lightgray'}>
-    //                 <ScrollView width="100%">
-    //                     <HStack space="xs" flexWrap="wrap" alignItems='center'>
-    //                         {/* {renderCommunityPosts()} */}
-    //                         {/* {renderDescription()} */}
-    //                     </HStack>
-    //                 </ScrollView>
-    //             </Box>
-    //         </Box>
-    //     </Box>
-    // )
 
     const renderDescription = () => {
         return description.map((userData, index) => (
@@ -395,96 +255,19 @@ return (
 
         {/*Community Label */}
         <VStack pb={2} bgColor={colors.secondary}>
-                    <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>Community</Heading>
-                </VStack>
+            <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>Community</Heading>
 
-                <PostBox posterIcon={require("../../assets/img/usericon.jpg")} post={() => Alert.alert("Alert", "This is a dummy action")} />
+        </VStack>
 
-
-        <Box p="$6" w="100%" maxWidth="$96" flex={1} h="100%">
-                <ScrollView>
-                    <VStack space="xs">
-                        {/* {renderPosts()} */}
-                    </VStack>
-
-                <VStack space="xs">
-                {/* <CommentBox
-                    selectedPost={selectedPost}
-                    posterUserId={currentUser ? currentUser.uid : null}
-                    // posterIcon={currentUserProfileImg ? { uri: currentUserProfileImg } : require("../../assets/img/usericon.jpg")}
-                    onCommentChange={(comment) => setNewComment(comment)}  // Added callback to update new comment
-                    onAddComment={addComment}  // Added callback to add new comment
-                /> */}
-                </VStack>
-           
-            
-                {/* Listing Comments */}
-                <VStack space="xs">
-                    <VStack space="xs">
-                        {renderDescription()}
-                    </VStack>
-                </VStack>
-            
-
-                {/* Added a comment
-                <VStack space="xs">
-                    {/* <CommentBox posterIcon={ require("../../assets/img/usericon.jpg") } comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
-                {/* </VStack> */}
-                 
-                {/* Replies */}
-                {/* <VStack space="xs">
-                    <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Replies</Heading>
-                    <VStack space="xs">
-                        {/* {renderListingsReply()} */}
-                    {/* </VStack> */}
-                {/* </VStack> */} 
-            </ScrollView> 
-
-        </Box>
-      </Box>  
-   
-);  
-            }
-
-            // Style definitions
-const styles = {
-    userDataContainer: {
-        marginBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#CCCCCC',
-        paddingBottom: 10,
-    },
-    username: {
-        fontWeight: 'bold',
-        margin: 10
-        
-    },
-    description: {
-        // fontStyle: 'italic',
-        color: 'black'
-    },
-};
+        <ScrollView>
+        <PostBox></PostBox>
+            <VStack>
+                {renderAllCommunityPosts()}
+            </VStack>
+        </ScrollView>
 
 
 
-/* // return ( 
-//     <Box w="100%" h="100%">
-//          <SearchHeaderBack></SearchHeaderBack>
-//         <Box>
-//             <ScrollView>
-//                 <HStack>
-//                     {renderCommunityPosts()}
-//                 </HStack>
-
-//             </ScrollView>
-//         </Box>
-
-       
-
-//         <Heading>Hello</Heading>
-//     </Box>
-// )
-} */
-
-
-
+    </Box>
+    )
+}

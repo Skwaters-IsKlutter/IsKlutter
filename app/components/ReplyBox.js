@@ -54,7 +54,10 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
       <VStack space="sm" m={6}>
         <HStack justifyContent="space-between" alignItems="center">
         <TouchableOpacity onPress={handleViewProfile}>
-          <Text color={colors.gray} fontSize="$lg" fontWeight="$extrabold">{userData.username}</Text>
+          <HStack alignItems="center">
+              <Image source={{ uri: userData.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
+              <Text color={colors.secondary} fontSize="$md" fontWeight="$bold" pl={5}>{userData.username}</Text>
+          </HStack>
         </TouchableOpacity>
           <HStack space="sm">
             <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
@@ -64,9 +67,9 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
       </VStack>
 
       <HStack space="sm" justifyContent="center" alignItems="center">
-        <Image source={{ uri: userData.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
+        
         <ScrollView style={{ flex: 1, maxHeight: 100 }}>
-          <Box h="auto" w="75%">
+          <Box h="auto" w="100%">
             <Input
               bg={colors.white}
               p={10}

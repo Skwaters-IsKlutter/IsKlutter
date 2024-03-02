@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Box, ScrollView, Heading, Text } from '@gluestack-ui/themed';
+import { Box, ScrollView, Heading, Text, HStack } from '@gluestack-ui/themed';
+
 import SearchHeader from '../components/SearchHeader.js';
 import ViewProfileCard from '../components/ViewProfileCard.js';
 import ItemCard from '../components/ItemCard.js';
@@ -76,7 +77,7 @@ export default function ViewProfile() {
   return (
     <Box w="100%" h="100%">
       <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
-      <Box p="$6" w="100%" maxWidth="$96">
+      <Box p="$2" w="100%">
         {sellerProfile && (
           <ViewProfileCard
             userProfileImg={sellerProfile.userProfileImg}
@@ -86,15 +87,21 @@ export default function ViewProfile() {
             userID={sellerProfile.userID}
           />
         )}
-        <ScrollView>
-          <Box bgColor="white" p={20} borderRadius={5} m={5}>
-            <Heading lineHeight={40} fontSize="$3xl" color={colors.secondary}>
-              {`${sellerProfile?.username}'s Listings`}
-            </Heading>
-            {renderUserListings()}
-          </Box>
-        </ScrollView>
       </Box>
+        
+      <Heading lineHeight={40}  pl={20} fontSize={20} color={colors.white} bgColor={colors.secondary} mt={6}>
+          {`${sellerProfile?.username}'s Listings`}
+       </Heading>
+
+      <Box  p="$5" w="100%" maxWidth="$96" >
+              <ScrollView>
+              <HStack space="xs" flexWrap="wrap" justifyContent="center" >
+                  {renderUserListings()}
+                </HStack>
+              </ScrollView>
+            </Box>
+        
+      
     </Box>
   );
 }

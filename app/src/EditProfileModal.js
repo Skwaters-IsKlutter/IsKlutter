@@ -16,7 +16,8 @@ import {
   FormControlErrorIcon, 
   Input, 
   InputField,
-  Pressable
+  Pressable,
+  HStack
 } from '@gluestack-ui/themed';
 
 import { useUser } from '../components/UserIcon.js'; // useUser hook
@@ -209,12 +210,20 @@ export default function EditProfileScreen({ route, navigation }) {
 
   return (
     //Parent box
-    <Box w="100%" h="100%" justifyContent="center" alignItems="center">
+    <Box bgColor='$white'>
+     {/* <Box w="100%" h="100%" justifyContent="center" alignItems="center"> */}
+        <Box backgroundColor={colors.primary} alignItems="center">
+                    <HStack p="$2" w={400} mt={25} >
+                        <Pressable onPress={navigation.goBack} ml={20} mt={10}>
+                            <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30}/>
+                        </Pressable>
+                        <Heading lineHeight={50} fontSize={25} color={colors.white} m={45}>
+                            Edit Your Profile
+                        </Heading>
+                    </HStack>
+        </Box>
       <Box p="$6" w="100%"maxWidth="$96">
-        {/* Heading */}
-        <VStack space="xs" pb="$3">
-            <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>Edit Profile</Heading>
-        </VStack>
+      
 
         {/* Choose Image */}
         <VStack space="xl" m={1} alignItems="center">
@@ -298,7 +307,7 @@ export default function EditProfileScreen({ route, navigation }) {
       
       </Box>
     </Box>
- 
+    // </Box>
   );
 }
 

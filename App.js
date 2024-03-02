@@ -16,9 +16,12 @@ import PrivateMessageScreen from './app/components/screens/PrivateMessageScreen.
 import EditProfileScreen from './app/src/EditProfileModal.js';
 import IndividualPostScreen from './app/components/screens/IndividualPostScreen.js';
 import ViewProfileScreen from './app/components/screens/ViewProfileScreen.js';
+import AllBiddingsScreen from './app/components/screens/AllBiddingsScreen.js';
+import SpecificBiddingScreen from './app/components/screens/SpecificBiddingPageScreen.js';
 
 import colors from './app/config/colors.js';
 import { UserProvider } from './app/components/UserIcon.js';
+import SpecificBiddingPage from './app/src/SpecificBidding.js';
 
 
 
@@ -42,6 +45,12 @@ function HomepageScreenTabs() {
 								), 
 								tabBarLabelStyle: {top:-5},}}
 						name="Community" component={CommunityScreen} />
+			<Tab.Screen options={{headerShown: false, 
+								tabBarIcon: ({ color, size }) => (
+									<MaterialCommunityIcons name="cash-multiple" color={colors.white} size={30} />
+								), 
+								tabBarLabelStyle: {top:-5},}}
+						name="Biddings" component={AllBiddingsScreen} />
 		</Tab.Navigator>
 	);
 }
@@ -54,7 +63,7 @@ export default function App() {
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Login">
 				<Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
-				<Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} />
+				<Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} /> 
 				<Stack.Screen options={{headerShown:false}} name="Homepage" component={HomepageScreenTabs} />
 				<Stack.Screen options={{headerShown:false}} name="Listings" component={ListingsScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} />
@@ -64,6 +73,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="EditProfile" component={EditProfileScreen} />
 				<Stack.Screen options={{headerShown:false}} name="IndividualPost" component={IndividualPostScreen} />
 				<Stack.Screen options={{headerShown:false}} name="ViewProfile" component={ViewProfileScreen} />
+				<Stack.Screen options={{headerShown:false}} name="SpecificBidding" component={SpecificBiddingScreen} /> 
 			</Stack.Navigator>
 		</NavigationContainer>
 		</UserProvider>
