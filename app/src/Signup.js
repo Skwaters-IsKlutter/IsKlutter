@@ -51,6 +51,12 @@ export default function SignupScreen() {
             if (email && password && username && password === retypePassword) {
                 const uniqueUsername = await isUsernameUnique(username);
 
+                if (!email.includes('@up.edu.ph')) {
+                    setError('Please use a valid email address with @up.edu.ph domain.');
+                    setLoading(false);
+                    return; // Stop further execution
+                }
+
                 if (!uniqueUsername) {
                     console.log('Username is already taken');
                     setError('Username is already taken. Please choose a different one.');
