@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { VStack } from "@gluestack-ui/themed";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import colors from "../config/colors";
 
@@ -44,8 +45,9 @@ export default function AddListingImagePicker({ listingFormLabel, setListingData
     };
 
     return (
-        <VStack space="xl" m={5}>
-            <TouchableOpacity onPress={pickImage} style={styles.button}>
+        <VStack space="xl" m={5} mt={-10}>
+            <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
+                <MaterialCommunityIcons name="image-plus" color={colors.white} style={styles.icon}/>
                 <Text style={styles.text}>Add Photo</Text>
             </TouchableOpacity>
 
@@ -66,12 +68,14 @@ export default function AddListingImagePicker({ listingFormLabel, setListingData
 const styles = StyleSheet.create({
     text: {
         color: colors.white,
-        fontSize: 15,
+        alignItems: "center",
+        marginTop: 10,
+        fontSize: 20,
     },
     button: {
         alignItems: "center",
         backgroundColor: colors.primary,
-        padding: 10,
+        padding: 5,
         marginTop: 10,
         marginHorizontal: 70,
         borderRadius: 50,
@@ -87,4 +91,18 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         borderRadius: 10,
     },
+    addPhotoButton: {
+        alignItems: "center",
+        backgroundColor: colors.primary,
+        padding: 10,
+        marginTop: 25,
+        marginHorizontal: 100 ,
+        height: 150,
+        width:150,
+        borderRadius:10
+    },
+    icon:{
+        marginTop: 30,
+        fontSize: 40
+    }
 });

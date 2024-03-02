@@ -36,22 +36,24 @@ export default function AddListingForm( {
         }
     };
     return (
-        <VStack space="xl" m={5}>
-            <FormControl size="md">
-                <FormControlLabel mb="$2">
-                    <FormControlLabelText color={colors.secondary} fontWeight={600}>{listingFormLabel}</FormControlLabelText>
-                </FormControlLabel>
+        <Box p={10}>
+            <VStack top={-20}>
+                <FormControl >
+                    <FormControlLabel mb="$1">
+                        <FormControlLabelText color={colors.secondary} fontWeight={600}>{listingFormLabel}</FormControlLabelText>
+                    </FormControlLabel>
 
-                <Input w="100%" bg={colors.white} h={listingFormBoxHeight}>
-                    <InputField
-                        type={listingFormType}
-                        placeholder={listingFormPlaceholder}
-                        value={listingFormValue}
-                        multiline={listingFormMultiline}
-                        onChangeText={handleInputChange}
-                    />
-                </Input>
-            </FormControl>
-        </VStack>
+                    <Input w="100%" bg={colors.white} h={listingFormBoxHeight} borderRadius={10}>
+                        <InputField
+                            type={listingFormType}
+                            placeholder={listingFormPlaceholder}
+                            value={listingFormValue}
+                            multiline={listingFormMultiline}
+                            onChangeText={handleInputChange}
+                        />
+                    </Input>
+                </FormControl>
+            </VStack>
+        </Box>
     );
 }

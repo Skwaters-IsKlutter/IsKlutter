@@ -218,7 +218,6 @@ export default function IndividualPostPage() {
             <Box p="$6" w="100%" maxWidth="$96" flex={1} h="100%">
                     <ScrollView>
                         <VStack space="xs">
-                        
                             {renderPosts()}
                         </VStack>
 

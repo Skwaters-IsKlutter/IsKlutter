@@ -1,12 +1,17 @@
 import React, { useState, useEffect }  from 'react';
 import {
-    HStack,
     VStack,
     Heading,
     Box,
     ScrollView,
     Button,
     ButtonText,
+    Pressable,
+    HStack,
+    Input,
+    InputField,
+    InputSlot,
+    InputIcon
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
@@ -14,6 +19,7 @@ import AddListingBox from '../components/AddListingBox.js';
 import { collection, addDoc, getDoc, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import colors from '../config/colors.js'
 
@@ -144,24 +150,25 @@ export default function AddListingPage() {
     };
 
     return (
-        // Parent box
-        <ScrollView>
-            <Box w="100%" h="100%" >
-                {/*Search Bar*/}
-                <SearchHeaderBack 
-                    userIcon={ require("../../assets/img/usericon.jpg") } 
-                    back={navigation.goBack} 
-                />
-
-                <Box p="$6" w="100%" maxWidth="$96">
-                    <VStack space="xs" pb="$2">
-                        <Heading lineHeight={60} fontSize="$3xl" color={colors.secondary}>
+        <Box backgroundColor={colors.white}>
+            <Box backgroundColor={colors.primary} alignItems="center">
+                    <HStack p="$2" w={400} mt={25} >
+                        <Pressable onPress={navigation.goBack} ml={20} mt={10}>
+                            <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30}/>
+                        </Pressable>
+                        <Heading lineHeight={50} fontSize={25} color={colors.white} m={45}>
                             Sell Your Product
                         </Heading>
-                    </VStack>
-
-                    <Box bg={colors.medium} borderRadius={50} >
-                        <VStack space="xs">
+                    </HStack>
+            </Box>
+    
+        <ScrollView>
+            <Box w="100%" h="100%">
+                {/*Search Bar*/}
+                
+                <Box  w="100%" maxWidth="$96" >
+                    <Box>
+                        <VStack space="xs" >
                             <AddListingBox 
                             listingImage={require("../../assets/img/item.jpg")} 
                             listingName={listingData.listingName}
@@ -173,30 +180,29 @@ export default function AddListingPage() {
                         </VStack>
                     </Box>
 
-                    <HStack p="$3" justifyContent='center'>
+                    <HStack p="$2" justifyContent='center' mb={10}>
                         <Button 
                             variant="solid" 
-                            size="sm" 
+                            size="md" 
                             bg={colors.primary} 
                             borderRadius={10} 
-                            m={5}
                             onPress={handlePostNow}
                             
                         >
-                            <ButtonText color={colors.white} fontSize="$sm">
+                            <ButtonText color={colors.white} fontSize={"$md"}>
                                 Post Now
                             </ButtonText>
                         </Button>
 
                         <Button 
                             variant="solid" 
-                            size="sm" 
+                            size="md" 
                             bg={colors.gray} 
                             borderRadius={10} 
-                            m={5}
+                            ml={10}
                             onPress={handleCancel}
                         >
-                            <ButtonText color={colors.white} fontSize="$sm">
+                            <ButtonText color={colors.white} fontSize="$md">
                                 Cancel
                             </ButtonText>
                         </Button>
@@ -204,5 +210,6 @@ export default function AddListingPage() {
                 </Box>
             </Box>
         </ScrollView>
+        </Box>
     );
 }

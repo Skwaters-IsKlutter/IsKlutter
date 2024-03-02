@@ -26,17 +26,21 @@ const Tab = createBottomTabNavigator();
 
 function HomepageScreenTabs() {
 	return (
-		<Tab.Navigator>
+		<Tab.Navigator screenOptions={{tabBarStyle:{backgroundColor: '#285656', height: 50 },
+									   tabBarActiveBackgroundColor:'teal',
+									   tabBarActiveTintColor:'white'}}>
 			<Tab.Screen options={{headerShown: false, 
 								tabBarIcon: ({ color, size }) => (
-									<MaterialCommunityIcons name="apps" color={colors.primary} size={35} />),
-								// tabBarLabelStyle: {color: colors.primary},
+									<MaterialCommunityIcons name="apps" color={colors.white} size={35} />),
+									
+								tabBarLabelStyle: {top:-5},
 								}} 
 						name="View Listings" component={AllListingsScreen} />
 			<Tab.Screen options={{headerShown: false, 
 								tabBarIcon: ({ color, size }) => (
-									<MaterialCommunityIcons name="human-greeting" color={colors.primary} size={35} />
-								)}}
+									<MaterialCommunityIcons name="account-group" color={colors.white} size={35} />
+								), 
+								tabBarLabelStyle: {top:-5},}}
 						name="Community" component={CommunityScreen} />
 		</Tab.Navigator>
 	);
