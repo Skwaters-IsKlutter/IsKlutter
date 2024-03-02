@@ -96,7 +96,7 @@ export default function ProfilePage() {
 
             <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
             
-            <Box p="$6" w="100%"  flex={1}>
+            <Box p="$3" w="100%"  flex={1}>
                 <HelloCard  username={currentUser?.username} />
                 <ScrollView>
                     <ProfileCard
@@ -112,37 +112,37 @@ export default function ProfilePage() {
                     />
                 
                     <Box bgColor="white" 
-                          p="$6"
-                          borderRadius={5} 
-                          m={5} alignItems="center" 
+                          p="$3"
+                          m={5}
+                        
                           h="100%" 
+                        
                     >
-                    <HStack bgColor={colors.secondary} 
-                              pl={20}
-                              pr={20}
-                              alignItems="center"
-                              borderRadius={30} >
-                        <MaterialCommunityIcons 
-                                  name="view-grid" 
-                                  color={colors.medium} 
-                                  size={20}
-                        />
-                        {/* Display user listings */}
-                        <Heading lineHeight={40}
-                                fontSize={20} 
-                                color={colors.medium} 
-                                pl={10}>
-                                My Listings
-                                
-                          </Heading>
-                      </HStack>
+                        <HStack 
+                                 p={5}
+                                  alignItems="center"
+                                  borderRadius={30} >
+                            <MaterialCommunityIcons 
+                                      name="view-grid" 
+                                      color={colors.secondary} 
+                                      size={20}
+                            />
+                            {/* Display user listings */}
+                            <Heading lineHeight={40}
+                                    fontSize={20} 
+                                    color={colors.secondary} 
+                                    pl={10}>
+                                    My Listings
+                                    
+                              </Heading>
+                          </HStack>
 
-                    {/* Listing Box Container */}
-                      <ScrollView>
-                        <HStack space="xs" flexWrap="wrap">
-                          {renderUserListings()}
-                        </HStack>
-                      </ScrollView>
+                        {/* Listing Box Container */}
+                          <ScrollView>
+                            <HStack space="xs" flexWrap="wrap">
+                              {renderUserListings()}
+                            </HStack>
+                          </ScrollView>
                      
                         
                     </Box>

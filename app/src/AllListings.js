@@ -126,29 +126,30 @@ export default function AllListingsPage({ key }) {
         onSearchChange={handleSearchChange}
       />
 
-      <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+      <Box p="$5" w="100%" maxWidth="$96" flex={1}>
         {/* Listings Label and post button */}
         <VStack space="xs" pb="$2">
           <HStack space="xs" justifyContent="space-between" alignItems="center">
-            <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>
+            <Heading lineHeight={50} fontSize={45} color={colors.secondary}>
               Listings
             </Heading>
             <Button
-              borderRadius={8}
-              backgroundColor={colors.secondary}
+              borderRadius={15}
+              backgroundColor={colors.primary}
               onPress={() => navigation.navigate(Routes.ADDLISTING)}
+              p={5}
             >
               <ButtonIcon>
-                <MaterialCommunityIcons name="post" size={15} color={colors.white} />
+                <MaterialCommunityIcons name="post" size={20} color={colors.white} />
               </ButtonIcon>
-              <ButtonText>Post</ButtonText>
+              <ButtonText pl={10}>Post</ButtonText>
             </Button>
           </HStack>
         </VStack>
 
         {/* Listing Box Container */}
         <ScrollView>
-          <HStack space="xs" flexWrap="wrap" justifyContent="center">
+          <HStack space="xs" flexWrap="wrap" justifyContent="center" >
             {renderAllListings()}
           </HStack>
         </ScrollView>

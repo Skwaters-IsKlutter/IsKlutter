@@ -13,8 +13,8 @@ import colors from '../config/colors.js';
 
 export default function AddListingBox({ user, listingImage, listingName, listingPrice, listingDescription, listingTags, setListingData }) {
     return (
-        <Box p="$2" bg={colors.medium} borderRadius={12} >
-            <Box w="100%" maxWidth="$60" pb={0} >
+        <Box >
+            <Box w="100%" m={5} >
 
                 <AddListingImagePicker
                 

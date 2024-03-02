@@ -95,16 +95,15 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     };
 
     return (
-        <Box>
-            <VStack space="xl" m={5}>
+        <Box p={10}>
+            <VStack top={-25}>
                 <FormControlLabel mb="$2">
                     <FormControlLabelText color={colors.secondary} fontWeight={600}>
                         {listingFormLabel}
                     </FormControlLabelText>
                 </FormControlLabel>
-            </VStack>
 
-            <SelectList
+                <SelectList
                 setSelected={handleMainTagChange}
                 data={Tags}
                 placeholder={listingFormPlaceholder}
@@ -112,6 +111,9 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
             />
 
             {renderCheckbox()}
+            </VStack>
+
+            
         </Box>
     );
 };

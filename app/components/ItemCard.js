@@ -23,7 +23,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                         {!isImageUrl && (
                             <Text>No Image Available</Text>
                         )}
-                        <Heading fontSize="$xl" color={colors.secondary}>
+                        <Heading fontSize="$xl" color={colors.primary}>
                             {`PHP ${productPrice}`}
                         </Heading>
                     </VStack>
