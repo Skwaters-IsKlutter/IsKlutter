@@ -51,6 +51,12 @@ export default function SignupScreen() {
             if (email && password && username && password === retypePassword) {
                 const uniqueUsername = await isUsernameUnique(username);
 
+                if (!email.includes('@up.edu.ph')) {
+                    setError('Please use a valid email address with @up.edu.ph domain.');
+                    setLoading(false);
+                    return; // Stop further execution
+                }
+
                 if (!uniqueUsername) {
                     console.log('Username is already taken');
                     setError('Username is already taken. Please choose a different one.');
@@ -84,7 +90,7 @@ export default function SignupScreen() {
 
     return (
         // Parent box
-        <Box w="100%" h="100%"  alignItems="center">
+        <Box w="100%" h="100%" justifyContent="center" alignItems="center">
             {/* Logo */}
             {/* <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
                 <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
@@ -92,30 +98,23 @@ export default function SignupScreen() {
 
             {/* Form control for login */}
             <Box
-               p="$6"
-               w="100%"
-               height={400}
-               backgroundColor={colors.primary}
-               borderBottomEndRadius={100}
-               borderBottomLeftRadius={100}
+                p="$6"
+                w="100%"
+                maxWidth="$96"
             >
                 {/* Heading */}
-                <VStack space="xs"mt={90} alignItems='center'>
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.white}>New here?</Heading>
-                    <Heading lineHeight={30} fontSize="$2xl" color={colors.white}>Sign up to start decluttering.</Heading>
+                <VStack space="xs" pb="$12">
+                    <Heading lineHeight={60} fontSize="$5xl">New here?</Heading>
+                    <Heading lineHeight={30} fontSize="$2xl">Sign up to start decluttering.</Heading>
                 </VStack>
-           </Box>
 
-           <Box p="$6" w="100%" maxWidth="$96 " top={-180}>
-                <Box backgroundColor={colors.white} p="$4" borderRadius={10}>
-                
                 {/* Email input */}
                 <VStack space="xl" py="$3">
                     <FormControl size="md">
                         <FormControlLabel mb="$2">
-                            <FormControlLabelText color={colors.secondary}>Email</FormControlLabelText>
+                            <FormControlLabelText>Email</FormControlLabelText>
                         </FormControlLabel>
-                        <Input w="100%" borderRadius={10}>
+                        <Input w="100%">
                             <InputField
                                 type="email"
                                 placeholder="Enter email"
@@ -137,9 +136,9 @@ export default function SignupScreen() {
                         isRequired={false}
                     >
                         <FormControlLabel mb="$2">
-                        <FormControlLabelText color={colors.secondary}>Username</FormControlLabelText>
+                        <FormControlLabelText>Username</FormControlLabelText>
                         </FormControlLabel>
-                        <Input w="100%" borderRadius={10}>
+                        <Input w="100%">
                         <InputField
                             type="username"
                             defaultValue=""
@@ -155,9 +154,9 @@ export default function SignupScreen() {
                         <VStack space="xl" py="$2">
                             <FormControl size="md">
                                 <FormControlLabel mb="$2">
-                                    <FormControlLabelText color={colors.secondary}>Password</FormControlLabelText>
+                                    <FormControlLabelText>Password</FormControlLabelText>
                                 </FormControlLabel>
-                                <Input w="100%" borderRadius={10} >
+                                <Input w="100%">
                                     <InputField
                                         type="password"
                                         placeholder="Enter password"
@@ -172,9 +171,9 @@ export default function SignupScreen() {
             <VStack space="xl" py="$2">
                 <FormControl size="md">
                     <FormControlLabel mb="$2">
-                        <FormControlLabelText color={colors.secondary}>Re-enter Password</FormControlLabelText>
+                        <FormControlLabelText>Re-enter Password</FormControlLabelText>
                     </FormControlLabel>
-                    <Input w="100%" borderRadius={10}>
+                    <Input w="100%">
                         <InputField
                             type="password"
                             placeholder="Re-enter password"
@@ -186,23 +185,20 @@ export default function SignupScreen() {
             </VStack>
 
             {/* Submit button */}
-            <VStack space="lg" pt="$4" >
-                <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup} disabled={loading} borderRadius={10}>
+            <VStack space="lg" pt="$4">
+                <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup} disabled={loading}>
                     <ButtonText>{loading ? 'Signing Up...' : 'Sign Up'}</ButtonText>
                 </Button>
             </VStack>
-           
-           </Box>
-           </Box>
+            </Box>
 
             {/* Go to sign up */}
             <Box flexDirection="row" top={700} position="absolute">
                 <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}>
                     <ButtonText sx={{
-                        color: colors.white
+                        color: colors.medium
                     }}>Already have an account? Sign in</ButtonText>
                 </Button>
             </Box>
-       </Box>
+        </Box>
     )
-}
