@@ -16,6 +16,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import AddListingBox from '../components/AddListingBox.js';
+import AddBiddingBox from '../components/AddBiddingBox.js';
 import { collection, addDoc, getDoc, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
@@ -176,6 +177,12 @@ export default function AddListingPage() {
                             listingDescription={listingData.listingDescription}
                             listingTags={listingData.listingTags}
                             setListingData={setListingData} // Prop to update the state in AddListingBox
+                            />
+                        </VStack>
+                        <VStack>
+                            <AddBiddingBox 
+                            
+
                             />
                         </VStack>
                     </Box>
