@@ -59,13 +59,13 @@ export default function CommunityCommentBox( {posterUserId, posterIcon, selected
     };
     
     return (
-        <Box bg={colors.white}>
-            <Box w="$64" flex={1}>
-                <HStack space="md" justifyContent="space-evenly" p={2} alignItems="center">
+        <Box>
+            <Box flex={1}>
+                <HStack space="md" justifyContent="space-evenly" p={2} alignItems="center" mt={20}>
                     {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
                     {/* <UserAvatar username={posterUser} userIcon={posterIcon} /> */}
 
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="100%">
+                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="100%" borderRadius={50}>
                         <InputField multiline={true} 
                             size="md" 
                             placeholder="Write a comment..." 
@@ -75,7 +75,7 @@ export default function CommunityCommentBox( {posterUserId, posterIcon, selected
                     </Input>
                 </HStack>
 
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={8} onPress={handleComment} mt={10} w="40%" alignSelf="flex-end">
+                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={handleComment} mt={25} w="30%" alignSelf="flex-end">
                     <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
                 </Button>
             </Box>
