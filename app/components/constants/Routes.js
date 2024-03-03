@@ -9,5 +9,6 @@ export default Object.freeze({
     ADDLISTING: "AddListing",
     PRIVATEMESSAGE: "PrivateMessage",
     VIEWPROFILE: "ViewProfile",
-    INDIVIDUALPOST: "IndividualPost"
+    INDIVIDUALPOST: "IndividualPost",
+    SPECIFICBIDDING: "SpecificBidding"
 });

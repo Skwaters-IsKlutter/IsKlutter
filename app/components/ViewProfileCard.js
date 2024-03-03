@@ -18,7 +18,7 @@ export default function ViewProfileCard({ userProfileImg, username, profileName,
   };
 
   return (
-    <Box bgColor="white" p={20} borderRadius={5}>
+    <Box bgColor="white" p={15} borderRadius={5}>
       {/* Avatar */}
       <Avatar borderRadius="$full" alignSelf="center" size="2xl">
         {userProfileImg && (
@@ -32,18 +32,18 @@ export default function ViewProfileCard({ userProfileImg, username, profileName,
 
       <VStack space="xs" pb="$2" py="$3">
         <HStack justifyContent="space-between" alignItems="center">
-          <Heading pt="$1.5" pl="$1" fontSize={30} color={colors.primary}>
+          <Heading pt="$1.5" pl="$1" fontSize={25} color={colors.primary}>
             {profileName}
           </Heading>
-          <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={20} onPress={handleChatPress}>
+          {/* <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={20} onPress={handleChatPress}>
             <ButtonText color={colors.white} fontSize="$sm">
               Chat
             </ButtonText>
-          </Button>
+          </Button> */}
         </HStack>
 
         <HStack justifyContent="space-between" alignItems="center">
-          <Heading px="$10" pl="$1" fontSize={20} color={colors.black} pt="0" pb="0">
+          <Heading px="$5" pl="$1" fontSize={20} color={colors.black} pt="0" pb="0">
             {`@${username}`}
           </Heading>
         </HStack>

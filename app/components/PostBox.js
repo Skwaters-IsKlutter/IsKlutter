@@ -87,7 +87,7 @@ export default function PostBox({ post, userProfileImg }) {
           />
         </Input>
 
-        <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={8} onPress={postForum} ml={3}>
+        <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={postForum} ml={3}>
           <Text color={colors.white} fontSize="$sm">
             Post
           </Text>

@@ -15,7 +15,7 @@ import { Alert } from 'react-native';
 import UserAvatar from './Avatar.js';
 
 import colors from '../config/colors.js';
-import CommunityCommentBox from './CommunityCommentBox.js';
+import CommentBox from './CommentBox.js';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -28,16 +28,18 @@ export default function IndividualPostCard({username, description}) {
             <VStack>
                     <HStack space="sm" alignItems="center">
                         <UserAvatar/> 
-                        <Heading color={colors.secondary} size="md" bold={true}>
-                            {username}
+                        <Heading color={colors.secondary} size={10} bold={true}>
+                            {/* {username} */}
+                            Username
                         </Heading>                       
                          {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
                     </HStack>
 
-                    <Text color="black" pb="$3" size="xl" mt="$3">{description}</Text>
+                    <Text color="black" pb="$3" size="md" mt="$3">Post content goes here</Text>
     
             </VStack>
-            {/* <CommunityCommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
+
+            {/* <CommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
         </Box>
     )
 }
