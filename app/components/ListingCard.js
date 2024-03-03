@@ -145,11 +145,11 @@ export default function ListingCard({ productID, productName, productImage, prod
             <HStack justifyContent="space-between" flexDirection="row">
                 <HStack w="100%" justifyContent="space-between">
                     <HStack space="sm" p="$2" alignItems="center">   
-                        <Image source={sellerImageURL} h={35} w={35} alt="icon" borderRadius={100} /> 
-                        <Text color={colors.gray} onPress={handleSellerProfilePress}>{sellerName}</Text>
+                        <Image source={sellerImageURL} h={45} w={45} alt="icon" borderRadius={100} /> 
+                        <Text color={colors.black} fontSize={15} onPress={handleSellerProfilePress}>{sellerName}</Text>
                     </HStack>
                     {/* Chat button */}
-                    <Button
+                    {/* <Button
                         variant="solid"
                         size="sm"
                         backgroundColor={colors.primary}
@@ -158,11 +158,11 @@ export default function ListingCard({ productID, productName, productImage, prod
                         alignSelf="flex-end"
                     >
                         {/* Chat button content */}
-                        <ButtonIcon>
+                        {/* <ButtonIcon>
                             <MaterialCommunityIcons name="chat" size={13} color={colors.white} />
                         </ButtonIcon>
                         <ButtonText color={colors.white} fontSize="$sm">Chat</ButtonText>
-                    </Button>
+                    </Button> */}
                 </HStack>
             </HStack>
         </Box>

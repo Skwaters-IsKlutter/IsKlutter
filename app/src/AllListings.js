@@ -134,13 +134,13 @@ export default function AllListingsPage({ key }) {
               Listings
             </Heading>
             <Button
-              borderRadius={15}
+              borderRadius={50}
               backgroundColor={colors.primary}
               onPress={() => navigation.navigate(Routes.ADDLISTING)}
               p={5}
             >
               <ButtonIcon>
-                <MaterialCommunityIcons name="post" size={20} color={colors.white} />
+                <MaterialCommunityIcons name="post" size={20} color={colors.white}   />
               </ButtonIcon>
               <ButtonText pl={10}>Post</ButtonText>
             </Button>

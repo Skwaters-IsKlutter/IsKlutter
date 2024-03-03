@@ -201,4 +201,5 @@ export default function SignupScreen() {
                 </Button>
             </Box>
         </Box>
-    )};
+    )
+};

@@ -218,14 +218,14 @@ export default function ListingsPage() {
             {/*Search Bar*/}
             <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
 
-            <Box p="$6" w="100%" maxWidth="$96" flex={1}>
+            <Box p="$2" w="100%" maxWidth="$96" flex={1}>
                 {/*Listings Label */}
-                <VStack space="xs" pb="$2">
+                {/* <VStack space="xs" pb="$2">
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.secondary}>Listings</Heading>
-                </VStack>
+                </VStack> */}
 
                 <ScrollView>
-                    <VStack space="xs" flexWrap="wrap">
+                    <VStack space="xs">
                         {renderListings()}
                     </VStack>
 
