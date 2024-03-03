@@ -8,6 +8,7 @@ import {
 import AddListingForm from './AddListingForm.js';
 import AddListingImagePicker from '../components/AddListingImagePicker.js';
 import AddTags from './AddTags.js';
+import AddBidding from './AddBidding.js';
 
 import colors from '../config/colors.js';
 
