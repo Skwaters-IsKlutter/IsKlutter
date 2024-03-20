@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import AddListingBox from '../components/AddListingBox.js';
 import AddBiddingBox from '../components/AddBiddingBox.js';
+import AddBidding from '../components/AddBidding.js';
 import { collection, addDoc, getDoc, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
@@ -70,31 +71,39 @@ export default function AddListingPage() {
             checkFirestoreStatus();
     }, []);
 
-    const handlePostNow = async () => {
+    const handlePostNow = async (bidding) => {
         try {
+            // Check if Firestore is online
             if (!isFirestoreOnline) {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
-
+    
             // Check if required fields are filled
             if (!listingData.listingName || !listingData.listingPrice || !listingData.listingDescription || Object.keys(listingData.listingImage).length === 0) {
                 throw new Error('Please fill in all required fields (Listing Title, Price, Description, and Image).');
-                // TODO: add a
             }
-
-            const user = auth.currentUser; // User authenticated
-            const uid = user.uid;
-
+    
+            // Convert listingPrice to a number
+            const listingPrice = parseFloat(listingData.listingPrice);
+    
+            // Check if the converted listingPrice is a valid number
+            if (isNaN(listingPrice)) {
+                throw new Error('Listing price must be a valid number.');
+            }
+            
+            const user = auth.currentUser; // Get current user
+            const uid = user.uid; // Get user's ID
+    
             // Generate a unique key for the new listing
             const docRef = doc(collection(database, 'listings'));   
             const newListingId = docRef.id;
-
+    
             // Generate a unique filename using timestamp and random string
             const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;   
             
             // Remove spaces from the listing name for the image file name
             const sanitizedListingName = listingData.listingName.replace(/\s+/g, ''); 
-
+    
             // Upload the image to Firebase Storage with a sanitized file name and ".jpeg" extension
             const storagePath = `images/${uniqueFilename}_${sanitizedListingName}.jpeg`;
             const file = listingData.listingImage;
@@ -106,28 +115,22 @@ export default function AddListingPage() {
             
             // Use uploadBytes with metadata
             await uploadBytes(imageRef, file, metadata);
-
+    
             // Get the download URL of the uploaded image
             const downloadURL = await getDownloadURL(imageRef);
-
+    
             // Add the listing data to Firestore with the image URL
             await setDoc(docRef, {
                 sellerID: uid,
                 key: newListingId,
                 productSeller: username,
                 ...listingData,
+                listingPrice: listingPrice, // Assign the converted listingPrice
                 listingImage: storagePath,
                 listingImageURL: downloadURL,
+                bidding: bidding 
             });
-
-                console.log('Listing Data before adding to Firestore: ', {
-                    productSeller: username,
-                    ...listingData,
-                    listingTags: Array.isArray(listingData.listingTags) ? listingData.listingTags : [],
-                    listingImage: storagePath,
-                    listingImageURL: downloadURL,
-                });
-        
+    
             // Reset the form and navigate to a different screen
             setListingData({
                 listingImage: null,
@@ -136,14 +139,16 @@ export default function AddListingPage() {
                 listingDescription: "",
                 listingTags: [],
             });
-
+    
             // Go back to the previous screen (listings page)
             navigation.goBack();
-
-            } catch (error) {
+    
+        } catch (error) {
             console.error('Error adding document: ', error);
-            }
-        };
+        }
+    };
+    
+    
 
         const handleCancel = () => {
         // Go back to the previous screen (listings page)
@@ -180,10 +185,10 @@ export default function AddListingPage() {
                             />
                         </VStack>
                         <VStack>
-                            <AddBiddingBox 
-                            
+    
+                            <AddBiddingBox onBiddingChange={handlePostNow} />
+                            <AddBidding onBiddingChange={handlePostNow} />
 
-                            />
                         </VStack>
                     </Box>
 
