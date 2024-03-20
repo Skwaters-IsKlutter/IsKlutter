@@ -32,8 +32,10 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                         <Text fontSize="$md" fontWeight="$bold">{productName}</Text>
                         <Text fontSize="$sm" color={colors.gray}>{productSeller}</Text>
                     </VStack>
-
-                    <HStack space="xs" p={0} flexWrap="wrap"><Text>{tags}</Text></HStack>
+                  
+                    <HStack space="sm"  flexWrap="wrap">
+                        <Text bgColor={colors.primary} color={colors.white} borderRadius={15} p={7}>{tags}</Text>
+                    </HStack>
                 </Box>
             </Box>
         </Pressable>

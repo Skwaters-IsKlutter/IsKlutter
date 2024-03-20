@@ -1,51 +1,45 @@
-import React from 'react';
-import { Box, VStack, HStack, Heading, Text, Image, Pressable,Button, ButtonText, ScrollView } from '@gluestack-ui/themed';
+import React, { useState, useEffect } from 'react';
+import { VStack, Heading, Button, ButtonText, Box, HStack } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
-import { Alert } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation} from '@react-navigation/native';
 
 import Routes from '../components/constants/Routes.js';
+import { Pressable } from 'react-native';
 
-export default function BidItemCard({ productImage, productPrice, productName, productSeller, sellerID, toSpecificBidding, tags }) {
-    // const isImageUrl = typeof productImage === 'string';
-    const navigation = useNavigation();
+export default function BidItemCard({ listingPrice, listingName,remainingTime, toBidding, }) {
+  const navigation = useNavigation();
+  const [timeRemaining, setTimeRemaining] = useState(4 * 3600 + 30 * 60 + 10);
 
-    return (
-       
-            <Box bg={colors.white} borderRadius={10} width="95%" maxHeight={350} m={10}>
-                <Box p="$">
-                    <HStack space="xs" p={0}>
-                        <Box borderRadius={10}
-                            maxheight={350}
-                            width={150}
-                            m={10}
-                            backgroundColor={colors.black}>
-                            
-                        </Box>
-                        {/* {isImageUrl && (
-                            <Image
-                                // source={{ uri: productImage }}
-                                style={{ height: 100, width: '100%'}}
-                                resizeMode="cover"
-                                alt="icon"
-                                borderTopLeftRadius={5}
-                                borderTopRightRadius={5}
-                                bgColor={colors.black}
-                            />
-                        )}
-                        {!isImageUrl && (
-                            <Text>No Image Available</Text>
-                        )} */}
-                        <VStack>
-                            <Heading fontSize="$xl" color={colors.primary}>ITEM NAME </Heading>
-                            <Heading fontSize="$md" color={colors.secondary} p={0}>Current Bid</Heading>
-                            <Heading fontSize="$md" color={colors.black}>Remaining Time</Heading>
-                            <Button bgColor={colors.primary} p={5} mb={10} borderRadius={50} onPress={() => navigation.navigate(Routes.SPECIFICBIDDING)}>
-                                <ButtonText>Bid Now</ButtonText>
-                            </Button>
-                        </VStack>
-                    </HStack>
-                </Box>
-            </Box>
-    );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeRemaining(prevTime => prevTime - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (time) => {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+    return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
+  return (
+
+      <Box p="$2">
+      <VStack bg={colors.white} borderRadius={10}  width="100%" maxHeight={350}>
+        <HStack width="100%">
+          <Box bg={colors.black} borderRadius={10} height={180} width={150} />
+          <VStack p="$3" flex={1}>
+            <Heading fontSize="$xl" color={colors.primary}>{listingName}</Heading>
+            <Heading fontSize="$md" color={colors.secondary} p={0}>PHP {listingPrice}</Heading>
+            <Heading fontSize="$md" color={colors.black}>Remaining Time: {formatTime(timeRemaining)}</Heading>
+            <Button bgColor={colors.primary} p={5}  borderRadius={50} width="60%" onPress={toBidding}>
+              <ButtonText>Bid Now</ButtonText>
+            </Button>
+          </VStack>
+        </HStack>
+      </VStack>
+      </Box>
+  );
 }

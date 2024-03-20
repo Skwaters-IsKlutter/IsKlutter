@@ -126,7 +126,7 @@ export default function AllListingsPage({ key }) {
         onSearchChange={handleSearchChange}
       />
 
-      <Box p="$5" w="100%" maxWidth="$96" flex={1}>
+      <Box p="$5"  w="100%"  maxWidth="$96" flex={1}>
         {/* Listings Label and post button */}
         <VStack space="xs" pb="$2">
           <HStack space="xs" justifyContent="space-between" alignItems="center">
