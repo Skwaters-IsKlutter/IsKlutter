@@ -17,6 +17,7 @@ import UserAvatar from '../components/Avatar.js';
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
+import BidItemCard from '../components/BidItemCard.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -135,8 +136,28 @@ export default function AllBiddingsPage() {
     }
   };
 
+  const renderAllBiddings = () => {
+    return listings.map(listing => {
+      return (
+        <BidItemCard 
+          key={listing.id}
+          listingName={listing.listingName}
+          listingPrice={listing.listingPrice}
+          toBidding={() => navigation.navigate(Routes.SPECIFICBIDDING, {selecteditem: listing})}
+          >
+          
+          
+        </BidItemCard>
+      );
+    });
+  }
+  
+
+
+
   return (
     <Box w="100%" h="100%">
+      {/* Header */}
       <Box backgroundColor={colors.primary}>
         <HStack p="$2" w="100%" mt={45} alignItems="center">
           <Pressable onPress={navigation.goBack}>
@@ -179,41 +200,12 @@ export default function AllBiddingsPage() {
         <ButtonText pl={10}>Add item for bidding</ButtonText>
       </Button>
 
-      <Box>
-        <ScrollView>
-          {listings.map(listing => (
-            <Box key={listing.id}>
-              <Text>
-                Listing Name: {listing.listingName}, Listing Price: {listing.listingPrice}
-              </Text>
-              <HStack justifyContent="space-between" alignItems="center">
-                <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
-                  <InputField
-                    multiline={true}
-                    size="md"
-                    placeholder="Place your bid Only numbers!"
-                    onChangeText={text => handleCommentChange(listing.id, text)}
-                  />
-                </Input>
-                <Button
-                  variant="solid"
-                  size="sm"
-                  bg={colors.primary}
-                  borderRadius={8}
-                  ml={3}
-                  mt={5}
-                  onPress={() => handleBid(listing.id, comments[listing.id])}
-                >
-                  <Text color={colors.black} fontSize="$sm">Bid</Text>
-                </Button>
-              </HStack>
-              <Text>
-                Current highest bidder: {listing.listingName}: {highestBidders[listing.id] || 'Anonymous'}
-              </Text>
-            </Box>
-          ))}
+        <ScrollView >
+          <VStack space="xs " flexWrap="wrap" justifyContent="center">
+              {renderAllBiddings()}
+          </VStack>
         </ScrollView>
-      </Box>
+      
     </Box>
   );
 }
