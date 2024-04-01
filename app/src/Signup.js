@@ -2,28 +2,24 @@ import React, { useState } from 'react';
 import {
     VStack,
     Heading,
-    Image,
     Box, 
     Button, 
     ButtonText, 
     FormControl, 
     FormControlLabel, 
-    FormControlError, 
-    FormControlErrorText, 
-    FormControlLabelText, 
-    FormControlHelper, 
-    FormControlHelperText, 
-    FormControlErrorIcon, 
+    FormControlLabelText,
     Input, 
     InputField,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth} from '../../config/firebase'; // Import Firebase authentication
+import { auth, storage } from '../../config/firebase';
 import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
 import { FIREBASE_APP } from '../../config/firebase'; 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+import temporaryImage from '../../assets/img/profile-holder.jpg'; // Import the temporary image
 
 const db = getFirestore(FIREBASE_APP);
 
@@ -58,18 +54,36 @@ export default function SignupScreen() {
                 }
 
                 if (!uniqueUsername) {
-                    console.log('Username is already taken');
                     setError('Username is already taken. Please choose a different one.');
                 } else {
-                    const response = await createUserWithEmailAndPassword(auth, email, password);
-                    console.log('User UID:', response.user.uid);
+                    const userResponse = await createUserWithEmailAndPassword(auth, email, password);
+                    console.log('User UID:', userResponse.user.uid);
 
                     try {
+                        let imageURL = '';
+                        // Get the temporary image from the assets folder
+                        const storage = getStorage();
+                        const imageRef = storageRef(storage, `profileImages/${userResponse.user.uid}`);
+                        // const response = await fetch(temporaryImage);
+                        // const blob = await response.blob();
+
+                        // const uploadTask = uploadBytes(imageRef, blob);   
+                        // const snapshot = await uploadTask;                     
+                        
+
+                        // // Get the download URL of the uploaded image
+                        // imageUrl = await getDownloadURL(snapshot.ref);
+                    
+                        // Update user document in Firestore with the temporary profile image URL
                         const userDocRef = await addDoc(collection(db, 'users'), {
-                            userID: response.user.uid,
-                            username: username,
                             email: email,
+                            userBio: "",
+                            userID: userResponse.user.uid,
+                            userProfile: username,
+                            // userProfileImg: imageUrl, // Add the temporary profile image URL
+                            username: username,
                         });
+                    
                         console.log('Document written with ID:', userDocRef.id);
                         navigation.navigate(Routes.LOGIN);
                     } catch (error) {
