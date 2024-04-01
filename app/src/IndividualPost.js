@@ -1,64 +1,96 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import {
     VStack,
-    HStack,
-    Text,
     Heading,
-    Image,
     Box,
-    Button,
-    ButtonText,
-    FormControl,
-    Input,
-    InputField,
-    View,
-    ScrollView
+    ScrollView,
 } from '@gluestack-ui/themed';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Alert, Pressable } from 'react-native';
 
-import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
-import { TouchableOpacity } from 'react-native';
+import colors from '../config/colors';
+import SearchHeaderBack from '../components/SearchHeaderBack';
+import IndividualPostCard from '../components/IndividualPostCard.js';
+import { getFirestore, collection, getDocs,query,where } from 'firebase/firestore';
+import CommunityReplyBox from '../components/CommunityReplyBox';
 
-import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
 
 import { FIREBASE_APP } from '../../config/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
-import IndividualPostCard from '../components/IndividualPostCard.js';
-import CommunityCommentBox from '../components/CommunityCommentBox.js';
-import ReplyBox from '../components/ReplyBox.js';
-
-
-const db = getFirestore(FIREBASE_APP);
-const auth = getAuth();
-
-
+import CommunityCommentBox from '../components/CommunityCommentBox';
+// import CommunityReplyBox from '../components/CommunityReplyBox';
 
 export default function IndividualPostPage() {
     const navigation = useNavigation();
     const route = useRoute();
-  
-    return (
-        // Parent box
-        <Box w="100%" h="100%">
-
-            {/*Search Bar*/}
-            <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+    const { selectedPost } = route.params || {};
+    const [comments, setComments] = useState([]);
 
     
+    useEffect(() => {
+        console.log('Selected Post:', selectedPost);
+        // Fetch comments for the specific post from Firebase when component mounts
+        const fetchComments = async () => {
+            try {
+                const db = getFirestore(FIREBASE_APP); 
+                const commentsRef = collection(db, 'CommunityComment');
+                const postCommentsQuery = query(commentsRef, where('Primary', '==', selectedPost.key));
+                const querySnapshot = await getDocs(postCommentsQuery);
+                const commentsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log('Comments:', commentsData); 
+                setComments(commentsData);
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+            }
+        };
+        if (selectedPost && selectedPost.key) {
+            fetchComments();
+        }
+    }, [selectedPost]);
+
+    // Render Specific Post
+    const renderCommunityPosts = () => {
+        return (
+            <IndividualPostCard
+                description={selectedPost.description}
+                username={selectedPost.postusername}
+            />
+        );
+    };
+
+    // Render Comments
+    const renderComments = () => {
+        return comments.map(comment => (
+            <CommunityReplyBox
+                key={comment.id}
+                replyUsername={comment.username}
+                replyComment={comment.comment}
+            />
+      
+        ));
+    };
+
+    return (
+        <Box w="100%" h="100%">
+            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
             <Box p="$3" w="100%" flex={1} h="100%">
-                <VStack space="xs" p="$1">
-                    <IndividualPostCard></IndividualPostCard>
-                    <CommunityCommentBox></CommunityCommentBox>
+                <ScrollView>
+                    <VStack space="xs" p="$1">
+                        {renderCommunityPosts()}
+                    </VStack>
 
-                    <Heading top={100} fontSize={20} color={colors.primary}>Comments</Heading>
+                    {/* Comment Box */}
+                    <VStack>
+                        <CommunityCommentBox></CommunityCommentBox>        
+                    </VStack>
 
-                </VStack>
-
+                    {/* Render comments */}
+                    <VStack mt={10}>
+                        <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
+                            {renderComments()}
+                    </VStack>
+                            
+                </ScrollView>
             </Box>
         </Box>
-    )
+    );
 }

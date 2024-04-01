@@ -13,29 +13,33 @@ import {
 import { Alert } from 'react-native';
 
 import UserAvatar from './Avatar.js';
+import Routes from '../components/constants/Routes.js';
 
 import colors from '../config/colors.js';
 import CommentBox from './CommentBox.js';
-import { useNavigation } from '@react-navigation/native';
+import { doc, deleteDoc } from 'firebase/firestore'
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { auth, database } from '../../config/firebase';
 
 
 export default function IndividualPostCard({username, description}) {
 
     const navigation = useNavigation();
+    const route = useRoute();
 
     return (
-        <Box w="100%" backgroundColor="$white" p={10}>
-            <VStack>
+        <Box p="$3" w="100%" backgroundColor="$white">
+            <VStack >
                     <HStack space="sm" alignItems="center">
                         <UserAvatar/> 
-                        <Heading color={colors.secondary} size={10} bold={true}>
+                        <Heading color={colors.primary} size={10} bold={true}>
                             {/* {username} */}
-                            Username
+                            {username}
                         </Heading>                       
                          {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
                     </HStack>
 
-                    <Text color="black" pb="$3" size="md" mt="$3">Post content goes here</Text>
+                    <Text color="black" pb="$3" size="md" mt="$3">{description}</Text>
     
             </VStack>
 
