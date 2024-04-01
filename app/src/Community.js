@@ -174,11 +174,11 @@ export default function CommunityPage() {
         return description.map((userData, index) => 
             <PostCard
                 key={index}
-                // posterIcon={userData.posterIcon}
+                posterIcon={userData.posterIcon}
                 username={userData.postusername}
                 // postDate={userData.postDate}
                 description={userData.description}
-                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
+                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, {selectedPost: userData })}
             />
         );
     }

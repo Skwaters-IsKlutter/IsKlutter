@@ -37,9 +37,9 @@ export default function ListingCard({ productID, productName, productImage, prod
     const currentUserId = getCurrentUserID();
     console.log(sellerID);
 
-    const handleChatPress = () => {
-        navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: sellerName });
-    };
+    // const handleChatPress = () => {
+    //     navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: sellerName });
+    // };
 
     const handleSellerProfilePress = () => {
         console.log("Seller ID: ", sellerID);
