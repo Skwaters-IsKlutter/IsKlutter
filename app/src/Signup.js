@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, Image, TouchableOpacity, } from 'react-native';
 import {
     VStack,
     Heading,
@@ -45,35 +45,36 @@ export default function SignupScreen() {
         try {
             setLoading(true);
             setError(null);
-
+    
             if (email && password && username && password === retypePassword) {
                 const uniqueUsername = await isUsernameUnique(username);
-
+    
                 if (!email.includes('@up.edu.ph')) {
                     setError('Please use a valid email address with @up.edu.ph domain.');
                     setLoading(false);
                     return; // Stop further execution
                 }
-
+    
                 if (!uniqueUsername) {
                     setError('Username is already taken. Please choose a different one.');
                 } else {
                     const userResponse = await createUserWithEmailAndPassword(auth, email, password);
                     console.log('User UID:', userResponse.user.uid);
-
+    
                     let imageUrl = '';
                     if (profileImage) {
                         const storage = getStorage();
                         const imageRef = storageRef(storage, `profileImages/${userResponse.user.uid}`);
                         const response = await fetch(profileImage.assets[0].uri);
                         const blob = await response.blob();
-
+    
                         const uploadTask = uploadBytes(imageRef, blob);
                         const snapshot = await uploadTask;
-
+    
                         imageUrl = await getDownloadURL(snapshot.ref);
                     }
-
+    
+                    // Wait for the user document to be added to the collection
                     const userDocRef = await addDoc(collection(db, 'users'), {
                         email: email,
                         userBio: '',
@@ -82,7 +83,7 @@ export default function SignupScreen() {
                         userProfileImg: imageUrl,
                         username: username,
                     });
-
+    
                     console.log('Document written with ID:', userDocRef.id);
                     navigation.navigate(Routes.LOGIN);
                 }
@@ -90,12 +91,13 @@ export default function SignupScreen() {
                 setError('Please fill in all fields and make sure passwords match.');
             }
         } catch (error) {
-            console.error(error);
-            setError(error.message);
+            //console.error("error", error);
+            //setError(error.message);
         } finally {
             setLoading(false);
         }
     };
+    
 
     const handleChooseProfileImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -107,7 +109,7 @@ export default function SignupScreen() {
 
         const result = await ImagePicker.launchImageLibraryAsync();
 
-        if (!result.cancelled) {
+        if (!result.canceled) {
             setProfileImage(result);
         }
     };
