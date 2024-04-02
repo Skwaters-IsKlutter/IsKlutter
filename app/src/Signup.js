@@ -13,11 +13,12 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, firestore } from '../../config/firebase'; // Import Firebase authentication and firestore
+import { auth } from '../../config/firebase'; // Import Firebase authentication
+import { getFirestore, addDoc, collection } from 'firebase/firestore'; // Import Firestore functions
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-const db = firestore();
+const db = getFirestore();
 
 export default function SignupScreen() {
     const navigation = useNavigation();

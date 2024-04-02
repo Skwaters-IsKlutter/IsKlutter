@@ -19,6 +19,8 @@ export default function LoginPage() {
                 await signInWithEmailAndPassword(auth, email, password);
                 navigation.navigate(Routes.HOMEPAGE);
                 console.log("Sign in successful.");
+                setEmail('');
+                setPassword('');
             } else {
                 throw new Error("Please check your email and password.");
             }
