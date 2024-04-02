@@ -13,12 +13,13 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase'; // Import Firebase authentication
-import { getFirestore, addDoc, collection } from 'firebase/firestore'; // Import Firestore functions
+import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { auth } from '../../config/firebase';
+import { FIREBASE_APP } from '../../config/firebase';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-const db = getFirestore();
+const db = getFirestore(FIREBASE_APP);
 
 export default function SignupScreen() {
     const navigation = useNavigation();
@@ -31,9 +32,9 @@ export default function SignupScreen() {
     const [loading, setLoading] = useState(false);
 
     const isUsernameUnique = async (username) => {
-        const usersRef = firestore().collection('users');
-        const querySnapshot = await usersRef.where('username', '==', username).get();
-        return querySnapshot.empty;
+        const q = query(collection(db, 'users'), where('username', '==', username));
+        const usernameSnapshot = await getDocs(q);
+        return usernameSnapshot.empty;
     };
 
     const handleSignup = async () => {
@@ -53,27 +54,30 @@ export default function SignupScreen() {
                 if (!uniqueUsername) {
                     setError('Username is already taken. Please choose a different one.');
                 } else {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const defaultImgURL = "https://https://firebasestorage.googleapis.com/v0/b/isklutterfinal.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=8763c0e7-c1a4-40f1-a9ce-91f9164d71ae";
+                    const response = await createUserWithEmailAndPassword(auth, email, password);
 
-                    await addDoc(collection(db, 'users'), {
-                        email: email,
-                        userBio: "I have no interesting info.",
-                        userID: userCredential.user.uid,
-                        userProfile: username,
-                        userProfileImg: defaultImgURL,
-                        username: username,
-                    });
+                    const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterfinal.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=8763c0e7-c1a4-40f1-a9ce-91f9164d71ae";
 
-                    console.log('User account created successfully with ID:', userCredential.user.uid);
-                    navigation.navigate(Routes.LOGIN);
+                    try {
+                        await addDoc(collection(db, 'users'), {
+                            userID: response.user.uid,
+                            username: username,
+                            email: email,
+                            userProfileImg: defaultImgURL, // Added userProfileImg
+                        });
+                        console.log('User account created successfully with ID:', response.user.uid);
+                        navigation.navigate(Routes.LOGIN);
+                    } catch (error) {
+                        console.error('Error adding document:', error);
+                        setError('Error creating user. Please try again.');
+                    }
                 }
             } else {
                 setError('Please fill in all fields and make sure passwords match.');
             }
         } catch (error) {
-            console.error('Error', error);
-            setError('An error occurred while signing up. Please try again.');
+            console.error(error);
+            setError(error.message);
         } finally {
             setLoading(false);
         }
@@ -158,23 +162,23 @@ export default function SignupScreen() {
                         </FormControl>
                     </VStack>
                     <VStack space="lg" pt="$4">
-                        <Button size="sm" backgroundColor={colors.primary} onPress={handleSignup} disabled={loading}>
+                        <Button size="sm" 
+                                backgroundColor={colors.primary} 
+                                onPress={handleSignup} 
+                                disabled={loading}
+                                borderRadius={10}>
                             <ButtonText>{loading ? 'Signing Up...' : 'Sign Up'}</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
             </Box>
             <Box flexDirection="row" top={700} position="absolute">
-                <Button
-                    variant="solid"
-                    m="$7"
-                    size="sm"
-                    backgroundColor={colors.secondary}
-                    onPress={() => navigation.navigate(Routes.LOGIN)}
-                >
-                    <ButtonText sx={{ color: colors.white }}>Already have an account? Sign in</ButtonText>
+                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}>
+                    <ButtonText sx={{
+                        color: colors.white
+                    }}>Already have an account? Sign in</ButtonText>
                 </Button>
             </Box>
         </Box>
-    );
-}
+    )
+};
