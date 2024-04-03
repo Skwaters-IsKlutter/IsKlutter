@@ -17,7 +17,6 @@ import UserAvatar from '../components/Avatar.js';
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
-import BidItemCard from '../components/BidItemCard.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -28,38 +27,66 @@ export default function AllBiddingsPage() {
   const [comments, setComments] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
   const [highestBidders, setHighestBidders] = useState({});
+  const [biddingData, setBiddingData] = useState({});
+
 
   useEffect(() => {
     const fetchListings = async () => {
       const listingsCollection = collection(db, 'listings');
-      const snapshot = await getDocs(listingsCollection);
-      const listingsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        listingName: doc.data().listingName,
-        listingPrice: doc.data().listingPrice
-      }));
-      setListings(listingsData);
+      const snapshot = await getDocs(query(listingsCollection, where('bidding', '==', true)));
+      const listingsData = snapshot.docs.map(async doc => {
+        const data = doc.data();
+        const endTime = data.endTime.toDate(); // Convert Firestore Timestamp to JavaScript Date object
+        const remainingTime = endTime - new Date(); // Calculate remaining time in milliseconds
+        const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24)); // Convert remaining time to days
+        return {
+          id: doc.id,
+          listingName: data.listingName,
+          listingPrice: data.listingPrice,
+          daysRemaining: daysRemaining
+        };
+      });
+      const resolvedListingsData = await Promise.all(listingsData);
+      setListings(resolvedListingsData);
     };
     fetchListings();
-
-    // Subscribe to changes in listings collection
-    const unsubscribe = onSnapshot(collection(db, 'listings'), (snapshot) => {
-      const updatedListings = snapshot.docs.map(doc => ({
-        id: doc.id,
-        listingName: doc.data().listingName,
-        listingPrice: doc.data().listingPrice
-      }));
-      setListings(updatedListings);
-    });
-
-    return unsubscribe; // Cleanup function to unsubscribe from snapshot listener
+  
+    // // Subscribe to changes in listings collection
+    // const unsubscribe = onSnapshot(collection(db, 'listings'), (snapshot) => {
+    //   const updatedListings = snapshot.docs.map(doc => (
+    //     id: doc.id,
+    //     listingName: doc.data().listingName,
+    //     listingPrice: doc.data().listingPrice
+    //   }));
+    //   setListings(updatedListings);
+    // });
+  
+    // return unsubscribe; // Cleanup function to unsubscribe from snapshot listener
   }, []);
+  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       setCurrentUser(user);
     });
     return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const fetchBiddingData = async () => {
+      const biddingCollectionRef = collection(db, 'bidding');
+      const snapshot = await getDocs(biddingCollectionRef);
+      const biddingData = {};
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (!biddingData[data.listingName]) {
+          biddingData[data.listingName] = [];
+        }
+        biddingData[data.listingName].push({ user: data.user, biddingPrice: data.biddingPrice });
+      });
+      setBiddingData(biddingData);
+    };
+    fetchBiddingData();
   }, []);
 
   const fetchUsername = async (userId) => {
@@ -103,7 +130,7 @@ export default function AllBiddingsPage() {
       if (isNaN(intValue)) {
         throw new Error('Bidding price must be a valid number.');
       }
-
+  
       const biddingCollectionRef = collection(db, 'bidding');
       const username = currentUser ? await fetchUsername(currentUser.uid) : 'Anonymous';
       await addDoc(biddingCollectionRef, {
@@ -112,12 +139,12 @@ export default function AllBiddingsPage() {
         biddingPrice: intValue,
         user: username
       });
-
-      // Get the highest bidding price and username for the current listing
+  
+      // Get the highest bidding price for the current listing
       const querySnapshot = await getDocs(query(biddingCollectionRef, where('listingName', '==', listings.find(listing => listing.id === listingId).listingName)));
       let highestBiddingPrice = 0;
-      let highestBidder = 'Anonymous';
-
+      let highestBidder = '';
+  
       querySnapshot.forEach(doc => {
         const data = doc.data();
         if (data.biddingPrice > highestBiddingPrice) {
@@ -125,39 +152,34 @@ export default function AllBiddingsPage() {
           highestBidder = data.user;
         }
       });
-
-      updateHighestBidder(listingId, highestBidder);
-
-      alert(`Bid placed successfully!\nCurrent highest bidder in ${listings.find(listing => listing.id === listingId).listingName}: ${highestBidder}`);
-
+  
+      // Update the minimum bid amount to be the highest bidding price plus 1
+      const minimumBid = highestBiddingPrice + 1;
+  
+      // Display alert if the entered bid amount is less than the minimum bid amount
+      if (intValue < minimumBid) {
+        const endTime = listings.find(listing => listing.id === listingId).endTime;
+        const remainingTime = endTime - new Date();
+        const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+        alert(`Minimum bid must be ${minimumBid}. Remaining time: ${daysRemaining} days`);
+        return; // Stop execution if the bid is below the minimum
+      } 
+      
+      else {
+        alert(`Bid placed successfully!`);
+      }
     } catch (error) {
       alert('Input only number');
       console.error('Error placing bid:', error);
     }
   };
-
-  const renderAllBiddings = () => {
-    return listings.map(listing => {
-      return (
-        <BidItemCard 
-          key={listing.id}
-          listingName={listing.listingName}
-          listingPrice={listing.listingPrice}
-          toBidding={() => navigation.navigate(Routes.SPECIFICBIDDING, {selecteditem: listing})}
-          >
-          
-          
-        </BidItemCard>
-      );
-    });
-  }
   
-
-
+  
+  
+  
 
   return (
     <Box w="100%" h="100%">
-      {/* Header */}
       <Box backgroundColor={colors.primary}>
         <HStack p="$2" w="100%" mt={45} alignItems="center">
           <Pressable onPress={navigation.goBack}>
@@ -200,12 +222,54 @@ export default function AllBiddingsPage() {
         <ButtonText pl={10}>Add item for bidding</ButtonText>
       </Button>
 
-        <ScrollView >
-          <VStack space="xs " flexWrap="wrap" justifyContent="center">
-              {renderAllBiddings()}
-          </VStack>
+      <Box>
+        <ScrollView>
+            {listings.map(listing => (
+              <Box key={listing.id}>
+                <Text>
+                  Listing Name: {listing.listingName}, Listing Price: {listing.listingPrice}
+                </Text>
+                <Text>All bidders and their corresponding bidding prices:</Text>
+                {biddingData[listing.listingName] ? (
+                  biddingData[listing.listingName].map((bid, index) => (
+                    <Text key={index}>
+                      Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
+                    </Text>
+                  ))
+                ) : (
+                  <Text>No bids yet</Text>
+                )}
+                <HStack justifyContent="space-between" alignItems="center">
+                  <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
+                    <InputField
+                      multiline={true}
+                      size="md"
+                      placeholder="Place your bid Only numbers!"
+                      onChangeText={text => handleCommentChange(listing.id, text)}
+                    />
+                  </Input>
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    bg={colors.primary}
+                    borderRadius={8}
+                    ml={3}
+                    mt={5}
+                    onPress={() => handleBid(listing.id, comments[listing.id])}
+                  >
+                    <Text color={colors.black} fontSize="$sm">Bid</Text>
+                  </Button>
+                </HStack>
+                <Text>
+                  Remaining time: {listing.daysRemaining} days
+                </Text>
+                <Text>
+                  Current highest bidder: {listing.listingName}: {highestBidders[listing.id]}
+                </Text>
+              </Box>
+            ))}
         </ScrollView>
-      
+      </Box>
     </Box>
   );
 }

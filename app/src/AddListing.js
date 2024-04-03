@@ -6,19 +6,38 @@ import {
     ScrollView,
     Button,
     ButtonText,
+    FormControl,
+    FormControlLabel,
+    FormControlLabelText,
+    Select,
+    SelectTrigger,
+    SelectDragIndicatorWrapper,
+    SelectDragIndicator,
+    SelectBackdrop,
+    SelectContent,
+    SelectPortal,
+    Icon,
+    SelectInput,
+    SelectIcon,
+    SelectItem,
     Pressable,
     HStack,
     Input,
+    Checkbox,
+    CheckIcon,
+    CheckboxLabel,
+    CheckboxIcon,
     InputField,
     InputSlot,
     InputIcon
 } from '@gluestack-ui/themed';
+import DatePicker from 'react-native-date-picker'
 import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import AddListingBox from '../components/AddListingBox.js';
 import AddBiddingBox from '../components/AddBiddingBox.js';
 import AddBidding from '../components/AddBidding.js';
-import { collection, addDoc, getDoc, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
+import { Timestamp, collection, addDoc, getDoc, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -37,7 +56,10 @@ export default function AddListingPage() {
 
     const [username, setUsername] = useState("");
     const [isFirestoreOnline, setIsFirestoreOnline] = useState(true); // New state to track Firestore online status
-
+    const [enableBidding, setEnableBidding] = useState(false);
+    const [biddingTime, setBiddingTime] = useState(1); // Default to 1 day
+    const [date, setDate] = useState(new Date())
+    
     const fetchUsername = async () => {
         try {
             const user = auth.currentUser;
@@ -71,67 +93,62 @@ export default function AddListingPage() {
             checkFirestoreStatus();
     }, []);
 
-    const handlePostNow = async (bidding) => {
+     const handlePostNow = async () => {
         try {
-            // Check if Firestore is online
             if (!isFirestoreOnline) {
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
-    
-            // Check if required fields are filled
-            if (!listingData.listingName || !listingData.listingPrice || !listingData.listingDescription || Object.keys(listingData.listingImage).length === 0) {
+
+            if (!listingData.listingName || !listingData.listingPrice || !listingData.listingDescription || !listingData.listingImage) {
                 throw new Error('Please fill in all required fields (Listing Title, Price, Description, and Image).');
             }
-    
-            // Convert listingPrice to a number
+
             const listingPrice = parseFloat(listingData.listingPrice);
-    
-            // Check if the converted listingPrice is a valid number
+
             if (isNaN(listingPrice)) {
                 throw new Error('Listing price must be a valid number.');
             }
-            
-            const user = auth.currentUser; // Get current user
-            const uid = user.uid; // Get user's ID
-    
-            // Generate a unique key for the new listing
-            const docRef = doc(collection(database, 'listings'));   
+
+            const user = auth.currentUser;
+            const uid = user.uid;
+
+            const docRef = doc(collection(database, 'listings'));
             const newListingId = docRef.id;
-    
-            // Generate a unique filename using timestamp and random string
-            const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;   
-            
-            // Remove spaces from the listing name for the image file name
-            const sanitizedListingName = listingData.listingName.replace(/\s+/g, ''); 
-    
-            // Upload the image to Firebase Storage with a sanitized file name and ".jpeg" extension
+
+            const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+            const sanitizedListingName = listingData.listingName.replace(/\s+/g, '');
+
             const storagePath = `images/${uniqueFilename}_${sanitizedListingName}.jpeg`;
             const file = listingData.listingImage;
             const imageRef = storageRef(storage, storagePath);
-            // Set content type to image/jpeg
             const metadata = {
                 contentType: 'image/jpeg',
             };
-            
-            // Use uploadBytes with metadata
+
             await uploadBytes(imageRef, file, metadata);
-    
-            // Get the download URL of the uploaded image
             const downloadURL = await getDownloadURL(imageRef);
-    
-            // Add the listing data to Firestore with the image URL
-            await setDoc(docRef, {
+
+            let listingDataFirestore = {
                 sellerID: uid,
                 key: newListingId,
                 productSeller: username,
                 ...listingData,
-                listingPrice: listingPrice, // Assign the converted listingPrice
+                listingPrice: listingPrice,
                 listingImage: storagePath,
                 listingImageURL: downloadURL,
-                bidding: bidding 
-            });
-    
-            // Reset the form and navigate to a different screen
+                bidding: enableBidding
+            };
+            
+            if (enableBidding) {
+                const endTimeTimestamp = Timestamp.fromMillis(Date.now() + biddingTime * 24 * 60 * 60 * 1000);
+                listingDataFirestore = {
+                    ...listingDataFirestore,
+                    endTime: endTimeTimestamp,
+                };
+            }
+            
+            await setDoc(docRef, listingDataFirestore);
+
             setListingData({
                 listingImage: null,
                 listingName: "",
@@ -139,17 +156,36 @@ export default function AddListingPage() {
                 listingDescription: "",
                 listingTags: [],
             });
-    
-            // Go back to the previous screen (listings page)
+
             navigation.goBack();
-    
         } catch (error) {
             console.error('Error adding document: ', error);
+        }
+    };
+
+    const handleBiddingTimeChange = (value) => {
+        const selectedDays = parseInt(value);
+        
+        // Check if the selectedDays is a valid number
+        if (!isNaN(selectedDays)) {
+            // Update the state with the selected number of days
+            setBiddingTime(selectedDays);
+    
+            // Calculate the end time based on the selected number of days
+            const endTimeTimestamp = Timestamp.fromMillis(Date.now() + selectedDays * 24 * 60 * 60 * 1000);
+            setEndTime(endTimeTimestamp); // Assuming you have a state variable endTime to store the timestamp
         }
     };
     
     
 
+    const handleBiddingCheckboxChange = () => {
+        const output = enableBidding ? "Yes" : "No"; // check lungs
+        console.log(output);
+        setEnableBidding(!enableBidding);
+        
+    };
+    
         const handleCancel = () => {
         // Go back to the previous screen (listings page)
         navigation.goBack();
@@ -184,23 +220,59 @@ export default function AddListingPage() {
                             setListingData={setListingData} // Prop to update the state in AddListingBox
                             />
                         </VStack>
+                       
                         <VStack>
-    
-                            <AddBiddingBox onBiddingChange={handlePostNow} />
-                            <AddBidding onBiddingChange={handlePostNow} />
+                    <Checkbox
+                        size="md"
+                        isInvalid={false}
+                        isDisabled={false}
+                        isChecked={enableBidding}
+                        onChange={handleBiddingCheckboxChange}
+                    >
+                        <CheckboxIcon as={CheckIcon}>
+                            <CheckIcon />
+                        </CheckboxIcon>
+                        <CheckboxLabel>Enable Bidding</CheckboxLabel>
+                    </Checkbox>
 
-                        </VStack>
-                    </Box>
+  
+                </VStack>
+            </Box>
+            {enableBidding && (
+                <VStack>
+                <FormControl isRequired isInvalid>
+                    <FormControlLabel>
+                        <FormControlLabelText>Bidding time</FormControlLabelText>
+                    </FormControlLabel>
+                    <Select onChange={(value) => handleBiddingTimeChange(value)}>
+                        <SelectTrigger>
+                            <SelectInput placeholder="Select Time" />
+                        </SelectTrigger>
+                        <SelectPortal>
+                            <SelectBackdrop />
+                            <SelectContent>
+                                <SelectDragIndicatorWrapper>
+                                    <SelectDragIndicator />
+                                </SelectDragIndicatorWrapper>
 
+                                <SelectItem label="1 day" value={1} />
+                                <SelectItem label="2 days" value={2} />
+                                <SelectItem label="3 days" value={3} />
+                                <SelectItem label="4 days" value={4} />
+                            </SelectContent>
+                        </SelectPortal>
+                    </Select>
+
+  </FormControl>
+                </VStack>
+            )}
                     <HStack p="$2" justifyContent='center' mb={10}>
                         <Button 
                             variant="solid" 
                             size="md" 
                             bg={colors.primary} 
                             borderRadius={10} 
-                            onPress={handlePostNow}
-                            
-                        >
+                            onPress={handlePostNow} >
                             <ButtonText color={colors.white} fontSize={"$md"}>
                                 Post Now
                             </ButtonText>
