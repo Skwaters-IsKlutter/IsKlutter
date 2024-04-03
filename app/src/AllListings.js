@@ -1,155 +1,112 @@
-// React
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
-// Gluestack UI
 import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
-
-
-// Local Components
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
-
-// Firebase Components
 import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
 import { database } from '../../config/firebase';
 
-export default function AllListingsPage({ key }) {
+export default function AllListingsPage() {
   const navigation = useNavigation();
   const [allListingsData, setAllListingsData] = useState([]);
   const [searchInput, setSearchInput] = useState('');
 
-  useFocusEffect(
-    useCallback(() => {
-      const unsubscribeListings = onSnapshot(collection(database, 'listings'), (querySnapshot) => {
-        const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  const fetchListings = useCallback(() => {
+    const unsubscribeListings = onSnapshot(collection(database, 'listings'), (querySnapshot) => {
+      const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-        // Fetch and update productSeller for each listing
-        const updatedListingsData = Promise.all(
-            listingsData.map(async (item) => {
-              const sellerID = item.sellerID;
-          
-              if (sellerID) {
-                try {
-                  const userDocRef = collection(database, 'users');
-                  const userQuery = query(userDocRef, where('userID', '==', sellerID));
-                  const userQuerySnapshot = await getDocs(userQuery);
-          
-                  if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
-                    const userDocument = userQuerySnapshot.docs[0];
-                    const sellerUsername = userDocument.data().username;
-                    const sellerImageURL = userDocument.data().userProfileImg || '';
-          
-                    // Update the productSeller directly in the listings collection
-                    const listingsDocRef = doc(collection(database, 'listings'), item.id); // Use doc function to create DocumentReference
-                    await updateDoc(listingsDocRef, { productSeller: sellerUsername });
-          
-                    // Return the updated item
-                    return {
-                      ...item,
-                      username: sellerUsername,
-                      sellerImageURL,
-                    };
-                  } else {
-                    console.error(`User document not found for sellerID: ${sellerID}`);
-                    return item; // Return the original item if user document not found
-                  }
-                } catch (error) {
-                  console.error('Error fetching user document:', error);
-                  return item; // Return the original item in case of an error
-                }
-              }
-          
-              return item; // Return the original item if sellerID is missing
-            })
-          );
-          
+      Promise.all(listingsData.map(updateSellerInfo))
+        .then(updatedListings => setAllListingsData(updatedListings))
+        .catch(error => console.error('Error updating seller info:', error));
+    });
 
-        // Update the state with the new data
-        updatedListingsData.then((updatedData) => setAllListingsData(updatedData));
-      });
+    return () => unsubscribeListings();
+  }, []);
 
-      return () => {
-        // Cleanup function to detach the listener when the component unmounts
-        if (typeof unsubscribeListings === 'function') {
-          unsubscribeListings();
-        }
-      };
-    }, []) // Empty dependency array to run effect only once
-  );
+  useFocusEffect(fetchListings);
+
+  const updateSellerInfo = async (item) => {
+    const sellerID = item.sellerID;
+
+    if (!sellerID) return item;
+
+    try {
+      const userQuerySnapshot = await getDocs(query(collection(database, 'users'), where('userID', '==', sellerID)));
+      if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
+        const userDocument = userQuerySnapshot.docs[0];
+        const sellerUsername = userDocument.data().username;
+        const sellerImageURL = userDocument.data().userProfileImg || '';
+        const listingsDocRef = doc(collection(database, 'listings'), item.id);
+        await updateDoc(listingsDocRef, { productSeller: sellerUsername });
+
+        return { ...item, username: sellerUsername, sellerImageURL };
+      } else {
+        console.error(`User document not found for sellerID: ${sellerID}`);
+        return item;
+      }
+    } catch (error) {
+      console.error('Error fetching user document:', error);
+      return item;
+    }
+  };
 
   const handleSearchChange = (text) => {
     setSearchInput(text.toLowerCase());
   };
-  
+
   const filteredListings = allListingsData.filter((item) => {
     const listingName = item.listingName.toLowerCase();
     const username = item.username.toLowerCase();
-    const tags = item.listingTags.map(tag => tag.toLowerCase()); // Convert tags to lowercase
-  
+    const tags = item.listingTags.map(tag => tag.toLowerCase());
+
     return (
       listingName.includes(searchInput) ||
       username.includes(searchInput) ||
       tags.some(tag => tag.includes(searchInput))
     );
   });
-  
+
   const renderAllListings = () => {
-    return filteredListings.map((item) => {
-      const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
-  
-      return (
-        <ItemCard
-          key={item.id}
-          productImage={item.listingImageURL}
-          productPrice={item.listingPrice}
-          productName={item.listingName}
-          productSeller={item.username}
-          sellerID={item.sellerID}
-          tags={firstTag}
-          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
-        />
-      );
-    });
+    return filteredListings.map((item) => (
+      <ItemCard
+        key={item.id}
+        productImage={item.listingImageURL}
+        productPrice={item.listingPrice}
+        productName={item.listingName}
+        productSeller={item.username}
+        sellerID={item.sellerID}
+        tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+        toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
+      />
+    ));
   };
 
   return (
-    // Parent box
     <Box w="100%" h="100%">
-      {/* Search Bar */}
-      <SearchHeader 
-        userIcon={require("../../assets/img/usericon.jpg")} 
+      <SearchHeader
+        userIcon={require('../../assets/img/usericon.jpg')}
         search={searchInput}
         onSearchChange={handleSearchChange}
       />
-
-      <Box p="$5"  w="100%"  maxWidth="$96" flex={1}>
-        {/* Listings Label and post button */}
+      <Box p="$5" w="100%" maxWidth="$96" flex={1}>
         <VStack space="xs" pb="$2">
           <HStack space="xs" justifyContent="space-between" alignItems="center">
             <Heading lineHeight={50} fontSize={45} color={colors.secondary}>
               Listings
             </Heading>
-            <Button
-              borderRadius={50}
-              backgroundColor={colors.primary}
-              onPress={() => navigation.navigate(Routes.ADDLISTING)}
-              p={5}
-            >
+            <Button borderRadius={50} backgroundColor={colors.primary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={5}>
               <ButtonIcon>
-                <MaterialCommunityIcons name="post" size={20} color={colors.white}   />
+                <MaterialCommunityIcons name="post" size={20} color={colors.white} />
               </ButtonIcon>
               <ButtonText pl={10}>Post</ButtonText>
             </Button>
           </HStack>
         </VStack>
-
-        {/* Listing Box Container */}
         <ScrollView>
-          <HStack space="xs" flexWrap="wrap" justifyContent="center" >
+          <HStack space="xs" flexWrap="wrap" justifyContent="center">
             {renderAllListings()}
           </HStack>
         </ScrollView>
