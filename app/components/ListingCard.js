@@ -89,6 +89,27 @@ export default function ListingCard({ productID, productName, productImage, prod
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white">
+             {/* Conditionally render the delete button */}
+             {isCurrentUserSeller() && (
+                        <Button
+                            variant="solid"
+                            size="sm"
+                            backgroundColor="$red600"
+                            borderRadius={8}
+                            onPress={() => onDelete(productID)}
+                            position="absolute"
+                            top={15}
+                            right={15}
+                            zIndex={1}
+                        >
+                            <HStack>
+                                <ButtonIcon>
+                                    <MaterialCommunityIcons name="delete" size={20} color={colors.white}/>
+                                </ButtonIcon>
+                                {/* <ButtonText color={colors.white} m={3} fontSize="$sm">Delete</ButtonText> */}
+                            </HStack>
+                        </Button>
+                    )}
             <VStack space="md" pb="$2">
                 {productImage && productImage.uri ? (
                     <Image source={{ uri: productImage.uri }} h={230} w="100%" alt="item" borderRadius={3} />
@@ -104,6 +125,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                     <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
                     
                 </HStack>
+                <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >Timestamp</Text>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
 
@@ -120,24 +142,7 @@ export default function ListingCard({ productID, productName, productImage, prod
             <VStack space="sm" p="$2">
                 <Text fontSize="$md">{productDesc}</Text>
             </VStack>
-            {/* Conditionally render the delete button */}
-            {isCurrentUserSeller() && (
-                        <Button
-                            variant="solid"
-                            size="sm"
-                            backgroundColor={colors.secondary}
-                            borderRadius={8}
-                            onPress={() => onDelete(productID)}
-                            alignSelf="flex-end"
-                        >
-                            <HStack>
-                                <ButtonIcon>
-                                    <MaterialCommunityIcons name="delete" size={20} color={colors.white}/>
-                                </ButtonIcon>
-                                <ButtonText color={colors.white} m={3} fontSize="$sm">Delete</ButtonText>
-                            </HStack>
-                        </Button>
-                    )}
+           
             </HStack>
             
 
