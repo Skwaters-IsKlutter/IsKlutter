@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import colors from '../config/colors.js'
 import AddListingBox from '../components/AddListingBox.js';
-import { collection, getDoc, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
+import { collection, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
 

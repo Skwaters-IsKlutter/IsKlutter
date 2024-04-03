@@ -1,24 +1,14 @@
-// AddListingBox.js
-
 import React from 'react';
-import {
-    Box,
-} from '@gluestack-ui/themed';
+import { Box } from '@gluestack-ui/themed';
+import AddListingForm from './AddListingForm';
+import AddListingImagePicker from '../components/AddListingImagePicker';
+import AddTags from './AddTags';
 
-import AddListingForm from './AddListingForm.js';
-import AddListingImagePicker from '../components/AddListingImagePicker.js';
-import AddTags from './AddTags.js';
-import AddBidding from './AddBidding.js';
-
-import colors from '../config/colors.js';
-
-export default function AddListingBox({ user, listingImage, listingName, listingPrice, listingDescription, listingTags, setListingData }) {
+export default function AddListingBox({ listingName, listingPrice, listingDescription, listingTags, setListingData }) {
     return (
-        <Box >
-            <Box w="100%" m={5} >
-
+        <Box>
+            <Box w="100%" m={5}>
                 <AddListingImagePicker
-                
                     listingFormLabel="Upload an Image"
                     setListingData={setListingData}
                 />
@@ -54,7 +44,7 @@ export default function AddListingBox({ user, listingImage, listingName, listing
                 <AddTags 
                     listingFormLabel="Tags"
                     listingFormPlaceholder="Select a Tag"
-                    listingTags={listingTags}  // Pass listingTags to AddTags
+                    listingTags={listingTags} 
                     setListingData={setListingData}
                 />
 

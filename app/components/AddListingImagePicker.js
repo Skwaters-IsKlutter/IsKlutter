@@ -3,7 +3,6 @@ import { VStack } from "@gluestack-ui/themed";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
 import colors from "../config/colors";
 
 export default function AddListingImagePicker({ listingFormLabel, setListingData }) {
@@ -44,23 +43,33 @@ export default function AddListingImagePicker({ listingFormLabel, setListingData
         }
     };
 
+    const handleImagePress = () => {
+        // Reset image state when image is pressed
+        setImageBlob(null);
+        setImageSource(null);
+        setError('');
+        setListingData((prevData) => ({ ...prevData, listingImage: null }));
+    };
+
     return (
         <VStack space="xl" m={5} mt={-10}>
-            <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
-                <MaterialCommunityIcons name="image-plus" color={colors.white} style={styles.icon}/>
-                <Text style={styles.text}>Add Photo</Text>
-            </TouchableOpacity>
-
             {imageSource ? (
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={imageSource}
-                        style={styles.image}
-                    />
-                </View>
+                <TouchableOpacity onPress={handleImagePress}>
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={imageSource}
+                            style={styles.image}
+                        />
+                    </View>
+                </TouchableOpacity>
             ) : (
-                <Text>{error}</Text>
+                <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
+                    <MaterialCommunityIcons name="image-plus" color={colors.white} style={styles.icon}/>
+                    <Text style={styles.text}>Add Photo</Text>
+                </TouchableOpacity>
             )}
+
+            {error ? <Text>{error}</Text> : null}
         </VStack>
     );
 }

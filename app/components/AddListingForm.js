@@ -1,23 +1,13 @@
 import React from 'react';
 import {
     VStack,
-    Heading,
-    Image,
     Box,
-    Button,
-    ButtonText,
     FormControl,
     FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
     FormControlLabelText,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlErrorIcon,
     Input,
     InputField
 } from '@gluestack-ui/themed';
-
 import colors from '../config/colors.js';
 
 export default function AddListingForm( { 
@@ -30,7 +20,6 @@ export default function AddListingForm( {
     onValueChange, 
 } ) {
     const handleInputChange = (value) => {
-        // Call the onValueChange prop to handle changes in the parent component
         if (onValueChange) {
             onValueChange(value);
         }
