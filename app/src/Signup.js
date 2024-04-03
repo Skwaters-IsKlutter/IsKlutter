@@ -2,26 +2,20 @@ import React, { useState } from 'react';
 import {
     VStack,
     Heading,
-    Image,
-    Box, 
-    Button, 
-    ButtonText, 
-    FormControl, 
-    FormControlLabel, 
-    FormControlError, 
-    FormControlErrorText, 
-    FormControlLabelText, 
-    FormControlHelper, 
-    FormControlHelperText, 
-    FormControlErrorIcon, 
-    Input, 
+    Box,
+    Button,
+    ButtonText,
+    FormControl,
+    FormControlLabel,
+    FormControlLabelText,
+    Input,
     InputField,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth} from '../../config/firebase'; // Import Firebase authentication
-import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { FIREBASE_APP } from '../../config/firebase'; 
+import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { auth } from '../../config/firebase';
+import { FIREBASE_APP } from '../../config/firebase';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -32,7 +26,7 @@ export default function SignupScreen() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [retypePassword, setRetypePassword] = useState(''); 
+    const [retypePassword, setRetypePassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -54,23 +48,24 @@ export default function SignupScreen() {
                 if (!email.includes('@up.edu.ph')) {
                     setError('Please use a valid email address with @up.edu.ph domain.');
                     setLoading(false);
-                    return; // Stop further execution
+                    return;
                 }
 
                 if (!uniqueUsername) {
-                    console.log('Username is already taken');
                     setError('Username is already taken. Please choose a different one.');
                 } else {
                     const response = await createUserWithEmailAndPassword(auth, email, password);
-                    console.log('User UID:', response.user.uid);
+
+                    const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterfinal.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=8763c0e7-c1a4-40f1-a9ce-91f9164d71ae";
 
                     try {
-                        const userDocRef = await addDoc(collection(db, 'users'), {
+                        await addDoc(collection(db, 'users'), {
                             userID: response.user.uid,
                             username: username,
                             email: email,
+                            userProfileImg: defaultImgURL, // Added userProfileImg
                         });
-                        console.log('Document written with ID:', userDocRef.id);
+                        console.log('User account created successfully with ID:', response.user.uid);
                         navigation.navigate(Routes.LOGIN);
                     } catch (error) {
                         console.error('Error adding document:', error);
@@ -89,14 +84,7 @@ export default function SignupScreen() {
     };
 
     return (
-        // Parent box
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
-            {/* Logo */}
-            {/* <VStack w="100%" h="$10" pb="$4" justifyContent="center" alignItems="center">
-                <Image source={ require("../assets/img/icon.png") } h={100} w={100} alt="logo" />
-            </VStack> */}
-
-            {/* Form control for login */}
             <Box
                 p="$6"
                 w="100%"
@@ -105,106 +93,85 @@ export default function SignupScreen() {
                 borderBottomEndRadius={100}
                 borderBottomLeftRadius={100}
             >
-                {/* Heading */}
-                <VStack space="xs"mt={90} alignItems='center' >
+                <VStack space="xs" mt={90} alignItems="center">
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.white}>New here?</Heading>
                     <Heading lineHeight={30} fontSize="$2xl" color={colors.white}>Sign up to start decluttering.</Heading>
                 </VStack>
-            
             </Box>
             <Box p="$6" w="100%" maxWidth="$96 " top={-180}>
                 <Box backgroundColor={colors.white} p="$2" borderRadius={10}>
-                {/* Email input */}
-                <VStack space="xl" py="$3" p="$2" pt="$5">
-                    <FormControl size="md">
-                        <FormControlLabel mb="$2">
-                            <FormControlLabelText color={colors.secondary}>Email</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                            <InputField
-                                type="email"
-                                placeholder="Enter email"
-                                value={email}
-                                onChangeText={(text) => setEmail(text)}
-                            />
+                    <VStack space="xl" py="$3" p="$2" pt="$5">
+                        <FormControl size="md">
+                            <FormControlLabel mb="$2">
+                                <FormControlLabelText color={colors.secondary}>Email</FormControlLabelText>
+                            </FormControlLabel>
+                            <Input w="100%">
+                                <InputField
+                                    type="email"
+                                    placeholder="Enter email"
+                                    value={email}
+                                    onChangeText={(text) => setEmail(text)}
+                                />
                             </Input>
-                    </FormControl>
-                </VStack>
-
-
-                {/* Username input */}
-                <VStack space="xl" py="$3" p="$2">
-                    <FormControl
-                        size="md"
-                        isDisabled={false}
-                        isInvalid={false}
-                        isReadOnly={false}
-                        isRequired={false}
-                    >
-                        <FormControlLabel mb="$2">
-                        <FormControlLabelText color={colors.secondary}>Username</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input w="100%">
-                        <InputField
-                            type="username"
-                            defaultValue=""
-                            placeholder="Enter username"
-                            value={username}
-                            onChangeText={(text) => setUsername(text)}
-                        />
-                        </Input>
-                    </FormControl>
-                </VStack>
-
-             {/* Password input */}
-                        <VStack space="xl" py="$2" p="$2">
-                            <FormControl size="md">
-                                <FormControlLabel mb="$2">
-                                    <FormControlLabelText color={colors.secondary}>Password</FormControlLabelText>
-                                </FormControlLabel>
-                                <Input w="100%">
-                                    <InputField
-                                        type="password"
-                                        placeholder="Enter password"
-                                        value={password}
-                                        onChangeText={(text) => setPassword(text)}
-                                    />
-                                </Input>
-                            </FormControl>
-                        </VStack>
-
-               {/* Re-enter password input */}
-            <VStack space="xl" py="$2" p="$2">
-                <FormControl size="md">
-                    <FormControlLabel mb="$2">
-                        <FormControlLabelText color={colors.secondary}>Re-enter Password</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input w="100%">
-                        <InputField
-                            type="password"
-                            placeholder="Re-enter password"
-                            value={retypePassword}
-                            onChangeText={(text) => setRetypePassword(text)}
-                        />
-                    </Input>
-                </FormControl>
-            </VStack>
-
-            {/* Submit button */}
-            <VStack space="lg" pt="$4">
-                <Button size="sm" 
-                        backgroundColor={colors.primary} 
-                        onPress={handleSignup} 
-                        disabled={loading}
-                        borderRadius={10}>
-                    <ButtonText>{loading ? 'Signing Up...' : 'Sign Up'}</ButtonText>
-                </Button>
-            </VStack>
+                        </FormControl>
+                    </VStack>
+                    <VStack space="xl" py="$3" p="$2">
+                        <FormControl size="md">
+                            <FormControlLabel mb="$2">
+                                <FormControlLabelText color={colors.secondary}>Username</FormControlLabelText>
+                            </FormControlLabel>
+                            <Input w="100%">
+                                <InputField
+                                    type="username"
+                                    defaultValue=""
+                                    placeholder="Enter username"
+                                    value={username}
+                                    onChangeText={(text) => setUsername(text)}
+                                />
+                            </Input>
+                        </FormControl>
+                    </VStack>
+                    <VStack space="xl" py="$2" p="$2">
+                        <FormControl size="md">
+                            <FormControlLabel mb="$2">
+                                <FormControlLabelText color={colors.secondary}>Password</FormControlLabelText>
+                            </FormControlLabel>
+                            <Input w="100%">
+                                <InputField
+                                    type="password"
+                                    placeholder="Enter password"
+                                    value={password}
+                                    onChangeText={(text) => setPassword(text)}
+                                />
+                            </Input>
+                        </FormControl>
+                    </VStack>
+                    <VStack space="xl" py="$2" p="$2">
+                        <FormControl size="md">
+                            <FormControlLabel mb="$2">
+                                <FormControlLabelText color={colors.secondary}>Re-enter Password</FormControlLabelText>
+                            </FormControlLabel>
+                            <Input w="100%">
+                                <InputField
+                                    type="password"
+                                    placeholder="Re-enter password"
+                                    value={retypePassword}
+                                    onChangeText={(text) => setRetypePassword(text)}
+                                />
+                            </Input>
+                        </FormControl>
+                    </VStack>
+                    <VStack space="lg" pt="$4">
+                        <Button size="sm" 
+                                backgroundColor={colors.primary} 
+                                onPress={handleSignup} 
+                                disabled={loading}
+                                borderRadius={10}>
+                            <ButtonText>{loading ? 'Signing Up...' : 'Sign Up'}</ButtonText>
+                        </Button>
+                    </VStack>
+                </Box>
             </Box>
-            </Box>
-            
-
-            {/* Go to sign up */}
             <Box flexDirection="row" top={700} position="absolute">
                 <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}>
                     <ButtonText sx={{
