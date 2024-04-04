@@ -142,7 +142,8 @@ export default function ListingsPage() {
     };
 
     const renderListingComments = () => {
-        return listingComments.map((comment, index) => (
+        const sortedComments = [...listingComments].sort((a, b) => a.timestamp - b.timestamp);
+        return sortedComments.map((comment, index) => (
             <ReplyBox
                 key={index}
                 replyUser={comment.userId}
