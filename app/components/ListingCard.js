@@ -8,11 +8,10 @@ import {
     Image,
     Button,
     ButtonIcon,
-    ButtonText,
 } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
 import Routes from '../components/constants/Routes.js';
@@ -24,34 +23,20 @@ const getCurrentUserID = () => {
     if (currentUser) {
       return currentUser.uid;
     } else {
-      // Handle the case where there is no logged-in user
       return null;
     }
 };
 
 export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags }) {
     const navigation = useNavigation();
-    const route = useRoute();
     const currentUserId = getCurrentUserID();
-    console.log(sellerID);
-
-    // const handleChatPress = () => {
-    //     navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: sellerName });
-    // };
 
     const handleSellerProfilePress = () => {
-        console.log("Seller ID: ", sellerID);
         navigation.navigate(Routes.VIEWPROFILE, { sellerID });
     };
     
     const isCurrentUserSeller = () => {
-        const result = sellerID === currentUserId;
-    
-        if (result) {
-            console.log('Current user is the seller.');
-        }
-    
-        return result;
+        return sellerID === currentUserId;
     };
 
     const onDelete = async (productId) => {
@@ -67,18 +52,14 @@ export default function ListingCard({ productID, productName, productImage, prod
                     text: 'Delete',
                     onPress: async () => {
                         try {
-                            // Delete the document from the 'listings' collection in Firestore
                             await deleteDoc(doc(database, 'listings', productId));
-                            console.log(`Product with ID ${productId} deleted successfully.`);
                             
-                            // Delete comments associated with the item ID
                             const commentsQuery = query(collection(database, 'ListingsComments'), where('itemId', '==', productId));
                             const commentsSnapshot = await getDocs(commentsQuery);
                             commentsSnapshot.forEach(async (commentDoc) => {
                                 await deleteDoc(commentDoc.ref);
                             });
-    
-                            // Go back to the previous screen (listings page)
+
                             navigation.goBack();
                         } catch (error) {
                             console.error('Error deleting product:', error);
@@ -92,26 +73,23 @@ export default function ListingCard({ productID, productName, productImage, prod
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white">
-             {/* Conditionally render the delete button */}
-             {isCurrentUserSeller() && (
-                        <Button
-                            variant="solid"
-                            size="sm"
-                            backgroundColor="$red600"
-                            borderRadius={8}
-                            onPress={() => onDelete(productID)}
-                            position="absolute"
-                            top={15}
-                            right={15}
-                            zIndex={1}
-                        >
-                            <HStack>
-                                <ButtonIcon>
-                                    <MaterialCommunityIcons name="delete" size={20} color={colors.white}/>
-                                </ButtonIcon>
-                            </HStack>
-                        </Button>
-                    )}
+            {isCurrentUserSeller() && (
+                <Button
+                    variant="solid"
+                    size="sm"
+                    backgroundColor="$red600"
+                    borderRadius={8}
+                    onPress={() => onDelete(productID)}
+                    position="absolute"
+                    top={15}
+                    right={15}
+                    zIndex={1}
+                >
+                    <ButtonIcon>
+                        <MaterialCommunityIcons name="delete" size={20} color={colors.white}/>
+                    </ButtonIcon>
+                </Button>
+            )}
             <VStack space="md" pb="$2">
                 {productImage && productImage.uri ? (
                     <Image source={{ uri: productImage.uri }} h={230} w="100%" alt="item" borderRadius={3} />
@@ -119,7 +97,6 @@ export default function ListingCard({ productID, productName, productImage, prod
                     <Text>No Image</Text>
                 )}
             </VStack>
-            {/* Item name and price */}
             <VStack space="sm" p="$2">
                 <HStack w="100%" justifyContent="space-between">
                     <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>   
@@ -127,40 +104,22 @@ export default function ListingCard({ productID, productName, productImage, prod
                 <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >Timestamp</Text>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
-            {/* Tags */}
             <HStack space="sm" p="$2">
                 {tags && tags?.map((tag, index) => (
                     <Text key={index}>{tag}</Text>
                 ))} 
             </HStack>
-            {/* Description */}
             <HStack justifyContent="space-between" flexDirection="row">
                 <VStack space="sm" p="$2">
                     <Text fontSize="$md">{productDesc}</Text>
                 </VStack>
             </HStack>
-            {/* Poster info */}
             <HStack justifyContent="space-between" flexDirection="row">
                 <HStack w="100%" justifyContent="space-between">
                     <HStack space="sm" p="$2" alignItems="center">   
                         <Image source={sellerImageURL} h={45} w={45} alt="icon" borderRadius={100} /> 
                         <Text color={colors.black} fontSize={15} onPress={handleSellerProfilePress}>{sellerName}</Text>
                     </HStack>
-                    {/* Chat button */}
-                    {/* <Button
-                        variant="solid"
-                        size="sm"
-                        backgroundColor={colors.primary}
-                        borderRadius={8}
-                        onPress={handleChatPress} // Use the function to navigate and pass sellerName
-                        alignSelf="flex-end"
-                    >
-                        {/* Chat button content */}
-                        {/* <ButtonIcon>
-                            <MaterialCommunityIcons name="chat" size={13} color={colors.white} />
-                        </ButtonIcon>
-                        <ButtonText color={colors.white} fontSize="$sm">Chat</ButtonText>
-                    </Button> */}
                 </HStack>
             </HStack>
         </Box>
