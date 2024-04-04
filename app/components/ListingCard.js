@@ -11,14 +11,12 @@ import {
     ButtonText,
 } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { doc, deleteDoc } from 'firebase/firestore'
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
-
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
-// import Routes from '../components/constants/Routes.js';
 
 const getCurrentUserID = () => {
     const currentUser = auth.currentUser;
@@ -46,7 +44,6 @@ export default function ListingCard({ productID, productName, productImage, prod
         navigation.navigate(Routes.VIEWPROFILE, { sellerID });
     };
     
-
     const isCurrentUserSeller = () => {
         const result = sellerID === currentUserId;
     
@@ -56,7 +53,6 @@ export default function ListingCard({ productID, productName, productImage, prod
     
         return result;
     };
-
 
     const onDelete = async (productId) => {
         Alert.alert(
@@ -72,9 +68,16 @@ export default function ListingCard({ productID, productName, productImage, prod
                     onPress: async () => {
                         try {
                             // Delete the document from the 'listings' collection in Firestore
-                            await deleteDoc(doc(database, 'listings', productID));
+                            await deleteDoc(doc(database, 'listings', productId));
                             console.log(`Product with ID ${productId} deleted successfully.`);
-
+                            
+                            // Delete comments associated with the item ID
+                            const commentsQuery = query(collection(database, 'ListingsComments'), where('itemId', '==', productId));
+                            const commentsSnapshot = await getDocs(commentsQuery);
+                            commentsSnapshot.forEach(async (commentDoc) => {
+                                await deleteDoc(commentDoc.ref);
+                            });
+    
                             // Go back to the previous screen (listings page)
                             navigation.goBack();
                         } catch (error) {
@@ -106,7 +109,6 @@ export default function ListingCard({ productID, productName, productImage, prod
                                 <ButtonIcon>
                                     <MaterialCommunityIcons name="delete" size={20} color={colors.white}/>
                                 </ButtonIcon>
-                                {/* <ButtonText color={colors.white} m={3} fontSize="$sm">Delete</ButtonText> */}
                             </HStack>
                         </Button>
                     )}
@@ -114,38 +116,29 @@ export default function ListingCard({ productID, productName, productImage, prod
                 {productImage && productImage.uri ? (
                     <Image source={{ uri: productImage.uri }} h={230} w="100%" alt="item" borderRadius={3} />
                 ) : (
-                    // You can replace this with a placeholder image or some other content
                     <Text>No Image</Text>
                 )}
             </VStack>
-
             {/* Item name and price */}
             <VStack space="sm" p="$2">
                 <HStack w="100%" justifyContent="space-between">
-                    <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>
-                    
+                    <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>   
                 </HStack>
                 <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >Timestamp</Text>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
-
             {/* Tags */}
             <HStack space="sm" p="$2">
                 {tags && tags?.map((tag, index) => (
                     <Text key={index}>{tag}</Text>
-                ))}
-                
+                ))} 
             </HStack>
-
             {/* Description */}
             <HStack justifyContent="space-between" flexDirection="row">
-            <VStack space="sm" p="$2">
-                <Text fontSize="$md">{productDesc}</Text>
-            </VStack>
-           
+                <VStack space="sm" p="$2">
+                    <Text fontSize="$md">{productDesc}</Text>
+                </VStack>
             </HStack>
-            
-
             {/* Poster info */}
             <HStack justifyContent="space-between" flexDirection="row">
                 <HStack w="100%" justifyContent="space-between">
