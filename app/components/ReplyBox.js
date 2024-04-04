@@ -55,7 +55,7 @@ export default function ReplyBox({ replyID, replyText, replyUser, replyDate, rep
         <HStack justifyContent="space-between" alignItems="center">
         <TouchableOpacity onPress={handleViewProfile}>
           <HStack alignItems="center">
-              <Image source={{ uri: userData.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
+              <Image source={{ uri: userData.userProfileImg, key: userData.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
               <Text color={colors.secondary} fontSize="$md" fontWeight="$bold" pl={5}>{userData.username}</Text>
           </HStack>
         </TouchableOpacity>
