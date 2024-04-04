@@ -18,24 +18,21 @@ export default function CommentBox({ posterUserId, posterIcon, selectedItem }) {
     const [commentText, setCommentText] = useState('');
 
     const handleComment = async () => {
-        // Check if posterUserId is not null
-        if (!posterUserId) {
-            console.error('Invalid user ID: null');
-            // Handle the case where the user ID is not available
-            // For example, you could show an error message to the user
+        if (!commentText.trim()) {
+            console.error('Comment is empty');
             return;
         }
-
-        // Check if selectedItem is available
+        if (!posterUserId) {
+            console.error('Invalid user ID: null');
+            return;
+        }
         if (!selectedItem) {
             console.error('No selected item data provided');
             return;
         }
     
-        // Get Firestore instance
         const firestore = getFirestore();
-    
-         // Add the comment to the Firestore collection
+
          try {
             const commentsCollectionRef = collection(firestore, 'ListingsComments');
             const newCommentDocRef = await addDoc(commentsCollectionRef, {
@@ -44,13 +41,8 @@ export default function CommentBox({ posterUserId, posterIcon, selectedItem }) {
                 comment: commentText,
                 timestamp: serverTimestamp(),
             });
-    
-            // Log the new comment document reference for debugging
             console.log('New comment added with ID: ', newCommentDocRef.id);
-
-            // Clear the comment text after submitting
             setCommentText('');
-
         } catch (error) {
             console.error('Error adding comment: ', error);
         }
@@ -66,8 +58,8 @@ export default function CommentBox({ posterUserId, posterIcon, selectedItem }) {
                         multiline={true}
                         size="md"
                         placeholder="Write a comment..."
-                        value={commentText}  // Add this line to bind the value
-                        onChangeText={(text) => setCommentText(text)}  // Add this line to update the state
+                        value={commentText}
+                        onChangeText={(text) => setCommentText(text)} 
                     />
                     </Input>
                 </HStack>
