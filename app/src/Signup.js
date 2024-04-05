@@ -10,8 +10,10 @@ import {
     FormControlLabelText,
     Input,
     InputField,
+    Text
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth } from '../../config/firebase';
@@ -48,6 +50,7 @@ export default function SignupScreen() {
                 if (!email.includes('@up.edu.ph')) {
                     setError('Please use a valid email address with @up.edu.ph domain.');
                     setLoading(false);
+                    Alert.alert("Signup Failed", "Please use a valid UP email address."); // Alert the user to use a valid email address
                     return;
                 }
 
@@ -55,7 +58,6 @@ export default function SignupScreen() {
                     setError('Username is already taken. Please choose a different one.');
                 } else {
                     const response = await createUserWithEmailAndPassword(auth, email, password);
-
                     const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterfinal.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=8763c0e7-c1a4-40f1-a9ce-91f9164d71ae";
 
                     try {
@@ -66,7 +68,9 @@ export default function SignupScreen() {
                             userProfileImg: defaultImgURL, // Added userProfileImg
                         });
                         console.log('User account created successfully with ID:', response.user.uid);
-                        navigation.navigate(Routes.LOGIN);
+                        navigation.navigate(Routes.LOGIN); // Navigate to login page if successful
+                    Alert.alert("Signup Successful", "Please log in."); // Alert the user on successful signup
+
                     } catch (error) {
                         console.error('Error adding document:', error);
                         setError('Error creating user. Please try again.');
@@ -74,6 +78,7 @@ export default function SignupScreen() {
                 }
             } else {
                 setError('Please fill in all fields and make sure passwords match.');
+                Alert.alert("Signup Failed", "Please fill in all fields and make sure passwords match."); // Alert the user to invalid signup details
             }
         } catch (error) {
             console.error(error);
@@ -98,6 +103,7 @@ export default function SignupScreen() {
                     <Heading lineHeight={30} fontSize="$2xl" color={colors.white}>Sign up to start decluttering.</Heading>
                 </VStack>
             </Box>
+
             <Box p="$6" w="100%" maxWidth="$96 " top={-180}>
                 <Box backgroundColor={colors.white} p="$2" borderRadius={10}>
                     <VStack space="xl" py="$3" p="$2" pt="$5">
@@ -115,6 +121,7 @@ export default function SignupScreen() {
                             </Input>
                         </FormControl>
                     </VStack>
+
                     <VStack space="xl" py="$3" p="$2">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
@@ -131,6 +138,7 @@ export default function SignupScreen() {
                             </Input>
                         </FormControl>
                     </VStack>
+
                     <VStack space="xl" py="$2" p="$2">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
@@ -146,6 +154,7 @@ export default function SignupScreen() {
                             </Input>
                         </FormControl>
                     </VStack>
+
                     <VStack space="xl" py="$2" p="$2">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
@@ -161,6 +170,7 @@ export default function SignupScreen() {
                             </Input>
                         </FormControl>
                     </VStack>
+
                     <VStack space="lg" pt="$4">
                         <Button size="sm" 
                                 backgroundColor={colors.primary} 
@@ -171,13 +181,11 @@ export default function SignupScreen() {
                         </Button>
                     </VStack>
                 </Box>
-            </Box>
-            <Box flexDirection="row" top={700} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.LOGIN)}>
-                    <ButtonText sx={{
-                        color: colors.white
-                    }}>Already have an account? Sign in</ButtonText>
-                </Button>
+
+                <Box w="100%" mt="$5" alignItems="center">
+                    <Text fontSize="$md">Already have an account? <Text color={colors.secondary} fontWeight="$black" fontSize="$md" onPress={() => navigation.navigate(Routes.LOGIN)}>Sign in</Text></Text>
+                </Box>
+                
             </Box>
         </Box>
     )

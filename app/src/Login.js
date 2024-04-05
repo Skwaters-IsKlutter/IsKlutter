@@ -37,7 +37,7 @@ export default function LoginPage() {
             }
         } catch (error) {
             setError(error.message);
-            Alert.alert("Login Failed", "Please check your email and password."); 
+            Alert.alert("Login Failed", "Please check your email and password."); // Alert the user that the account is invalid
         }
     };
 
@@ -90,14 +90,11 @@ export default function LoginPage() {
                         </Button>
                     </VStack>
                 </Box>
-                {/* <VStack space="lg" pt="$5" width="$80">
-                    <Button size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)} borderRadius={10}>
-                        <ButtonText>Don't have an account yet? Sign up</ButtonText>
-                    </Button>
-                </VStack> */}
+                
                 <Box w="100%" mt="$5" alignItems="center">
                     <Text fontSize="$md">Don't have an account yet? <Text color={colors.secondary} fontWeight="$black" fontSize="$md" onPress={() => navigation.navigate(Routes.SIGNUP)}>Sign up</Text></Text>
                 </Box>
+
             </Box>
         </Box>
     );
