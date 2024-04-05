@@ -22,6 +22,7 @@ import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
 import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native';
+import UpperTabBar from '../components/UpperTabBar.js';
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
@@ -250,15 +251,10 @@ return (
     // Parent box
     <Box w="100%" h="100%">
 
-        {/*Search Bar*/}
-        <SearchHeaderBack userIcon={ require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
-
-        {/*Community Label */}
-        <VStack pb={2} bgColor={colors.secondary}>
-            <Heading lineHeight={50} fontSize={30} color={colors.white} pl={20}>Community</Heading>
-
-        </VStack>
-
+        <UpperTabBar 
+            pageTitle={"Community"}
+        />
+        
         <ScrollView>
         <PostBox></PostBox>
             <VStack>
