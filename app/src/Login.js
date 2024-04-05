@@ -69,7 +69,7 @@ export default function LoginPage() {
                             <Input w="100%" borderRadius={10}>
                                 <InputField
                                     type="email"
-                                    placeholder="Enter email"
+                                    placeholder="example@up.edu.ph"
                                     value={email}
                                     onChangeText={(text) => setEmail(text)}
                                 />

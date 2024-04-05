@@ -117,7 +117,7 @@ export default function SignupScreen() {
                             <Input w="100%">
                                 <InputField
                                     type="email"
-                                    placeholder="Enter email"
+                                    placeholder="example@up.edu.ph"
                                     value={email}
                                     onChangeText={(text) => setEmail(text)}
                                 />
