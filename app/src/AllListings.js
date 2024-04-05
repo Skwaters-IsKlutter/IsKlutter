@@ -1,13 +1,16 @@
 import React, { useState, useCallback } from 'react';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import SearchHeader from '../components/SearchHeader.js';
-import ItemCard from '../components/ItemCard.js';
-import Routes from '../components/constants/Routes.js';
-import colors from '../config/colors.js';
+
 import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
 import { database } from '../../config/firebase';
+
+import UpperTabBar from '../components/UpperTabBar';
+import ItemCard from '../components/ItemCard.js';
+
+import Routes from '../components/constants/Routes.js';
+import colors from '../config/colors.js';
 
 export default function AllListingsPage() {
   const navigation = useNavigation();
@@ -86,31 +89,26 @@ export default function AllListingsPage() {
 
   return (
     <Box w="100%" h="100%">
-      <SearchHeader
-        userIcon={require('../../assets/img/usericon.jpg')}
-        search={searchInput}
-        onSearchChange={handleSearchChange}
-      />
-      <Box p="$5" w="100%" maxWidth="$96" flex={1}>
-        <VStack space="xs" pb="$2">
-          <HStack space="xs" justifyContent="space-between" alignItems="center">
-            <Heading lineHeight={50} fontSize={45} color={colors.secondary}>
-              Listings
-            </Heading>
-            <Button borderRadius={50} backgroundColor={colors.primary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={5}>
-              <ButtonIcon>
-                <MaterialCommunityIcons name="post" size={20} color={colors.white} />
-              </ButtonIcon>
-              <ButtonText pl={10}>Post</ButtonText>
-            </Button>
-          </HStack>
-        </VStack>
-        <ScrollView>
-          <HStack space="xs" flexWrap="wrap" justifyContent="center">
-            {renderAllListings()}
-          </HStack>
-        </ScrollView>
-      </Box>
+      <UpperTabBar pageTitle={"Listings"}/>
+
+      <Button
+        borderRadius={50}
+        backgroundColor={colors.secondary}
+        onPress={() => navigation.navigate(Routes.ADDLISTING)}
+        p={5}
+        m={10}
+      >
+        <ButtonIcon>
+          <MaterialCommunityIcons name="plus-thick" size={20} color={colors.white} />
+        </ButtonIcon>
+        <ButtonText pl={10}>Add item as listing</ButtonText>
+      </Button>
+
+      <ScrollView>
+        <HStack space="xs" flexWrap="wrap" justifyContent="center">
+          {renderAllListings()}
+        </HStack>
+      </ScrollView>
     </Box>
   );
 }
