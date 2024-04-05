@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { VStack, Heading, Box, Button, ButtonText, FormControl, FormControlLabel, FormControlLabelText, Input, InputField } from '@gluestack-ui/themed';
+import { 
+    VStack, 
+    Heading, 
+    Box, 
+    Button, 
+    ButtonText, 
+    FormControl, 
+    FormControlLabel, 
+    FormControlLabelText, 
+    Input, 
+    InputField, 
+    Text } from '@gluestack-ui/themed';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { useNavigation } from '@react-navigation/native';
@@ -22,11 +33,11 @@ export default function LoginPage() {
                 setEmail('');
                 setPassword('');
             } else {
-                throw new Error("Please check your email and password.");
+                throw new Error(error.message);
             }
         } catch (error) {
             setError(error.message);
-            Alert.alert("Login Failed", error.message);
+            Alert.alert("Login Failed", "Please check your email and password."); 
         }
     };
 
@@ -73,18 +84,20 @@ export default function LoginPage() {
                         </FormControl>
                     </VStack>
 
-                    <VStack space="lg" pt="$10" pb="$5" width="$80">
+                    <VStack space="lg" pt="$2" width="$80">
                         <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin} borderRadius={10}>
-                            <ButtonText>Log In</ButtonText>
+                            <ButtonText>Sign In</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
-            </Box>
-
-            <Box flexDirection="row" top={700} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)}>
-                    <ButtonText sx={{ color: colors.white }}>Don't have an account yet? Sign up</ButtonText>
-                </Button>
+                {/* <VStack space="lg" pt="$5" width="$80">
+                    <Button size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)} borderRadius={10}>
+                        <ButtonText>Don't have an account yet? Sign up</ButtonText>
+                    </Button>
+                </VStack> */}
+                <Box w="100%" mt="$5" alignItems="center">
+                    <Text fontSize="$md">Don't have an account yet? <Text color={colors.secondary} fontWeight="$black" fontSize="$md" onPress={() => navigation.navigate(Routes.SIGNUP)}>Sign up</Text></Text>
+                </Box>
             </Box>
         </Box>
     );
