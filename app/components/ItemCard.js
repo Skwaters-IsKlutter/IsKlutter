@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, VStack, HStack, Heading, Text, Image, Pressable } from '@gluestack-ui/themed';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import colors from '../config/colors.js';
 
 export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags }) {
@@ -7,7 +9,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
 
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} width={150} maxHeight={256} m="2%" flex={1} overflow="hidden">
+            <Box bg={colors.white} borderRadius={10} width={175} maxHeight={256} m={2} flex={1} overflow="hidden">
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image
@@ -19,15 +21,21 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                     ) : (
                         <Text>No Image Available</Text>
                     )}
-                    <Heading fontSize="$xl" color={colors.primary}>
+
+                    <Heading fontSize="$2xl" color={colors.primary} mt={2}>
                         {`PHP ${productPrice}`}
                     </Heading>
+
                     <VStack space="xs" p={0}>
                         <Text fontSize="$md" fontWeight="bold">{productName}</Text>
-                        <Text fontSize="$sm" color={colors.gray}>{productSeller}</Text>
+                        <Text fontSize="$sm" color={colors.gray}>
+                            <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary} />
+                            {productSeller}
+                        </Text>
                     </VStack>
-                    <HStack space="sm" flexWrap="wrap">
-                        <Text bgColor={colors.primary} color={colors.white} borderRadius={15} p={7}>{tags}</Text>
+                    
+                    <HStack space="sm" flexWrap="wrap" mt={2}>
+                        <Text bgColor={colors.secondary} color={colors.white} borderRadius={10} p={7}>{tags}</Text>
                     </HStack>
                 </Box>
             </Box>
