@@ -180,7 +180,7 @@ export default function AllBiddingsPage() {
     return (
         <Box w="100%" h="100%">
 
-            <UpperTabBar 
+            <UpperTabBar
                 pageTitle={"Biddings"}
             />
 

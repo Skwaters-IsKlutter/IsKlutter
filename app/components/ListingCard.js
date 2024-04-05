@@ -60,6 +60,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                                 await deleteDoc(commentDoc.ref);
                             });
 
+                            Alert.alert("Success", "Product deleted successfully.", [{ text: "OK" }])
                             navigation.goBack();
                         } catch (error) {
                             console.error('Error deleting product:', error);

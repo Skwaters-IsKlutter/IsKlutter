@@ -13,102 +13,102 @@ import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 
 export default function AllListingsPage() {
-  const navigation = useNavigation();
-  const [allListingsData, setAllListingsData] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+	const navigation = useNavigation();
+	const [allListingsData, setAllListingsData] = useState([]);
+	const [searchInput, setSearchInput] = useState('');
 
-  const fetchListings = useCallback(() => {
-    const unsubscribeListings = onSnapshot(collection(database, 'listings'), (querySnapshot) => {
-      const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+	const fetchListings = useCallback(() => {
+		const unsubscribeListings = onSnapshot(collection(database, 'listings'), (querySnapshot) => {
+			const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-      Promise.all(listingsData.map(updateSellerInfo))
-        .then(updatedListings => setAllListingsData(updatedListings))
-        .catch(error => console.error('Error updating seller info:', error));
-    });
+			Promise.all(listingsData.map(updateSellerInfo))
+				.then(updatedListings => setAllListingsData(updatedListings))
+				.catch(error => console.error('Error updating seller info:', error));
+		});
 
-    return () => unsubscribeListings();
-  }, []);
+		return () => unsubscribeListings();
+	}, []);
 
-  useFocusEffect(fetchListings);
+	useFocusEffect(fetchListings);
 
-  const updateSellerInfo = async (item) => {
-    const sellerID = item.sellerID;
+	const updateSellerInfo = async (item) => {
+		const sellerID = item.sellerID;
 
-    if (!sellerID) return item;
+		if (!sellerID) return item;
 
-    try {
-      const userQuerySnapshot = await getDocs(query(collection(database, 'users'), where('userID', '==', sellerID)));
-      if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
-        const userDocument = userQuerySnapshot.docs[0];
-        const sellerUsername = userDocument.data().username;
-        const sellerImageURL = userDocument.data().userProfileImg || '';
-        const listingsDocRef = doc(collection(database, 'listings'), item.id);
-        await updateDoc(listingsDocRef, { productSeller: sellerUsername });
+		try {
+			const userQuerySnapshot = await getDocs(query(collection(database, 'users'), where('userID', '==', sellerID)));
+			if (!userQuerySnapshot.empty && userQuerySnapshot.docs[0]) {
+				const userDocument = userQuerySnapshot.docs[0];
+				const sellerUsername = userDocument.data().username;
+				const sellerImageURL = userDocument.data().userProfileImg || '';
+				const listingsDocRef = doc(collection(database, 'listings'), item.id);
+				await updateDoc(listingsDocRef, { productSeller: sellerUsername });
 
-        return { ...item, username: sellerUsername, sellerImageURL };
-      } else {
-        console.error(`User document not found for sellerID: ${sellerID}`);
-        return item;
-      }
-    } catch (error) {
-      console.error('Error fetching user document:', error);
-      return item;
-    }
-  };
+				return { ...item, username: sellerUsername, sellerImageURL };
+			} else {
+				console.error(`User document not found for sellerID: ${sellerID}`);
+				return item;
+			}
+		} catch (error) {
+			console.error('Error fetching user document:', error);
+			return item;
+		}
+	};
 
-  const handleSearchChange = (text) => {
-    setSearchInput(text.toLowerCase());
-  };
+	const handleSearchChange = (text) => {
+		setSearchInput(text.toLowerCase());
+	};
 
-  const filteredListings = allListingsData.filter((item) => {
-    const listingName = item.listingName.toLowerCase();
-    const username = item.username.toLowerCase();
-    const tags = item.listingTags.map(tag => tag.toLowerCase());
+	const filteredListings = allListingsData.filter((item) => {
+		const listingName = item.listingName.toLowerCase();
+		const username = item.username.toLowerCase();
+		const tags = item.listingTags.map(tag => tag.toLowerCase());
 
-    return (
-      listingName.includes(searchInput) ||
-      username.includes(searchInput) ||
-      tags.some(tag => tag.includes(searchInput))
-    );
-  });
+		return (
+			listingName.includes(searchInput) ||
+			username.includes(searchInput) ||
+			tags.some(tag => tag.includes(searchInput))
+		);
+	});
 
-  const renderAllListings = () => {
-    return filteredListings.map((item) => (
-      <ItemCard
-        key={item.id}
-        productImage={item.listingImageURL}
-        productPrice={item.listingPrice}
-        productName={item.listingName}
-        productSeller={item.username}
-        sellerID={item.sellerID}
-        tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-        toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
-      />
-    ));
-  };
+	const renderAllListings = () => {
+		return filteredListings.map((item) => (
+			<ItemCard
+				key={item.id}
+				productImage={item.listingImageURL}
+				productPrice={item.listingPrice}
+				productName={item.listingName}
+				productSeller={item.username}
+				sellerID={item.sellerID}
+				tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+				toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
+			/>
+		));
+	};
 
-  return (
-    <Box w="100%" h="100%">
-      <UpperTabBar pageTitle={"Listings"}/>
+	return (
+		<Box w="100%" h="100%">
+			<UpperTabBar pageTitle={"Listings"} />
 
-      <Button
-        borderRadius={50}
-        backgroundColor={colors.secondary}
-        onPress={() => navigation.navigate(Routes.ADDLISTING)}
-        p={5}
-        m={10}
-      >
-        <ButtonIcon>
-          <MaterialCommunityIcons name="plus-thick" size={20} color={colors.white} />
-        </ButtonIcon>
-        <ButtonText pl={10}>Add item as listing</ButtonText>
-      </Button>
+			<Button
+				borderRadius={50}
+				backgroundColor={colors.secondary}
+				onPress={() => navigation.navigate(Routes.ADDLISTING)}
+				p={5}
+				m={10}
+			>
+				<ButtonIcon>
+					<MaterialCommunityIcons name="plus-thick" size={20} color={colors.white} />
+				</ButtonIcon>
+				<ButtonText pl={10}>Add item as listing</ButtonText>
+			</Button>
 
-      <ScrollView>
-        <HStack space="xs" flexWrap="wrap" justifyContent="center">
-          {renderAllListings()}
-        </HStack>
-      </ScrollView>
-    </Box>
-  );
+			<ScrollView>
+				<HStack space="xs" flexWrap="wrap" justifyContent="center">
+					{renderAllListings()}
+				</HStack>
+			</ScrollView>
+		</Box>
+	);
 }
