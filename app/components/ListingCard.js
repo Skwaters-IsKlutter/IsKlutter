@@ -87,7 +87,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                     zIndex={1}
                 >
                     <ButtonIcon>
-                        <MaterialCommunityIcons name="delete" size={20} color={colors.white}/>
+                        <MaterialCommunityIcons name="delete" size={15} color={colors.white}/>
                     </ButtonIcon>
                 </Button>
             )}
@@ -98,6 +98,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                     <Text>No Image</Text>
                 )}
             </VStack>
+
             <VStack space="sm" p="$2">
                 <HStack w="100%" justifyContent="space-between">
                     <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>   
@@ -105,16 +106,19 @@ export default function ListingCard({ productID, productName, productImage, prod
                 <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >Timestamp</Text>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
+
             <HStack space="sm" p="$2">
                 {tags && tags?.map((tag, index) => (
                     <Text key={index}>{tag}</Text>
                 ))} 
             </HStack>
+            
             <HStack justifyContent="space-between" flexDirection="row">
                 <VStack space="sm" p="$2">
                     <Text fontSize="$md">{productDesc}</Text>
                 </VStack>
             </HStack>
+            
             <HStack justifyContent="space-between" flexDirection="row">
                 <HStack w="100%" justifyContent="space-between">
                     <HStack space="sm" p="$2" alignItems="center">   
