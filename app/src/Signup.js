@@ -12,12 +12,15 @@ import {
     InputField,
     Text
 } from '@gluestack-ui/themed';
+
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
+
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth } from '../../config/firebase';
 import { FIREBASE_APP } from '../../config/firebase';
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -69,7 +72,7 @@ export default function SignupScreen() {
                         });
                         console.log('User account created successfully with ID:', response.user.uid);
                         navigation.navigate(Routes.LOGIN); // Navigate to login page if successful
-                    Alert.alert("Signup Successful", "Please log in."); // Alert the user on successful signup
+                        Alert.alert("Signup Successful", "Please log in."); // Alert the user on successful signup
 
                     } catch (error) {
                         console.error('Error adding document:', error);
@@ -177,7 +180,7 @@ export default function SignupScreen() {
                                 onPress={handleSignup} 
                                 disabled={loading}
                                 borderRadius={10}>
-                            <ButtonText>{loading ? 'Signing Up...' : 'Sign Up'}</ButtonText>
+                            <ButtonText>{loading ? 'Signing Up' : 'Sign Up'}</ButtonText>
                         </Button>
                     </VStack>
                 </Box>

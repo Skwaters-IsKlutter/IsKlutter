@@ -11,10 +11,13 @@ import {
     Input, 
     InputField, 
     Text } from '@gluestack-ui/themed';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
+
+import { auth } from "../../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -23,9 +26,12 @@ export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
         try {
+            setLoading(true);
+
             if (email && password) {
                 await signInWithEmailAndPassword(auth, email, password);
                 navigation.navigate(Routes.HOMEPAGE);
@@ -33,11 +39,14 @@ export default function LoginPage() {
                 setEmail('');
                 setPassword('');
             } else {
+                setLoading(false);
                 throw new Error(error.message);
             }
         } catch (error) {
             setError(error.message);
             Alert.alert("Login Failed", "Please check your email and password."); // Alert the user that the account is invalid
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -86,7 +95,7 @@ export default function LoginPage() {
 
                     <VStack space="lg" pt="$2" pb="$2" width="$80">
                         <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin} borderRadius={10}>
-                            <ButtonText>Sign In</ButtonText>
+                            <ButtonText>{loading ? 'Signing In' : 'Sign In' }</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
