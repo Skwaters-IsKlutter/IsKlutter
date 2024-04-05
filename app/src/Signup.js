@@ -171,7 +171,7 @@ export default function SignupScreen() {
                         </FormControl>
                     </VStack>
 
-                    <VStack space="lg" pt="$4">
+                    <VStack space="lg" pt="$4" pb="$2">
                         <Button size="sm" 
                                 backgroundColor={colors.primary} 
                                 onPress={handleSignup} 
