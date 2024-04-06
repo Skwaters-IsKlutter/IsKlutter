@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/themed';
 import { getFirestore, collection, doc, getDoc, userDoc, query, where, getDocs } from 'firebase/firestore';
+import { useIsFocused } from '@react-navigation/native'; // Import useIsFocused hook
 
 import colors from '../config/colors.js';
 
@@ -8,27 +9,32 @@ const db = getFirestore();
 
 export default function PostCard({ userId, userProfileImg, description, toIndividualPost }) {
   const [username, setUsername] = useState('');
+  const isFocused = useIsFocused(); // Use useIsFocused hook to track screen focus
   
-  useEffect(() => {
-    const fetchUsername = async () => {
-      try {
-        const userCollection = collection(db, 'users');
-        const userQuery = query(userCollection, where('userID', '==', userId));
-        const userSnapshot = await getDocs(userQuery);
-        if (!userSnapshot.empty) {
-          const userData = userSnapshot.docs[0].data();
-          setUsername(userData.username);
-        } else {
-          setUsername('User not found');
-        }
-      } catch (error) {
-        console.error('Error fetching username:', error.message);
-        setUsername('Error fetching username');
+  const fetchUsername = useCallback(async () => {
+    try {
+      const userCollection = collection(db, 'users');
+      const userQuery = query(userCollection, where('userID', '==', userId));
+      const userSnapshot = await getDocs(userQuery);
+      if (!userSnapshot.empty) {
+        const userData = userSnapshot.docs[0].data();
+        setUsername(userData.username);
+      } else {
+        setUsername('User not found');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching username:', error.message);
+      setUsername('Error fetching username');
+    }
+  }, [userId]); // Add userId as a dependency for useCallback
 
-    fetchUsername();
-  }, [userId]);
+  useEffect(() => {
+    if (isFocused) {
+      console.log('Focusing Post Card');
+      // Fetch username whenever the screen is focused
+      fetchUsername();
+    }
+  }, [isFocused, fetchUsername]); // Add isFocused and fetchUsername as dependencies for useEffect
 
   return (
     <Pressable onPress={toIndividualPost}>
