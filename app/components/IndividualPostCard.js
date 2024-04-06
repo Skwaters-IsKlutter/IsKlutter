@@ -1,49 +1,49 @@
-import React from 'react';
-import {
-    Box,
-    VStack,
-    HStack,
-    Button,
-    ButtonText,
-    Heading,
-    Text,
-    Image,
-    Pressable
-} from '@gluestack-ui/themed';
-import { Alert } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { Box, VStack, HStack, Heading, Text, Image } from '@gluestack-ui/themed';
+import { getFirestore, collection, doc, getDoc, userDoc, query, where, getDocs } from 'firebase/firestore';
 import UserAvatar from './Avatar.js';
-import Routes from '../components/constants/Routes.js';
-
 import colors from '../config/colors.js';
-import CommentBox from './CommentBox.js';
-import { doc, deleteDoc } from 'firebase/firestore'
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { auth, database } from '../../config/firebase';
 
+const database = getFirestore();
 
-export default function IndividualPostCard({username, description}) {
+export default function IndividualPostCard({ userId, description }) {
+    const [username, setUsername] = useState('');
+    console.log('user ID:', userId);
 
-    const navigation = useNavigation();
-    const route = useRoute();
+    useEffect(() => {
+        const fetchUsername = async () => {
+            try {
+                const userCollection = collection(database, 'users');
+                const userQuery = query(userCollection, where('userID', '==', userId));
+                const userSnapshot = await getDocs(userQuery);
+                if (!userSnapshot.empty) {
+                    const userData = userSnapshot.docs[0].data();
+                    setUsername(userData.username);
+                } else {
+                    console.error('User document not found');
+                }
+            } catch (error) {
+                console.error('Error fetching username:', error.message);
+            }
+        };
+    
+        fetchUsername();
+    }, [userId]);
+    
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white">
-            <VStack >
-                    <HStack space="sm" alignItems="center">
-                        <UserAvatar/> 
-                        <Heading color={colors.primary} size={10} bold={true}>
-                            {/* {username} */}
-                            {username}
-                        </Heading>                       
-                         {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
-                    </HStack>
-
-                    <Text color="black" pb="$3" size="md" mt="$3">{description}</Text>
-    
+            <VStack>
+                <HStack space="sm" alignItems="center">
+                    <UserAvatar />
+                    <Heading color={colors.primary} size={10} bold={true}>
+                        {username}
+                    </Heading>
+                </HStack>
+                <Text color="black" pb="$3" size="md" mt="$3">
+                    {description}
+                </Text>
             </VStack>
-
-            {/* <CommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
         </Box>
-    )
+    );
 }

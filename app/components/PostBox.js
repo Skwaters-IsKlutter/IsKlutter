@@ -28,16 +28,16 @@ export default function PostBox({ onPostSubmit }) {
             }
         
             if (listingDescription) {
-                const docRef = await addDoc(collection(db, 'forum'), {
-                    userID: userID,
-                    description: listingDescription,
-                    timestamp: new Date(),
-                    key: '', 
-                  });
-
-                await updateDoc(docRef, { key: docRef.id });
-                setListingDescription('');
-                alert('Posted');
+              const docRef = await addDoc(collection(db, 'forum'), {
+                userID: userID,
+                description: listingDescription,
+                timestamp: new Date(),
+                key: '', 
+              });
+                
+              setListingDescription('');
+              await updateDoc(docRef, { key: docRef.id });
+              alert('Posted');
             } else {
                 console.error('Listing description is empty');
             }

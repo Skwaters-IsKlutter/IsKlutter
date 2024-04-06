@@ -9,7 +9,7 @@ const db = getFirestore();
 
 export default function PostCard({ userId, userProfileImg, description, toIndividualPost }) {
   const [username, setUsername] = useState('');
-  const isFocused = useIsFocused(); // Use useIsFocused hook to track screen focus
+  const isFocused = useIsFocused();
   
   const fetchUsername = useCallback(async () => {
     try {
@@ -26,7 +26,7 @@ export default function PostCard({ userId, userProfileImg, description, toIndivi
       console.error('Error fetching username:', error.message);
       setUsername('Error fetching username');
     }
-  }, [userId]); // Add userId as a dependency for useCallback
+  }, [userId]);
 
   useEffect(() => {
     if (isFocused) {

@@ -62,6 +62,7 @@ export default function CommunityPage() {
 
     const renderAllCommunityPosts = () => {
         return description.map((userData, index) => (
+
             <PostCard
                 key={index}
                 userId={userData.userID}
