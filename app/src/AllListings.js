@@ -98,15 +98,15 @@ export default function AllListingsPage() {
 			<Box p="$5" w="100%" maxWidth="$96" flex={1}>
 				<VStack space="xs" pb="$2">
 					<HStack space="xs" justifyContent="space-between" alignItems="center">
-						<Heading lineHeight={50} fontSize={45} color={colors.secondary}>
+						<Heading lineHeight={50} fontSize={40} color={colors.secondary}>
 							Listings
 						</Heading>
 
-						<Button borderRadius={50} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={5}>
+						<Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
 							<ButtonIcon>
-								<MaterialCommunityIcons name="post" size={20} color={colors.white} />
+								<MaterialCommunityIcons name="plus" size={20} color={colors.white} />
 							</ButtonIcon>
-							<ButtonText pl={10}>Post</ButtonText>
+							<ButtonText pl={10} lineHeight={35}>Post</ButtonText>
 						</Button>
 
 					</HStack>
