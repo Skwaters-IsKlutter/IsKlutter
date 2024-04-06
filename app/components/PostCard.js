@@ -31,10 +31,9 @@ export default function PostCard({ userId, userProfileImg, description, toIndivi
   useEffect(() => {
     if (isFocused) {
       console.log('Focusing Post Card');
-      // Fetch username whenever the screen is focused
       fetchUsername();
     }
-  }, [isFocused, fetchUsername]); // Add isFocused and fetchUsername as dependencies for useEffect
+  }, [isFocused, fetchUsername]);
 
   return (
     <Pressable onPress={toIndividualPost}>

@@ -61,6 +61,16 @@ export default function CommunityPage() {
         fetchUserData();
     }, []);
 
+    const handlePostSubmission = async (postData) => {
+        try {
+            const newPost = { id: postData.id, ...postData };
+            setDescription(prevDescription => [newPost, ...prevDescription]);
+        } catch (error) {
+            console.error('Error adding post:', error);
+        }
+    }
+    
+
     const renderAllCommunityPosts = () => {
         return description.map((userData, index) => {
             return (
@@ -81,7 +91,7 @@ export default function CommunityPage() {
                 pageTitle={"Community"}
             />
             <ScrollView>
-                <PostBox/>
+                <PostBox onPostSubmit={handlePostSubmission} />
                 <VStack>
                     {renderAllCommunityPosts()}
                 </VStack>
