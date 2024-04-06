@@ -3,12 +3,8 @@ import {
     VStack,
     HStack,
     Text,
-    Heading,
-    Image,
     Box,
     Button,
-    ButtonText,
-    FormControl,
     Input,
     InputField,
     View,
@@ -17,20 +13,19 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Pressable } from 'react-native';
 
-import SearchHeader from '../components/SearchHeader.js';
+// import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
 import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
-import { TouchableOpacity } from 'react-native';
+// import { TouchableOpacity } from 'react-native';
 import UpperTabBar from '../components/UpperTabBar.js';
-
-import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
 
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
+// import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
+import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -42,10 +37,8 @@ export default function CommunityPage() {
     const [comments, setComments] = useState({}); // New state for comments
     const [username, setUsername] = useState('');
 
-
     const navigation = useNavigation();
 
-    
     const addCommmunityComment = async (key, comment) => {
         try {
             const currentUser = username; 
@@ -253,6 +246,8 @@ return (
 
         <UpperTabBar 
             pageTitle={"Community"}
+            username={username}
+            userIcon={require('../../assets/img/usericon.jpg')}
         />
         
         <ScrollView>
