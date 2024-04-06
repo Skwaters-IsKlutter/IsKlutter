@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Text, VStack, HStack, Button, Input, InputField, Image } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, updateDoc } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth } from 'firebase/auth';
 
@@ -21,7 +21,7 @@ export default function PostBox({ onPostSubmit }) {
         
             const user = auth.currentUser;
             const userID = user.uid;
-        
+            
             if (!userID) {
                 console.error('User ID not available');
                 return;
@@ -32,10 +32,11 @@ export default function PostBox({ onPostSubmit }) {
                     userID: userID,
                     description: listingDescription,
                     timestamp: new Date(),
-                });
+                    key: '', 
+                  });
 
+                await updateDoc(docRef, { key: docRef.id });
                 setListingDescription('');
-                onPostSubmit({ id: docRef.id, userID, description: listingDescription });
                 alert('Posted');
             } else {
                 console.error('Listing description is empty');
