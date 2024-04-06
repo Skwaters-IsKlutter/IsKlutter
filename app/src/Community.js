@@ -27,8 +27,9 @@ export default function CommunityPage() {
                     const data = doc.data();
                     const userDataObj = {
                         key: doc.id,
-                        postusername: data.username,
                         description: data.description,
+                        userID: data.userID,
+                        timeposted: data.timestamp,
                     };
                     userData.push(userDataObj);
                 });
@@ -61,15 +62,17 @@ export default function CommunityPage() {
     }, []);
 
     const renderAllCommunityPosts = () => {
-        return description.map((userData, index) => 
-        <PostCard
-            key={index}
-            userId={userData.userId}
-            posterIcon={userData.userProfileImg}
-            description={userData.description}
-            toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, {selectedPost: userData })}
-        />    
-        );
+        return description.map((userData, index) => {
+            return (
+                <PostCard
+                    key={index}
+                    userId={userData.userID}
+                    posterIcon={userData.userProfileImg}
+                    description={userData.description}
+                    toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, {selectedPost: userData })}
+                />  
+            );
+        });
     }
 
     return (

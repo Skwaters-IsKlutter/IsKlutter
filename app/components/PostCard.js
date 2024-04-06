@@ -1,22 +1,35 @@
-import React from 'react';
-import {
-  Box,
-  VStack,
-  HStack,
-  Button,
-  ButtonText,
-  Heading,
-  Text,
-  Image,
-  Pressable
-} from '@gluestack-ui/themed';
-import { Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/themed';
+import { getFirestore, collection, doc, getDoc, userDoc, query, where, getDocs } from 'firebase/firestore';
 
 import colors from '../config/colors.js';
-import CommunityCommentBox from './CommunityCommentBox.js';
 
-export default function PostCard({ username, userProfileImg, description, toIndividualPost }) {
-    console.log(userProfileImg); 
+const db = getFirestore();
+
+export default function PostCard({ userId, userProfileImg, description, toIndividualPost }) {
+  const [username, setUsername] = useState('');
+  
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const userCollection = collection(db, 'users');
+        const userQuery = query(userCollection, where('userID', '==', userId));
+        const userSnapshot = await getDocs(userQuery);
+        if (!userSnapshot.empty) {
+          const userData = userSnapshot.docs[0].data();
+          setUsername(userData.username);
+        } else {
+          setUsername('User not found');
+        }
+      } catch (error) {
+        console.error('Error fetching username:', error.message);
+        setUsername('Error fetching username');
+      }
+    };
+
+    fetchUsername();
+  }, [userId]);
+
   return (
     <Pressable onPress={toIndividualPost}>
       <VStack>
@@ -28,10 +41,10 @@ export default function PostCard({ username, userProfileImg, description, toIndi
           mt={10}
         >
           <HStack space="sm" alignItems="center" p={5} m={5}>
-          <Image
-            source={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/profile-holder.jpg')}
-            style={{ width: 50, height: 50, borderRadius: 25 }}
-            alt="User Avatar"
+            <Image
+              source={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/profile-holder.jpg')}
+              style={{ width: 50, height: 50, borderRadius: 25 }}
+              alt="User Avatar"
             />
             <Text color={colors.secondary} size="md" bold={true}>
               {username}
@@ -41,8 +54,6 @@ export default function PostCard({ username, userProfileImg, description, toIndi
           <Text color="black" pb="$3" size="sm" ml="$3" mt={2}>
             {description}
           </Text>
-
-          {/* Additional components */}
         </Box>
       </VStack>
     </Pressable>
