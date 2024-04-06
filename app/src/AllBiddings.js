@@ -1,21 +1,27 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { 
+    HStack, 
+    VStack, 
+    Heading, 
+    Text, 
+    Box, 
+    ScrollView, 
+    Input, 
+    InputField,
+    Button, 
+    ButtonIcon, 
+    ButtonText } from '@gluestack-ui/themed';
 
-
-// Gluestack UI
-import { HStack, VStack, Heading, Text, Box, ScrollView, Input, InputField, InputSlot, InputIcon, Button, ButtonIcon, ButtonText, Pressable } from '@gluestack-ui/themed';
-
-
-// Local Components
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Routes from '../components/constants/Routes.js';
-import colors from '../config/colors.js';
-import UpperTabBar from '../components/UpperTabBar.js';
-
-// Firebase Components
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Routes from '../components/constants/Routes.js';
+
+import colors from '../config/colors.js';
+import SearchHeader from '../components/SearchHeader.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -27,7 +33,6 @@ export default function AllBiddingsPage() {
     const [currentUser, setCurrentUser] = useState(null);
     const [highestBidders, setHighestBidders] = useState({});
     const [biddingData, setBiddingData] = useState({});
-
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -173,77 +178,79 @@ export default function AllBiddingsPage() {
         }
     };
 
-
-
-
-
     return (
         <Box w="100%" h="100%">
 
-            <UpperTabBar
-                pageTitle={"Biddings"}
-            />
+            <SearchHeader
+				userIcon={require('../../assets/img/usericon.jpg')}
+				// search={searchInput}
+				// onSearchChange={handleSearchChange}
+			/>
 
-            <Button
-                borderRadius={50}
-                backgroundColor={colors.secondary}
-                onPress={() => navigation.navigate(Routes.ADDLISTING)}
-                p={5}
-                m={10}
-            >
-                <ButtonIcon>
-                    <MaterialCommunityIcons name="plus-thick" size={20} color={colors.white} />
-                </ButtonIcon>
-                <ButtonText pl={10}>Add item for bidding</ButtonText>
-            </Button>
+			<Box p="$5" w="100%" maxWidth="$96" flex={1}>
+				<VStack space="xs" pb="$2">
+					<HStack space="xs" justifyContent="space-between" alignItems="center">
+						<Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+							Biddings
+						</Heading>
 
-            <Box>
-                <ScrollView>
-                    {listings.map(listing => (
-                        <Box key={listing.id}>
-                            <Text>
-                                Listing Name: {listing.listingName}, Listing Price: {listing.listingPrice}
-                            </Text>
-                            <Text>All bidders and their corresponding bidding prices:</Text>
-                            {biddingData[listing.listingName] ? (
-                                biddingData[listing.listingName].map((bid, index) => (
-                                    <Text key={index}>
-                                        Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
-                                    </Text>
-                                ))
-                            ) : (
-                                <Text>No bids yet</Text>
-                            )}
-                            <HStack justifyContent="space-between" alignItems="center">
-                                <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
-                                    <InputField
-                                        multiline={true}
-                                        size="md"
-                                        placeholder="Place your bid Only numbers!"
-                                        onChangeText={text => handleCommentChange(listing.id, text)}
-                                    />
-                                </Input>
-                                <Button
-                                    variant="solid"
-                                    size="sm"
-                                    bg={colors.primary}
-                                    borderRadius={8}
-                                    ml={3}
-                                    mt={5}
-                                    onPress={() => handleBid(listing.id, comments[listing.id])}
-                                >
-                                    <Text color={colors.black} fontSize="$sm">Bid</Text>
-                                </Button>
-                            </HStack>
-                            <Text>
-                                Remaining time: {listing.daysRemaining} days
-                            </Text>
-                            <Text>
-                                Current highest bidder: {listing.listingName}: {highestBidders[listing.id]}
-                            </Text>
-                        </Box>
-                    ))}
-                </ScrollView>
+					<Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
+						<ButtonIcon>
+							<MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+						</ButtonIcon>
+						<ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+					</Button>
+					</HStack>
+				</VStack>
+
+                <Box>
+                    <ScrollView>
+                        {listings.map(listing => (
+                            <Box key={listing.id}>
+                                <Text>
+                                    Listing Name: {listing.listingName}, Listing Price: {listing.listingPrice}
+                                </Text>
+                                <Text>All bidders and their corresponding bidding prices:</Text>
+                                {biddingData[listing.listingName] ? (
+                                    biddingData[listing.listingName].map((bid, index) => (
+                                        <Text key={index}>
+                                            Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
+                                        </Text>
+                                    ))
+                                ) : (
+                                    <Text>No bids yet</Text>
+                                )}
+                                <HStack justifyContent="space-between" alignItems="center">
+                                    <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
+                                        <InputField
+                                            multiline={true}
+                                            size="md"
+                                            placeholder="Place your bid Only numbers!"
+                                            onChangeText={text => handleCommentChange(listing.id, text)}
+                                        />
+                                    </Input>
+                                    <Button
+                                        variant="solid"
+                                        size="sm"
+                                        bg={colors.primary}
+                                        borderRadius={8}
+                                        ml={3}
+                                        mt={5}
+                                        onPress={() => handleBid(listing.id, comments[listing.id])}
+                                    >
+                                        <Text color={colors.black} fontSize="$sm">Bid</Text>
+                                    </Button>
+                                </HStack>
+                                <Text>
+                                    Remaining time: {listing.daysRemaining} days
+                                </Text>
+                                <Text>
+                                    Current highest bidder: {listing.listingName}: {highestBidders[listing.id]}
+                                </Text>
+                            </Box>
+                        ))}
+                    </ScrollView>
+                </Box>
             </Box>
         </Box>
     );
