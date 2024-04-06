@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { VStack } from "@gluestack-ui/themed";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import colors from "../config/colors";
 
-export default function AddListingImagePicker({ listingFormLabel, setListingData }) {
+export default function AddListingImagePicker({ setListingData }) {
     const [imageBlob, setImageBlob] = useState(null);
     const [imageSource, setImageSource] = useState(null);
     const [error, setError] = useState('');
@@ -105,7 +106,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primary,
         padding: 10,
         marginTop: 25,
-        marginHorizontal: 100 ,
+        marginHorizontal: 100,
+        marginBottom: 25,
         height: 150,
         width:150,
         borderRadius:10
