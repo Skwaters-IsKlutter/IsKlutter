@@ -102,13 +102,12 @@ export default function AllListingsPage() {
 							Listings
 						</Heading>
 
-						<Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
-							<ButtonIcon>
-								<MaterialCommunityIcons name="plus" size={20} color={colors.white} />
-							</ButtonIcon>
-							<ButtonText pl={10} lineHeight={35}>Post</ButtonText>
-						</Button>
-
+					<Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
+						<ButtonIcon>
+							<MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+						</ButtonIcon>
+						<ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+					</Button>
 					</HStack>
 				</VStack>
 
@@ -117,7 +116,6 @@ export default function AllListingsPage() {
 						{renderAllListings()}
 					</HStack>
 				</ScrollView>
-
 			</Box>
 		</Box>
 	);

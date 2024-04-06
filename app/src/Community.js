@@ -8,20 +8,21 @@ import {
     Input,
     InputField,
     View,
-    ScrollView
+    ScrollView,
+    Heading
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Pressable } from 'react-native';
 
-// import SearchHeader from '../components/SearchHeader.js';
-import PostBox from '../components/PostBox.js';
-import PostCard from '../components/PostCard.js';
-import { getFirestore, addDoc, collection, getDocs, query, where,  doc, updateDoc, arrayUnion, getDoc} from 'firebase/firestore';
-// import { TouchableOpacity } from 'react-native';
-import UpperTabBar from '../components/UpperTabBar.js';
-
+import { getFirestore, addDoc, collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+import SearchHeader from '../components/SearchHeader.js';
+import PostBox from '../components/PostBox.js';
+import PostCard from '../components/PostCard.js';
+// import { TouchableOpacity } from 'react-native';
+// import UpperTabBar from '../components/UpperTabBar.js';
 // import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
 import colors from '../config/colors.js';
@@ -31,17 +32,16 @@ const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
 export default function CommunityPage() {
+    const navigation = useNavigation();
     const [usernames, setUsernames] = useState([]);
     const [description, setDescription] = useState([]);
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState({}); // New state for comments
     const [username, setUsername] = useState('');
 
-    const navigation = useNavigation();
-
     const addCommmunityComment = async (key, comment) => {
         try {
-            const currentUser = username; 
+            const currentUser = username;
             const userDocRef = await addDoc(collection(db, 'CommunityComment'), {
                 username: currentUser,
                 Primary: key,
@@ -55,38 +55,32 @@ export default function CommunityPage() {
             setError('Error creating user. Please try again.');
         }
     };
-    
-    
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const userCollection = collection(db, 'forum');
                 const querySnapshot = await getDocs(userCollection);
-    
+
                 const userData = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const userDataObj = {
-                        key: data.key, 
-                        postusername: data.username, 
+                        key: data.key,
+                        postusername: data.username,
                         description: data.description,
                     };
                     userData.push(userDataObj);
                 });
-    
-                setDescription(userData); 
+
+                setDescription(userData);
             } catch (error) {
                 console.error('Error fetching user data:', error.message);
             }
         };
-    
+
         fetchData();
     }, []);
-    
-    
-
-    
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -95,11 +89,11 @@ export default function CommunityPage() {
                     setTimeout(fetchUserData, 1000);
                     return;
                 }
-    
+
                 const currentUser = auth.currentUser; // Reference auth.currentUser
                 const userCollection = collection(db, 'users');
                 const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
-    
+
                 querySnapshot.forEach((doc) => {
                     setUsername(doc.data().username); // Assuming 'username' field exists in the user document
                 });
@@ -107,10 +101,10 @@ export default function CommunityPage() {
                 console.error('Error fetching user data:', error.message);
             }
         };
-    
+
         fetchUserData();
     }, []);
-    
+
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -138,41 +132,37 @@ export default function CommunityPage() {
             }
             setComments(commentsData);
         };
-    
+
         fetchComments();
     }, [description]);
-    
 
-    
-    
     const addComment = async (key, commentText) => {
         try {
-          const userDocRef = doc(db, 'forum', key);
-          const docSnap = await getDoc(userDocRef);
-        
-          if (docSnap.exists()) {
-            await updateDoc(userDocRef, {
-              comments: arrayUnion({ text: commentText, date: new Date() }),
-            });
-            fetchData();
-          } else {
-            console.error('Document does not exist');
-          }
+            const userDocRef = doc(db, 'forum', key);
+            const docSnap = await getDoc(userDocRef);
+
+            if (docSnap.exists()) {
+                await updateDoc(userDocRef, {
+                    comments: arrayUnion({ text: commentText, date: new Date() }),
+                });
+                fetchData();
+            } else {
+                console.error('Document does not exist');
+            }
         } catch (error) {
-          console.error('Error adding comment:', error.message);
+            console.error('Error adding comment:', error.message);
         }
-      };
-      
-      
+    };
+
     const renderAllCommunityPosts = () => {
-        return description.map((userData, index) => 
+        return description.map((userData, index) =>
             <PostCard
                 key={index}
                 posterIcon={userData.posterIcon}
                 username={userData.postusername}
                 // postDate={userData.postDate}
                 description={userData.description}
-                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, {selectedPost: userData })}
+                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
             />
         );
     }
@@ -184,16 +174,15 @@ export default function CommunityPage() {
 
     const [commentTexts, setCommentTexts] = useState(initialCommentState);
 
-
     const renderDescription = () => {
         return description.map((userData, index) => (
-            <Pressable key={index}> 
+            <Pressable key={index}>
                 <View style={styles.userDataContainer}>
-                    <Box p={5} w="100%"  borderRadius={8}>
-                        <Text style={styles.username}>{userData.postusername}</Text> 
-                        <Text color={colors.secondary}size="xl" bold={true} style={styles.description}>{userData.username}</Text>
-                        <Text fontSize="$md"style={styles.description}>{userData.description}</Text>
-                        
+                    <Box p={5} w="100%" borderRadius={8}>
+                        <Text style={styles.username}>{userData.postusername}</Text>
+                        <Text color={colors.secondary} size="xl" bold={true} style={styles.description}>{userData.username}</Text>
+                        <Text fontSize="$md" style={styles.description}>{userData.description}</Text>
+
                         <HStack>
                             <Input bg={colors.white} borderColor={colors.secondary} h={50} w="70%" zIndex={0}>
                                 <InputField
@@ -206,7 +195,7 @@ export default function CommunityPage() {
                                             ...prevState,
                                             [userData.key]: text // Update specific commentText based on user key
                                         }));
-                                    }}                   
+                                    }}
                                 />
                             </Input>
                             <Button
@@ -218,10 +207,10 @@ export default function CommunityPage() {
                                 mt={5}
                                 onPress={() => addCommmunityComment(userData.key, commentTexts[userData.key])}
                             >
-                            <Text color={colors.white} fontSize="$sm">Comment</Text>
+                                <Text color={colors.white} fontSize="$sm">Comment</Text>
                             </Button>
                         </HStack>
-                        
+
                         {/* Display comments with usernames */}
                         {comments[userData.key] && comments[userData.key].map((comment, commentIndex) => (
                             <Box key={commentIndex} mt={10} bgColor={colors.white} p={10}>
@@ -238,27 +227,28 @@ export default function CommunityPage() {
         ));
     };
 
+    return (
+        // Parent box
+        <Box w="100%" h="100%">
 
+            <SearchHeader
+                userIcon={require('../../assets/img/usericon.jpg')}
+            // search={searchInput}
+            // onSearchChange={handleSearchChange}
+            />
 
-return (
-    // Parent box
-    <Box w="100%" h="100%">
+            <Box p="$5" w="100%" maxWidth="$96" flex={1}>
+                <VStack space="xs" pb="$2">
+                    <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+                        Community
+                    </Heading>
 
-        <UpperTabBar 
-            pageTitle={"Community"}
-            username={username}
-            userIcon={require('../../assets/img/usericon.jpg')}
-        />
-        
-        <ScrollView>
-        <PostBox></PostBox>
-            <VStack>
-                {renderAllCommunityPosts()}
-            </VStack>
-        </ScrollView>
-
-
-
-    </Box>
+                    <ScrollView>
+                        <PostBox />
+                        <VStack>{renderAllCommunityPosts()}</VStack>
+                    </ScrollView>
+                </VStack>
+            </Box>
+        </Box>
     )
 }
