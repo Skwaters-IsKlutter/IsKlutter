@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         color: colors.white,
         alignItems: "center",
         marginTop: 10,
-        fontSize: 20,
+        fontSize: 15,
     },
     button: {
         alignItems: "center",
