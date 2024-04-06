@@ -233,6 +233,7 @@ export default function CommunityPage() {
 
             <SearchHeader
                 userIcon={require('../../assets/img/usericon.jpg')}
+                placeholder="Search in community"
             // search={searchInput}
             // onSearchChange={handleSearchChange}
             />

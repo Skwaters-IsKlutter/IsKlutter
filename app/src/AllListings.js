@@ -91,6 +91,7 @@ export default function AllListingsPage() {
 		<Box w="100%" h="100%">
 			<SearchHeader
 				userIcon={require('../../assets/img/usericon.jpg')}
+				placeholder="Search in listings"
 				search={searchInput}
 				onSearchChange={handleSearchChange}
 			/>

@@ -180,9 +180,9 @@ export default function AllBiddingsPage() {
 
     return (
         <Box w="100%" h="100%">
-
             <SearchHeader
 				userIcon={require('../../assets/img/usericon.jpg')}
+                placeholder="Search in biddings"
 				// search={searchInput}
 				// onSearchChange={handleSearchChange}
 			/>
