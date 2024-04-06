@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: "center",
-        backgroundColor: colors.primary,
+        backgroundColor: colors.secondary,
         padding: 5,
         marginTop: 10,
         marginHorizontal: 70,
@@ -100,10 +100,11 @@ const styles = StyleSheet.create({
         height: 200,
         resizeMode: 'cover',
         borderRadius: 10,
+        margin: 20,
     },
     addPhotoButton: {
         alignItems: "center",
-        backgroundColor: colors.primary,
+        backgroundColor: colors.secondary,
         padding: 10,
         marginTop: 25,
         marginHorizontal: 100,

@@ -162,11 +162,12 @@ export default function AddListingPage() {
                                 />
                             </VStack>
                         </Box>
+
                         <HStack p="$2" justifyContent="center" mb={10}>
                             <Button
                                 variant="solid"
                                 size="md"
-                                bg={colors.primary}
+                                bg={colors.secondary}
                                 borderRadius={10}
                                 onPress={handlePostNow}
                                 disabled={loading}
@@ -175,6 +176,7 @@ export default function AddListingPage() {
                                     {loading ? 'Posting' : 'Post Now'}
                                 </ButtonText>
                             </Button>
+                            
                             <Button
                                 variant="solid"
                                 size="md"
