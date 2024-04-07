@@ -13,7 +13,7 @@ export default function PostCard({ userId, description, toIndividualPost }) {
   
   const fetchUserData = useCallback(async () => {
     try {
-      // Fetch username
+      
       const userCollection = collection(db, 'users');
       const userQuery = query(userCollection, where('userID', '==', userId));
       const userSnapshot = await getDocs(userQuery);
