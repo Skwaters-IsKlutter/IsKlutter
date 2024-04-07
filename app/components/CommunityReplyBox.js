@@ -3,19 +3,18 @@ import {
     Box,
     VStack,
     HStack,
-    Button,
-    ButtonText,
     Heading,
     Text,
     Image,
-    Pressable
 } from '@gluestack-ui/themed';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import colors from '../config/colors.js';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function CommunityReplyBox({ replyUserID, replyComment }) {
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -36,8 +35,10 @@ export default function CommunityReplyBox({ replyUserID, replyComment }) {
             }
         };
 
-        fetchUserData();
-    }, [replyUserID, replyComment]); 
+        if (isFocused) { // Check if the component is focused
+            fetchUserData();
+        }
+    }, [replyUserID, isFocused]); // Add isFocused to the dependency array
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white" mt={10} borderRadius={10}>
