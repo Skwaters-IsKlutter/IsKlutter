@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text, VStack, HStack, Button, Input, InputField, Image } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
-import { getFirestore, addDoc, collection, updateDoc } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, updateDoc, query, where, getDocs } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth } from 'firebase/auth';
+import { useUser } from '../components/UserIcon.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
-export default function PostBox({ onPostSubmit }) {
+export default function PostBox() {
     const [listingDescription, setListingDescription] = useState('');
-    const [username, setUsername] = useState('');
+    const { userProfileImg } = useUser();
 
     const postForum = async () => {
         try {
@@ -18,26 +19,26 @@ export default function PostBox({ onPostSubmit }) {
                 console.error('User not authenticated');
                 return;
             }
-        
+
             const user = auth.currentUser;
             const userID = user.uid;
-            
+
             if (!userID) {
                 console.error('User ID not available');
                 return;
             }
-        
+
             if (listingDescription) {
-              const docRef = await addDoc(collection(db, 'forum'), {
-                userID: userID,
-                description: listingDescription,
-                timestamp: new Date(),
-                key: '', 
-              });
-                
-              setListingDescription('');
-              await updateDoc(docRef, { key: docRef.id });
-              alert('Posted');
+                const docRef = await addDoc(collection(db, 'forum'), {
+                    userID: userID,
+                    description: listingDescription,
+                    timestamp: new Date(),
+                    key: '',
+                });
+
+                setListingDescription('');
+                await updateDoc(docRef, { key: docRef.id });
+                alert('Posted');
             } else {
                 console.error('Listing description is empty');
             }
@@ -49,11 +50,13 @@ export default function PostBox({ onPostSubmit }) {
     return (
         <Box bgColor={colors.white} p={20}>
             <HStack space="sm" justifyContent="space-evenly" alignItems="center">
-                <Image
-                    source={require('../../assets/img/profile-holder.jpg')}
-                    style={{ width: 50, height: 50, borderRadius: 25 }}
-                    alt="user profile"
-                />
+                {userProfileImg && ( // Render the user icon if userProfileImg is available
+                    <Image
+                        source={{ uri: userProfileImg }}
+                        style={{ width: 50, height: 50, borderRadius: 25 }}
+                        alt="user profile"
+                    />
+                )}
 
                 <Input bg={colors.white} borderColor={colors.secondary} h={75} w="65%" zIndex={0}>
                     <InputField
