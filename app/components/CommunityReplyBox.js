@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     VStack,
@@ -10,40 +10,52 @@ import {
     Image,
     Pressable
 } from '@gluestack-ui/themed';
-import { Alert } from 'react-native';
-
-import UserAvatar from './Avatar.js';
-import Routes from '../components/constants/Routes.js';
-
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import colors from '../config/colors.js';
-import CommentBox from './CommentBox.js';
-import { doc, deleteDoc } from 'firebase/firestore'
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { auth, database } from '../../config/firebase';
 
+export default function CommunityReplyBox({ replyUserID, replyComment }) {
+    const [username, setUsername] = useState('');
+    const [userProfileImg, setUserProfileImg] = useState('');
 
-export default function CommunityReplyBox({replyUsername, replyComment}) {
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const db = getFirestore();
+                const usersRef = collection(db, 'users');
+                const userQuery = query(usersRef, where('userID', '==', replyUserID));
+                const userSnapshot = await getDocs(userQuery);
+                if (!userSnapshot.empty) {
+                    const userData = userSnapshot.docs[0].data();
+                    setUsername(userData.username);
+                    setUserProfileImg(userData.userProfileImg);
+                } else {
+                    console.error('User document not found');
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
 
-    const navigation = useNavigation();
-    const route = useRoute();
+        fetchUserData();
+    }, [replyUserID]);
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white" mt={10} borderRadius={10}>
-            <VStack >
-                    <HStack space="sm" alignItems="center">
-                        <UserAvatar/> 
-                        <Heading color={colors.secondary} size="sm" bold={true}>
-                            {/* {username} */}
-                            {replyUsername}
-                        </Heading>                       
-                         {/* <Text color={colors.gray} size="2xs">{postDate}</Text> */}
-                    </HStack>
-
-                    <Text color="black" pb="$3" size="md" mt="$3">{replyComment}</Text>
-    
+            <VStack>
+                <HStack space="sm" alignItems="center">
+                    <Image
+                        source={{ uri: userProfileImg || 'default_profile_image_url' }}
+                        style={{ width: 50, height: 50, borderRadius: 25 }}
+                        alt="User Avatar"
+                    />
+                    <Heading color={colors.secondary} size="sm" bold={true}>
+                        {username}
+                    </Heading>
+                </HStack>
+                <Text color="black" pb="$3" size="md" mt="$3">
+                    {replyComment}
+                </Text>
             </VStack>
-
-            {/* <CommentBox comment={() => Alert.alert("Alert", "This is a dummy action")} /> */}
         </Box>
-    )
+    );
 }

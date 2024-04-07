@@ -28,12 +28,11 @@ export default function IndividualPostPage() {
     
     useEffect(() => {
         console.log('Selected Post:', selectedPost);
-        // Fetch comments for the specific post from Firebase when component mounts
         const fetchComments = async () => {
             try {
                 const db = getFirestore(FIREBASE_APP); 
                 const commentsRef = collection(db, 'CommunityComment');
-                const postCommentsQuery = query(commentsRef, where('Primary', '==', selectedPost.key));
+                const postCommentsQuery = query(commentsRef, where('postKey', '==', selectedPost.key));
                 const querySnapshot = await getDocs(postCommentsQuery);
                 const commentsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 console.log('Comments:', commentsData); 
@@ -42,10 +41,12 @@ export default function IndividualPostPage() {
                 console.error('Error fetching comments:', error);
             }
         };
+    
         if (selectedPost && selectedPost.key) {
             fetchComments();
         }
     }, [selectedPost]);
+    
 
     // Render Specific Post
     const renderCommunityPosts = () => {
@@ -61,13 +62,13 @@ export default function IndividualPostPage() {
     const renderComments = () => {
         return comments.map(comment => (
             <CommunityReplyBox
-                key={comment.id}
-                replyUsername={comment.username}
+                key={comment.postKey}
+                replyUserID={comment.commentUserID}
                 replyComment={comment.comment}
             />
-      
         ));
     };
+
 
     return (
         <Box w="100%" h="100%">
@@ -80,7 +81,7 @@ export default function IndividualPostPage() {
 
                     {/* Comment Box */}
                     <VStack>
-                        <CommunityCommentBox></CommunityCommentBox>        
+                        <CommunityCommentBox posterUserId={selectedPost.userID} selectedPost={selectedPost} />  
                     </VStack>
 
                     {/* Render comments */}

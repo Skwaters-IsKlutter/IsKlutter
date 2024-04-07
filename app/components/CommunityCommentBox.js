@@ -10,51 +10,52 @@ import {
     Input,
     InputField,
 } from '@gluestack-ui/themed';
-
-import UserAvatar from './Avatar.js';
-
 import colors from '../config/colors.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
-export default function CommunityCommentBox( {posterUserId, posterIcon, selectedPost} ) {
-    
+// Define the CommunityCommentBox component
+export default function CommunityCommentBox({ posterUserId, selectedPost }) {
     const [commentText, setCommentText] = useState('');
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
+
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    const currentUserId = currentUser ? currentUser.uid : null;
 
     const handleComment = async () => {
-        // Check if posterUserId is not null
-        if (!posterUserId) {
-            console.error('Invalid user ID: null');
-            // Handle the case where the user ID is not available
-            // For example, you could show an error message to the user
+        if (!posterUserId || !selectedPost || !commentText) { // Check if comment text is empty
+            console.error('Invalid user ID, selected post, or empty comment');
             return;
         }
 
-        // Check if selectedItem is available
-        if (!selectedPost) {
-            console.error('No selected item data provided');
-            return;
-        }
-    
-        // Get Firestore instance
+        setIsLoading(true); // Set loading state to true
+
         const firestore = getFirestore();
-    
-         // Add the comment to the Firestore collection
-         try {
-            const commentsCollectionRef = collection(firestore, 'PostComments');
-            const newCommentDocRef = await addDoc(commentsCollectionRef, {
-                itemId: selectedPost.id,
-                userId: posterUserId,
+        
+        try {
+            const commentsCollectionRef = collection(firestore, 'CommunityComment');
+            await addDoc(commentsCollectionRef, {
+                postKey: selectedPost.key,
+                posterID: posterUserId,
+                commentUserID: currentUserId,
                 comment: commentText,
                 timestamp: serverTimestamp(),
             });
-    
-            // Log the new comment document reference for debugging
-            console.log('New comment added with ID: ', newCommentDocRef.id);
 
-            // Clear the comment text after submitting
+            console.log('Comment added successfully');
             setCommentText('');
+            setShowSuccessPopup(true);
 
+            // Close the success popup after 2 seconds
+            setTimeout(() => {
+                setShowSuccessPopup(false);
+            }, 2000);
         } catch (error) {
             console.error('Error adding comment: ', error);
+        } finally {
+            setIsLoading(false); // Set loading state to false regardless of success or error
         }
     };
     
@@ -62,9 +63,6 @@ export default function CommunityCommentBox( {posterUserId, posterIcon, selected
         <Box>
             <Box flex={1}>
                 <HStack space="md" justifyContent="space-evenly" p={2} alignItems="center" mt={20}>
-                    {/* <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} /> */}
-                    {/* <UserAvatar username={posterUser} userIcon={posterIcon} /> */}
-
                     <Input bg={colors.white} borderColor={colors.secondary} h={40} w="100%" borderRadius={50}>
                         <InputField multiline={true} 
                             size="md" 
@@ -76,9 +74,19 @@ export default function CommunityCommentBox( {posterUserId, posterIcon, selected
                 </HStack>
 
                 <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={handleComment} mt={25} w="30%" alignSelf="flex-end">
-                    <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
+                    {isLoading ? (
+                        <ButtonText color={colors.white} fontSize="$sm">Loading</ButtonText>
+                    ) : (
+                        <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
+                    )}
                 </Button>
             </Box>
+            {/* Success Popup */}
+            {showSuccessPopup && (
+                <Box position="absolute" bottom={20} right={20} bg="green" p={3} borderRadius={10}>
+                    <Text color="white">Comment added successfully!</Text>
+                </Box>
+            )}
         </Box>
     )
 }
