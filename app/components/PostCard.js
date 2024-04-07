@@ -1,39 +1,41 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/themed';
-import { getFirestore, collection, doc, getDoc, userDoc, query, where, getDocs } from 'firebase/firestore';
-import { useIsFocused } from '@react-navigation/native'; // Import useIsFocused hook
-
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
 import colors from '../config/colors.js';
 
 const db = getFirestore();
 
-export default function PostCard({ userId, userProfileImg, description, toIndividualPost }) {
+export default function PostCard({ userId, description, toIndividualPost }) {
   const [username, setUsername] = useState('');
+  const [userProfileImg, setUserProfileImg] = useState('');
   const isFocused = useIsFocused();
   
-  const fetchUsername = useCallback(async () => {
+  const fetchUserData = useCallback(async () => {
     try {
+      // Fetch username
       const userCollection = collection(db, 'users');
       const userQuery = query(userCollection, where('userID', '==', userId));
       const userSnapshot = await getDocs(userQuery);
       if (!userSnapshot.empty) {
         const userData = userSnapshot.docs[0].data();
         setUsername(userData.username);
+        setUserProfileImg(userData.userProfileImg);
       } else {
         setUsername('User not found');
       }
     } catch (error) {
-      console.error('Error fetching username:', error.message);
-      setUsername('Error fetching username');
+      console.error('Error fetching user data:', error.message);
+      setUsername('Error fetching user data');
     }
   }, [userId]);
 
   useEffect(() => {
     if (isFocused) {
       console.log('Focusing Post Card');
-      fetchUsername();
+      fetchUserData();
     }
-  }, [isFocused, fetchUsername]);
+  }, [isFocused, fetchUserData]);
 
   return (
     <Pressable onPress={toIndividualPost}>

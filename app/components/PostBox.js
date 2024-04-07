@@ -50,7 +50,7 @@ export default function PostBox() {
     return (
         <Box bgColor={colors.white} p={20}>
             <HStack space="sm" justifyContent="space-evenly" alignItems="center">
-                {userProfileImg && ( // Render the user icon if userProfileImg is available
+                {userProfileImg && (
                     <Image
                         source={{ uri: userProfileImg }}
                         style={{ width: 50, height: 50, borderRadius: 25 }}
