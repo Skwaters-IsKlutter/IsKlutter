@@ -37,7 +37,7 @@ export default function CommunityReplyBox({ replyUserID, replyComment }) {
         };
 
         fetchUserData();
-    }, [replyUserID]);
+    }, [replyUserID, replyComment]); 
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white" mt={10} borderRadius={10}>

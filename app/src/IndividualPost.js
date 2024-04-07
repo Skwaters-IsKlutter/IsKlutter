@@ -11,7 +11,7 @@ import {
 import colors from '../config/colors';
 import SearchHeaderBack from '../components/SearchHeaderBack';
 import IndividualPostCard from '../components/IndividualPostCard.js';
-import { getFirestore, collection, getDocs,query,where } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where, onSnapshot } from 'firebase/firestore'; // Import onSnapshot
 import CommunityReplyBox from '../components/CommunityReplyBox';
 
 
@@ -25,7 +25,6 @@ export default function IndividualPostPage() {
     const { selectedPost } = route.params || {};
     const [comments, setComments] = useState([]);
 
-    
     useEffect(() => {
         console.log('Selected Post:', selectedPost);
         const fetchComments = async () => {
@@ -33,10 +32,13 @@ export default function IndividualPostPage() {
                 const db = getFirestore(FIREBASE_APP); 
                 const commentsRef = collection(db, 'CommunityComment');
                 const postCommentsQuery = query(commentsRef, where('postKey', '==', selectedPost.key));
-                const querySnapshot = await getDocs(postCommentsQuery);
-                const commentsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('Comments:', commentsData); 
-                setComments(commentsData);
+                const unsubscribe = onSnapshot(postCommentsQuery, (snapshot) => {
+                    const commentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    console.log('Comments:', commentsData); 
+                    setComments(commentsData);
+                });
+                // Return the unsubscribe function to clean up the listener when component unmounts
+                return unsubscribe;
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
@@ -46,7 +48,6 @@ export default function IndividualPostPage() {
             fetchComments();
         }
     }, [selectedPost]);
-    
 
     // Render Specific Post
     const renderCommunityPosts = () => {
@@ -62,13 +63,12 @@ export default function IndividualPostPage() {
     const renderComments = () => {
         return comments.map(comment => (
             <CommunityReplyBox
-                key={comment.postKey}
+                key={comment.commentID}
                 replyUserID={comment.commentUserID}
                 replyComment={comment.comment}
             />
         ));
     };
-
 
     return (
         <Box w="100%" h="100%">

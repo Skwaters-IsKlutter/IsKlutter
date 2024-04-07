@@ -11,7 +11,7 @@ import {
     InputField,
 } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, serverTimestamp, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 // Define the CommunityCommentBox component
@@ -33,14 +33,16 @@ export default function CommunityCommentBox({ posterUserId, selectedPost }) {
         setIsLoading(true); // Set loading state to true
 
         const firestore = getFirestore();
+        const commentsCollectionRef = collection(firestore, 'CommunityComment');
         
         try {
-            const commentsCollectionRef = collection(firestore, 'CommunityComment');
+            const newCommentDocRef = doc(commentsCollectionRef);
             await addDoc(commentsCollectionRef, {
                 postKey: selectedPost.key,
                 posterID: posterUserId,
                 commentUserID: currentUserId,
                 comment: commentText,
+                commentID: newCommentDocRef.id,
                 timestamp: serverTimestamp(),
             });
 
