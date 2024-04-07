@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@gluestack-ui/themed';
+
 import AddListingForm from './AddListingForm';
 import AddListingImagePicker from '../components/AddListingImagePicker';
 import AddTags from './AddTags';
@@ -9,7 +10,6 @@ export default function AddListingBox({ listingName, listingPrice, listingDescri
         <Box>
             <Box w="100%" m={5}>
                 <AddListingImagePicker
-                    listingFormLabel="Upload an Image"
                     setListingData={setListingData}
                 />
 

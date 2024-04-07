@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { VStack } from "@gluestack-ui/themed";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import colors from "../config/colors";
 
-export default function AddListingImagePicker({ listingFormLabel, setListingData }) {
+export default function AddListingImagePicker({ setListingData }) {
     const [imageBlob, setImageBlob] = useState(null);
     const [imageSource, setImageSource] = useState(null);
     const [error, setError] = useState('');
@@ -79,11 +80,11 @@ const styles = StyleSheet.create({
         color: colors.white,
         alignItems: "center",
         marginTop: 10,
-        fontSize: 20,
+        fontSize: 15,
     },
     button: {
         alignItems: "center",
-        backgroundColor: colors.primary,
+        backgroundColor: colors.secondary,
         padding: 5,
         marginTop: 10,
         marginHorizontal: 70,
@@ -99,13 +100,15 @@ const styles = StyleSheet.create({
         height: 200,
         resizeMode: 'cover',
         borderRadius: 10,
+        margin: 20,
     },
     addPhotoButton: {
         alignItems: "center",
-        backgroundColor: colors.primary,
+        backgroundColor: colors.secondary,
         padding: 10,
         marginTop: 25,
-        marginHorizontal: 100 ,
+        marginHorizontal: 100,
+        marginBottom: 25,
         height: 150,
         width:150,
         borderRadius:10

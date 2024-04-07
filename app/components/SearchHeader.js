@@ -17,7 +17,7 @@ import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader({ search, username, userIcon, onSearchChange }) {
+export default function SearchHeader({ search, placeholder, username, userIcon, onSearchChange }) {
     const navigation = useNavigation();
     const { userProfileImg } = useUser();
     const [, setForceUpdate] = useState(false);
@@ -38,9 +38,9 @@ export default function SearchHeader({ search, username, userIcon, onSearchChang
         <Box w="100%" maxHeight={150} bg={colors.primary}>
           <VStack>
             <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" >
-              <Input w="80%" bg={colors.white}  size="sm" borderRadius={20} left={-5} h={40}>
+              <Input w="80%" bg={colors.white}  size="sm" borderRadius={15} left={-5} h={40}>
                 <InputField
-                  placeholder="Search"
+                  placeholder={placeholder}
                   value={search}
                   onChangeText={onSearchChange} // Add this line to handle text changes
                 />

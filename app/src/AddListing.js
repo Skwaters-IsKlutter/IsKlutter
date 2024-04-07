@@ -9,13 +9,17 @@ import {
     Pressable,
     HStack,
 } from '@gluestack-ui/themed';
+import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import colors from '../config/colors.js'
-import AddListingBox from '../components/AddListingBox.js';
+
 import { collection, doc, query, where, getDocs, setDoc} from 'firebase/firestore';
 import { storage, storageRef, uploadBytes,  database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
+
+import AddListingBox from '../components/AddListingBox.js';
+
+import colors from '../config/colors.js';
 
 export default function AddListingPage() {
     const navigation = useNavigation();
@@ -66,15 +70,18 @@ export default function AddListingPage() {
             setLoading(true);
 
             if (!isFirestoreOnline) {
+                Alert.alert("Error", "Please check your internet connection.");
                 throw new Error('Firestore is currently offline. Please check your internet connection and try again.');
             }
 
             if (!listingData.listingName || !listingData.listingPrice || !listingData.listingDescription || !listingData.listingImage) {
+                Alert.alert("Error", "Please fill in all required fields.");
                 throw new Error('Please fill in all required fields (Listing Title, Price, Description, and Image).');
             }
 
             const listingPrice = parseFloat(listingData.listingPrice);
             if (isNaN(listingPrice)) {
+                Alert.alert("Error", "Listing price must be a number.");
                 throw new Error('Listing price must be a valid number.');
             }
 
@@ -121,8 +128,8 @@ export default function AddListingPage() {
     };
 
     return (
-        <Box backgroundColor={colors.white}>
-            <Box backgroundColor={colors.primary} alignItems="center">
+        <Box backgroundColor={colors.white} w="100%">
+            {/* <Box backgroundColor={colors.primary} alignItems="center">
                 <HStack p="$2" w={400} mt={25}>
                     <Pressable onPress={navigation.goBack} ml={20} mt={10}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} />
@@ -131,7 +138,16 @@ export default function AddListingPage() {
                         Sell Your Product
                     </Heading>
                 </HStack>
+            </Box> */}
+            <Box backgroundColor={colors.primary}>
+                <HStack p="$2" w="100%" mt={50} alignItems="center">
+                    <Pressable onPress={navigation.goBack}>
+                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
+                    </Pressable>
+                    <Heading lineHeight={50} fontSize={25} color={colors.white} m={45}>Post</Heading>
+                </HStack>
             </Box>
+
             <ScrollView>
                 <Box w="100%" h="100%">
                     <Box w="100%" maxWidth="$96">
@@ -147,19 +163,21 @@ export default function AddListingPage() {
                                 />
                             </VStack>
                         </Box>
+
                         <HStack p="$2" justifyContent="center" mb={10}>
                             <Button
                                 variant="solid"
                                 size="md"
-                                bg={colors.primary}
+                                bg={colors.secondary}
                                 borderRadius={10}
                                 onPress={handlePostNow}
                                 disabled={loading}
                             >
                                 <ButtonText color={colors.white} fontSize="$md">
-                                    {loading ? 'Posting...' : 'Post Now'}
+                                    {loading ? 'Posting' : 'Post Now'}
                                 </ButtonText>
                             </Button>
+                            
                             <Button
                                 variant="solid"
                                 size="md"
