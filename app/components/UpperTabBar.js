@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     HStack, 
     VStack, 
@@ -15,11 +15,24 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 import UserAvatar from '../components/Avatar.js';
+import { useUser } from '../components/UserIcon.js';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-import { useNavigation } from '@react-navigation/native';
-
-export default function UpperTabBar({ pageTitle }) {
+export default function UpperTabBar({ pageTitle, search, username, userIcon, onSearchChange }) {
     const navigation = useNavigation();
+    const { userProfileImg } = useUser();
+    const [, setForceUpdate] = useState(false);
+
+    useFocusEffect(
+        React.useCallback(() => {
+              //console.log('Screen is focused. Updating userProfileImg:', userProfileImg);
+          setForceUpdate(prev => !prev);
+        }, [userProfileImg])
+      );
+    
+      useEffect(() => {
+        console.log('Forcing re-render in UpperTabBar');
+      }, [userProfileImg]); // Log when userProfileImg changes
 
     return (
         <Box backgroundColor={colors.primary}>
@@ -31,7 +44,7 @@ export default function UpperTabBar({ pageTitle }) {
                     {pageTitle}
                 </Heading>
                 <Pressable onPress={() => navigation.navigate(Routes.PROFILE)} mr={15}>
-                    <UserAvatar />
+                    <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} />
                 </Pressable>
             </HStack>
 

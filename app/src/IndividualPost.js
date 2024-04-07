@@ -52,7 +52,7 @@ export default function IndividualPostPage() {
         return (
             <IndividualPostCard
                 description={selectedPost.description}
-                username={selectedPost.postusername}
+                userId={selectedPost.userID}
             />
         );
     };
