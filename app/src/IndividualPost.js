@@ -11,7 +11,7 @@ import {
 import colors from '../config/colors';
 import SearchHeaderBack from '../components/SearchHeaderBack';
 import IndividualPostCard from '../components/IndividualPostCard.js';
-import { getFirestore, collection, getDocs,query,where } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where, onSnapshot } from 'firebase/firestore'; // Import onSnapshot
 import CommunityReplyBox from '../components/CommunityReplyBox';
 
 
@@ -25,23 +25,25 @@ export default function IndividualPostPage() {
     const { selectedPost } = route.params || {};
     const [comments, setComments] = useState([]);
 
-    
     useEffect(() => {
         console.log('Selected Post:', selectedPost);
-        // Fetch comments for the specific post from Firebase when component mounts
         const fetchComments = async () => {
             try {
                 const db = getFirestore(FIREBASE_APP); 
                 const commentsRef = collection(db, 'CommunityComment');
-                const postCommentsQuery = query(commentsRef, where('Primary', '==', selectedPost.key));
-                const querySnapshot = await getDocs(postCommentsQuery);
-                const commentsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('Comments:', commentsData); 
-                setComments(commentsData);
+                const postCommentsQuery = query(commentsRef, where('postKey', '==', selectedPost.key));
+                const unsubscribe = onSnapshot(postCommentsQuery, (snapshot) => {
+                    const commentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    console.log('Comments:', commentsData); 
+                    setComments(commentsData);
+                });
+                // Return the unsubscribe function to clean up the listener when component unmounts
+                return unsubscribe;
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
         };
+    
         if (selectedPost && selectedPost.key) {
             fetchComments();
         }
@@ -52,7 +54,7 @@ export default function IndividualPostPage() {
         return (
             <IndividualPostCard
                 description={selectedPost.description}
-                username={selectedPost.postusername}
+                userId={selectedPost.userID}
             />
         );
     };
@@ -61,11 +63,10 @@ export default function IndividualPostPage() {
     const renderComments = () => {
         return comments.map(comment => (
             <CommunityReplyBox
-                key={comment.id}
-                replyUsername={comment.username}
+                key={comment.commentID}
+                replyUserID={comment.commentUserID}
                 replyComment={comment.comment}
             />
-      
         ));
     };
 
@@ -80,7 +81,7 @@ export default function IndividualPostPage() {
 
                     {/* Comment Box */}
                     <VStack>
-                        <CommunityCommentBox></CommunityCommentBox>        
+                        <CommunityCommentBox posterUserId={selectedPost.userID} selectedPost={selectedPost} />  
                     </VStack>
 
                     {/* Render comments */}

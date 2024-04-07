@@ -105,6 +105,7 @@ export default function AddListingPage() {
                 listingPrice: listingPrice,
                 listingImage: storagePath,
                 listingImageURL: downloadURL,
+                listingTimestamp: new Date()
             };
             await setDoc(docRef, listingDataFirestore);
             setListingData({

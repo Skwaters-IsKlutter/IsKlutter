@@ -11,7 +11,7 @@ import {
     ScrollView,
     Heading
 } from '@gluestack-ui/themed';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import { Alert, Pressable } from 'react-native';
 
 import { getFirestore, addDoc, collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
@@ -35,135 +35,65 @@ export default function CommunityPage() {
     const navigation = useNavigation();
     const [usernames, setUsernames] = useState([]);
     const [description, setDescription] = useState([]);
-    const [comment, setComment] = useState('');
-    const [comments, setComments] = useState({}); // New state for comments
     const [username, setUsername] = useState('');
 
-    const addCommmunityComment = async (key, comment) => {
+    const navigation = useNavigation();
+
+    const fetchUserData = async () => {
         try {
-            const currentUser = username;
-            const userDocRef = await addDoc(collection(db, 'CommunityComment'), {
-                username: currentUser,
-                Primary: key,
-                comment: comment
+            if (!auth || !auth.currentUser) {
+                setTimeout(fetchUserData, 1000);
+                return;
+            }
+            const currentUser = auth.currentUser;
+            const userCollection = collection(db, 'users');
+            const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
+            querySnapshot.forEach((doc) => {
+                setUsername(doc.data().username);
+
             });
-            alert("Comment is posted");
-            console.log('Document written with ID:', userDocRef.id);
-
         } catch (error) {
-            console.error('Error adding document:', error);
-            setError('Error creating user. Please try again.');
+            console.error('Error fetching user data:', error.message);
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userCollection = collection(db, 'forum');
-                const querySnapshot = await getDocs(userCollection);
-
-                const userData = [];
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const userDataObj = {
-                        key: data.key,
-                        postusername: data.username,
-                        description: data.description,
-                    };
-                    userData.push(userDataObj);
-                });
-
-                setDescription(userData);
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                if (!auth || !auth.currentUser) {
-                    setTimeout(fetchUserData, 1000);
-                    return;
-                }
-
-                const currentUser = auth.currentUser; // Reference auth.currentUser
-                const userCollection = collection(db, 'users');
-                const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
-
-                querySnapshot.forEach((doc) => {
-                    setUsername(doc.data().username); // Assuming 'username' field exists in the user document
-                });
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
-            }
-        };
-
-        fetchUserData();
-    }, []);
-
-
-    useEffect(() => {
-        const fetchComments = async () => {
-            const commentsData = {};
-            for (const userData of description) {
-                try {
-                    const commentQuery = query(
-                        collection(db, 'CommunityComment'),
-                        where('Primary', '==', userData.key)
-                    );
-                    const commentSnapshot = await getDocs(commentQuery);
-                    const comments = [];
-                    commentSnapshot.forEach((commentDoc) => {
-                        const commentData = commentDoc.data();
-                        comments.push({
-                            username: commentData.username,
-                            comment: commentData.comment
-                        });
-                    });
-                    commentsData[userData.key] = comments;
-                } catch (error) {
-                    console.error('Error fetching comments:', error.message);
-                    commentsData[userData.key] = [];
-                }
-            }
-            setComments(commentsData);
-        };
-
-        fetchComments();
-    }, [description]);
-
-    const addComment = async (key, commentText) => {
+    const fetchAllCommunityPosts = async () => {
         try {
-            const userDocRef = doc(db, 'forum', key);
-            const docSnap = await getDoc(userDocRef);
-
-            if (docSnap.exists()) {
-                await updateDoc(userDocRef, {
-                    comments: arrayUnion({ text: commentText, date: new Date() }),
-                });
-                fetchData();
-            } else {
-                console.error('Document does not exist');
-            }
+            const userCollection = collection(db, 'forum');
+            const querySnapshot = await getDocs(userCollection);
+            const userData = [];
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const userDataObj = {
+                    key: doc.id,
+                    description: data.description,
+                    userID: data.userID,
+                    timeposted: data.timestamp,
+                };
+                userData.push(userDataObj);
+            });
+            setDescription(userData);
         } catch (error) {
-            console.error('Error adding comment:', error.message);
+            console.error('Error fetching user data:', error.message);
         }
     };
+
+    useFocusEffect(() => {
+        fetchUserData();
+        fetchAllCommunityPosts();
+    });
 
     const renderAllCommunityPosts = () => {
-        return description.map((userData, index) =>
+        return description.map((userData, index) => (
+
             <PostCard
                 key={index}
-                posterIcon={userData.posterIcon}
-                username={userData.postusername}
-                // postDate={userData.postDate}
+                userId={userData.userID}
+                posterIcon={userData.userProfileImg}
                 description={userData.description}
                 toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
             />
+
         );
     }
 

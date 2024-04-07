@@ -7,10 +7,9 @@ import {
     Heading
 } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import UserAvatar from './Avatar.js';
 import { useUser } from '../components/UserIcon.js';
-
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 

@@ -10,12 +10,13 @@ import {
     Input,
     InputField,
 } from '@gluestack-ui/themed';
-
+import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-export default function CommentBox({ posterUserId, posterIcon, selectedItem }) {
+export default function CommentBox({ posterUserId, selectedItem }) {
     const [commentText, setCommentText] = useState('');
+    const { userProfileImg } = useUser();
 
     const handleComment = async () => {
         if (!commentText.trim()) {
@@ -52,7 +53,7 @@ export default function CommentBox({ posterUserId, posterIcon, selectedItem }) {
         <Box p="$2" bg={colors.white}>
             <Box w="100%" maxWidth="$60" pb="$2">
                 <HStack space="sm" justifyContent="center" alignItems="center">
-                    <Image source={posterIcon} h={45} w={45} alt="icon" borderRadius={100} />
+                    <Image source={userProfileImg} h={45} w={45} alt="icon" borderRadius={100} />
                     <Input bg={colors.white} borderColor={colors.secondary} h={80} w="75%">
                     <InputField
                         multiline={true}

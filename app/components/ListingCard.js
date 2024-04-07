@@ -27,7 +27,7 @@ const getCurrentUserID = () => {
     }
 };
 
-export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags }) {
+export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags, timestamp }) {
     const navigation = useNavigation();
     const currentUserId = getCurrentUserID();
 
@@ -103,7 +103,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                 <HStack w="100%" justifyContent="space-between">
                     <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>   
                 </HStack>
-                <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >Timestamp</Text>
+                <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >{timestamp}</Text>
                 <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
             </VStack>
 
