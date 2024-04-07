@@ -6,7 +6,7 @@ import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
-const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
+export const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
     const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -76,5 +76,3 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
         </Box>
     );
 };
-
-export default ReplyBox;

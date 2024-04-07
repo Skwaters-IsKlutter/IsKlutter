@@ -67,7 +67,7 @@ export default function CommentBox({ posterUserId, selectedItem }) {
             </Box>
             
             <VStack space="sm" p="$2" alignItems="right">
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={handleComment}>
+                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={10} onPress={handleComment}>
                     <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
                 </Button>
             </VStack>

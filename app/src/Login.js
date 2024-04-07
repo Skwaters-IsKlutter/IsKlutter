@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { VStack, Heading, Box, Button, ButtonText, FormControl, FormControlLabel, FormControlLabelText, Input, InputField } from '@gluestack-ui/themed';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { 
+    VStack, 
+    Heading, 
+    Box, 
+    Button, 
+    ButtonText, 
+    FormControl, 
+    FormControlLabel, 
+    FormControlLabelText, 
+    Input, 
+    InputField, 
+    Text } from '@gluestack-ui/themed';
+
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
+
+import { auth } from "../../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -12,9 +26,12 @@ export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
         try {
+            setLoading(true);
+
             if (email && password) {
                 await signInWithEmailAndPassword(auth, email, password);
                 navigation.navigate(Routes.HOMEPAGE);
@@ -22,11 +39,14 @@ export default function LoginPage() {
                 setEmail('');
                 setPassword('');
             } else {
-                throw new Error("Please check your email and password.");
+                setLoading(false);
+                throw new Error(error.message);
             }
         } catch (error) {
             setError(error.message);
-            Alert.alert("Login Failed", error.message);
+            Alert.alert("Login Failed", "Please check your email and password."); // Alert the user that the account is invalid
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -49,7 +69,7 @@ export default function LoginPage() {
                             <Input w="100%" borderRadius={10}>
                                 <InputField
                                     type="email"
-                                    placeholder="Enter email"
+                                    placeholder="example@up.edu.ph"
                                     value={email}
                                     onChangeText={(text) => setEmail(text)}
                                 />
@@ -73,18 +93,17 @@ export default function LoginPage() {
                         </FormControl>
                     </VStack>
 
-                    <VStack space="lg" pt="$10" pb="$5" width="$80">
+                    <VStack space="lg" pt="$2" pb="$2" width="$80">
                         <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin} borderRadius={10}>
-                            <ButtonText>Log In</ButtonText>
+                            <ButtonText>{loading ? 'Signing In' : 'Sign In' }</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
-            </Box>
+                
+                <Box w="100%" mt="$5" alignItems="center">
+                    <Text fontSize="$md">Don't have an account yet? <Text color={colors.secondary} fontWeight="$black" fontSize="$md" onPress={() => navigation.navigate(Routes.SIGNUP)}>Sign up</Text></Text>
+                </Box>
 
-            <Box flexDirection="row" top={700} position="absolute">
-                <Button variant="solid" m="$7" size="sm" backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.SIGNUP)}>
-                    <ButtonText sx={{ color: colors.white }}>Don't have an account yet? Sign up</ButtonText>
-                </Button>
             </Box>
         </Box>
     );
