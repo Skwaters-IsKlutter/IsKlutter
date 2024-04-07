@@ -37,8 +37,6 @@ export default function CommunityPage() {
     const [description, setDescription] = useState([]);
     const [username, setUsername] = useState('');
 
-    const navigation = useNavigation();
-
     const fetchUserData = async () => {
         try {
             if (!auth || !auth.currentUser) {
@@ -94,7 +92,7 @@ export default function CommunityPage() {
                 toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
             />
 
-        );
+        ));
     }
 
     const initialCommentState = {};
@@ -183,3 +181,4 @@ export default function CommunityPage() {
         </Box>
     )
 }
+
