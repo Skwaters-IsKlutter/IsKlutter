@@ -83,7 +83,6 @@ export default function CommunityPage() {
 
     const renderAllCommunityPosts = () => {
         return description.map((userData, index) => (
-
             <PostCard
                 key={index}
                 userId={userData.userID}
@@ -91,9 +90,9 @@ export default function CommunityPage() {
                 description={userData.description}
                 toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
             />
-
         ));
     }
+    
 
     const initialCommentState = {};
     description.forEach(userData => {
