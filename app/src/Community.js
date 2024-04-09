@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     VStack,
-    HStack,
-    Text,
     Box,
-    Button,
-    Input,
-    InputField,
-    View,
     ScrollView,
     Heading
 } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import { Alert, Pressable } from 'react-native';
-import { getFirestore, addDoc, collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where} from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth} from 'firebase/auth';
 import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
@@ -27,7 +20,6 @@ const auth = getAuth();
 
 export default function CommunityPage() {
     const navigation = useNavigation();
-    const [usernames, setUsernames] = useState([]);
     const [description, setDescription] = useState([]);
     const [username, setUsername] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
@@ -77,7 +69,6 @@ export default function CommunityPage() {
 
     const renderAllCommunityPosts = () => {
         const sortedDescription = description.slice().sort((a, b) => b.timeposted - a.timeposted);
-        // Filter posts based on the search query
         const filteredPosts = sortedDescription.filter(post =>
             post.description.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -98,7 +89,7 @@ export default function CommunityPage() {
             <SearchHeader
                 userIcon={require('../../assets/img/usericon.jpg')}
                 placeholder="Search in community"
-                onSearchChange={setSearchQuery} // Pass setSearchQuery function to handle search query changes
+                onSearchChange={setSearchQuery}
             />
 
             <Box p="$5" w="100%" maxWidth="$96" flex={1}>

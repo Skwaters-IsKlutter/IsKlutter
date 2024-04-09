@@ -95,7 +95,7 @@ export default function LoginPage() {
 
                     <VStack space="lg" pt="$2" pb="$2" width="$80">
                         <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin} borderRadius={10}>
-                            <ButtonText>{loading ? 'Signing In' : 'Sign In' }</ButtonText>
+                            <ButtonText>{loading ? 'Logging In' : 'Log In' }</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
