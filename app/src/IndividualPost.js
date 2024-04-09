@@ -53,6 +53,7 @@ export default function IndividualPostPage() {
     const renderCommunityPosts = () => {
         return (
             <IndividualPostCard
+                postKey={selectedPost.key}
                 description={selectedPost.description}
                 userId={selectedPost.userID}
                 timestamp={selectedPost.timeposted?selectedPost.timeposted.toDate().toLocaleString():"N/A"}
