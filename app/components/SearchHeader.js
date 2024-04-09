@@ -17,7 +17,7 @@ import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeader({ search, placeholder, username, userIcon, onSearchChange }) {
+export default function SearchHeader({ search, placeholder, username, userIcon, onSearchChange, onSubmit }) {
     const navigation = useNavigation();
     const { userProfileImg } = useUser();
     const [, setForceUpdate] = useState(false);
@@ -42,7 +42,8 @@ export default function SearchHeader({ search, placeholder, username, userIcon, 
                 <InputField
                   placeholder={placeholder}
                   value={search}
-                  onChangeText={onSearchChange} // Add this line to handle text changes
+                  onChangeText={onSearchChange}
+                  onSubmitEditing={onSubmit}
                 />
                 <InputSlot>
                   <InputIcon>

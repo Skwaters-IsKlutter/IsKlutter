@@ -13,18 +13,12 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import { Alert, Pressable } from 'react-native';
-
 import { getFirestore, addDoc, collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-
 import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
-// import { TouchableOpacity } from 'react-native';
-// import UpperTabBar from '../components/UpperTabBar.js';
-// import SearchHeaderBack from '../components/SearchHeaderBack.js';
-
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
@@ -36,6 +30,7 @@ export default function CommunityPage() {
     const [usernames, setUsernames] = useState([]);
     const [description, setDescription] = useState([]);
     const [username, setUsername] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchUserData = async () => {
         try {
@@ -48,7 +43,6 @@ export default function CommunityPage() {
             const querySnapshot = await getDocs(query(userCollection, where('userID', '==', currentUser.uid)));
             querySnapshot.forEach((doc) => {
                 setUsername(doc.data().username);
-
             });
         } catch (error) {
             console.error('Error fetching user data:', error.message);
@@ -83,7 +77,11 @@ export default function CommunityPage() {
 
     const renderAllCommunityPosts = () => {
         const sortedDescription = description.slice().sort((a, b) => b.timeposted - a.timeposted);
-        return sortedDescription.map((userData, index) => (
+        // Filter posts based on the search query
+        const filteredPosts = sortedDescription.filter(post =>
+            post.description.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        return filteredPosts.map((userData, index) => (
             <PostCard
                 key={index}
                 userId={userData.userID}
@@ -94,23 +92,13 @@ export default function CommunityPage() {
             />
         ));
     }
-    
-    
-
-    const initialCommentState = {};
-    description.forEach(userData => {
-        initialCommentState[userData.key] = ''; // Use a unique identifier as the key
-    });
-
 
     return (
-        // Parent box
         <Box w="100%" h="100%">
             <SearchHeader
                 userIcon={require('../../assets/img/usericon.jpg')}
                 placeholder="Search in community"
-            // search={searchInput}
-            // onSearchChange={handleSearchChange}
+                onSearchChange={setSearchQuery} // Pass setSearchQuery function to handle search query changes
             />
 
             <Box p="$5" w="100%" maxWidth="$96" flex={1}>
@@ -128,4 +116,3 @@ export default function CommunityPage() {
         </Box>
     )
 }
-
