@@ -52,6 +52,9 @@ export default function CommunityReplyBox({ replyUserID, replyComment }) {
                     <Heading color={colors.secondary} size="sm" bold={true}>
                         {username}
                     </Heading>
+                    <Text color={colors.gray} size="xs" bold={true}>
+                    Timestamp
+                    </Text>
                 </HStack>
                 <Text color="black" pb="$3" size="md" mt="$3">
                     {replyComment}
