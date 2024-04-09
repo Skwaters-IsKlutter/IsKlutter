@@ -39,6 +39,7 @@ export default function PostBox() {
                 setListingDescription('');
                 await updateDoc(docRef, { key: docRef.id });
                 alert('Posted');
+                console.log("Post added successfully");
             } else {
                 console.error('Listing description is empty');
             }
