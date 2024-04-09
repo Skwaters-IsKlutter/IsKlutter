@@ -56,6 +56,10 @@ export default function PostCard({ userId, description, toIndividualPost }) {
             <Text color={colors.secondary} size="md" bold={true}>
               {username}
             </Text>
+
+            <Text color={colors.gray} size="xs" bold={true}>
+              Timestamp
+            </Text>
           </HStack>
 
           <Text color="black" pb="$3" size="sm" ml="$3" mt={2}>
