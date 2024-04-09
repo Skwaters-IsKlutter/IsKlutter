@@ -6,7 +6,8 @@ import colors from '../config/colors.js';
 
 const db = getFirestore();
 
-export default function PostCard({ userId, description, toIndividualPost }) {
+export default function PostCard({ userId, description, toIndividualPost, timestamp }) {
+  
   const [username, setUsername] = useState('');
   const [userProfileImg, setUserProfileImg] = useState('');
   const isFocused = useIsFocused();
@@ -58,7 +59,7 @@ export default function PostCard({ userId, description, toIndividualPost }) {
             </Text>
 
             <Text color={colors.gray} size="xs" bold={true}>
-              Timestamp
+              {timestamp}
             </Text>
           </HStack>
 

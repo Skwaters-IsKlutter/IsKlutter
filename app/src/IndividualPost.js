@@ -55,6 +55,7 @@ export default function IndividualPostPage() {
             <IndividualPostCard
                 description={selectedPost.description}
                 userId={selectedPost.userID}
+                timestamp={selectedPost.timeposted?selectedPost.timeposted.toDate().toLocaleString():"N/A"}
             />
         );
     };
@@ -62,10 +63,12 @@ export default function IndividualPostPage() {
     // Render Comments
     const renderComments = () => {
         return comments.map(comment => (
+            console.log(comment),
             <CommunityReplyBox
                 key={comment.commentID}
                 replyUserID={comment.commentUserID}
                 replyComment={comment.comment}
+                timestamp={comment.timestamp ? comment.timestamp.toDate().toLocaleString() : "N/A"}
             />
         ));
     };

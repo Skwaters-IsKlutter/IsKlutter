@@ -125,13 +125,6 @@ export default function ListingsPage() {
         }
     };
 
-    const formatTimestamp = (timestamp) => {
-        const date = new Date(timestamp.seconds * 1000);
-        const dateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-        const timeString = `${date.getHours()}:${(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()}:${(date.getSeconds() < 10 ? '0' : '') + date.getSeconds()}`;
-        return `${dateString} ${timeString}`;
-    };
-
     const renderListings = () => {
         return selectedItem ? (
             <ListingCard

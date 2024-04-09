@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 const database = getFirestore();
 
-export default function IndividualPostCard({ userId, description }) {
+export default function IndividualPostCard({ userId, description, timestamp }) {
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
@@ -65,7 +65,7 @@ export default function IndividualPostCard({ userId, description }) {
                         {username}
                     </Heading>
                     <Text color={colors.gray} size="xs" bold={true}>
-                    Timestamp
+                    {timestamp}
                     </Text>
                 </HStack>
                 <Text color="black" pb="$3" size="md" mt="$3">

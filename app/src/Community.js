@@ -88,6 +88,7 @@ export default function CommunityPage() {
                 userId={userData.userID}
                 posterIcon={userData.userProfileImg}
                 description={userData.description}
+                timestamp={userData.timeposted ? userData.timeposted.toDate().toLocaleString() : "N/A"}
                 toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
             />
         ));
