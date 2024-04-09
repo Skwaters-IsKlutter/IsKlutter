@@ -62,8 +62,8 @@ export default function IndividualPostPage() {
 
     // Render Comments
     const renderComments = () => {
-        return comments.map(comment => (
-            console.log(comment),
+        const sortedComments = comments.slice().sort((a, b) => b.timestamp - a.timestamp);
+        return sortedComments.map(comment => (
             <CommunityReplyBox
                 key={comment.commentID}
                 replyUserID={comment.commentUserID}
@@ -72,6 +72,7 @@ export default function IndividualPostPage() {
             />
         ));
     };
+
 
     return (
         <Box w="100%" h="100%">

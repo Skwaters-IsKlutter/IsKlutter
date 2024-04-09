@@ -82,7 +82,8 @@ export default function CommunityPage() {
     });
 
     const renderAllCommunityPosts = () => {
-        return description.map((userData, index) => (
+        const sortedDescription = description.slice().sort((a, b) => b.timeposted - a.timeposted);
+        return sortedDescription.map((userData, index) => (
             <PostCard
                 key={index}
                 userId={userData.userID}
@@ -93,6 +94,7 @@ export default function CommunityPage() {
             />
         ));
     }
+    
     
 
     const initialCommentState = {};
