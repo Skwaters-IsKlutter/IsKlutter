@@ -53,22 +53,27 @@ export default function IndividualPostPage() {
     const renderCommunityPosts = () => {
         return (
             <IndividualPostCard
+                postKey={selectedPost.key}
                 description={selectedPost.description}
                 userId={selectedPost.userID}
+                timestamp={selectedPost.timeposted?selectedPost.timeposted.toDate().toLocaleString():"N/A"}
             />
         );
     };
 
     // Render Comments
     const renderComments = () => {
-        return comments.map(comment => (
+        const sortedComments = comments.slice().sort((a, b) => b.timestamp - a.timestamp);
+        return sortedComments.map(comment => (
             <CommunityReplyBox
                 key={comment.commentID}
                 replyUserID={comment.commentUserID}
                 replyComment={comment.comment}
+                timestamp={comment.timestamp ? comment.timestamp.toDate().toLocaleString() : "N/A"}
             />
         ));
     };
+
 
     return (
         <Box w="100%" h="100%">

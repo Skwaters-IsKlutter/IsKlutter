@@ -1,17 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { Box, VStack, HStack, Heading, Text, Image,Button,ButtonIcon } from '@gluestack-ui/themed';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import { auth, database } from '../../config/firebase';
 import { useIsFocused } from '@react-navigation/native';
 import colors from '../config/colors.js';
 import { Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const database = getFirestore();
+const getCurrentUserID = () => {
+    const currentUser = auth.currentUser;
 
-export default function IndividualPostCard({ userId, description }) {
+    if (currentUser) {
+        return currentUser.uid;
+    } else {
+        return null;
+    }
+}
+
+export default function IndividualPostCard({ postKey, userId, description, timestamp }) {
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
+    const navigation = useNavigation();
+    const currentUserId = getCurrentUserID();
+
+    const isCurrentUserPost = () => {
+        return userId === currentUserId;
+    }
+
+    const onDelete = async (postKey) => {
+        Alert.alert(
+            'Confirm Deletion',
+            'Are you sure you want to delete this post?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Delete',
+                    onPress: async () => {
+                        try {
+                            await deleteDoc(doc(database, 'forum', postKey));
+                            
+                            const commentsQuery = query(collection(database, 'CommunityComment'), where('postKey', '==', postKey));
+                            const commentsSnapshot = await getDocs(commentsQuery);
+                            commentsSnapshot.forEach(async (commentDoc) => {
+                                await deleteDoc(commentDoc.ref);
+                            });
+
+                            Alert.alert("Success", "Post deleted successfully.", [{ text: "OK" }])
+                            navigation.goBack();
+                        } catch (error) {
+                            console.error('Error deleting product:', error);
+                        }
+                    },
+                    style: 'destructive',
+                },
+            ]
+        );
+    };
 
     const fetchUserData = async () => {
         try {
@@ -39,21 +88,24 @@ export default function IndividualPostCard({ userId, description }) {
 
     return (
         <Box p="$3" w="100%" backgroundColor="$white">
-                <Button
-                    variant="solid"
-                    size="sm"
-                    backgroundColor="$red600"
-                    borderRadius={8}
-                    onPress={() => Alert.alert("Alert", "This is a dummy action.", [{ text: "OK" }])}
-                    position="absolute"
-                    top={15}
-                    right={15}
-                    zIndex={1}
-                >
-                    <ButtonIcon>
-                        <MaterialCommunityIcons name="delete" size={15} color={colors.white}/>
-                    </ButtonIcon>
-                </Button>
+                {isCurrentUserPost() && (
+                    <Button
+                        variant="solid"
+                        size="sm"
+                        backgroundColor="$red600"
+                        borderRadius={8}
+                        onPress={() => onDelete(postKey)}
+                        position="absolute"
+                        top={15}
+                        right={15}
+                        zIndex={1}
+                    >
+                        
+                        <ButtonIcon>
+                            <MaterialCommunityIcons name="delete" size={15} color={colors.white}/>
+                        </ButtonIcon>
+                    </Button>
+                )}
             <VStack>
                 <HStack space="sm" alignItems="center">
                     <Image
@@ -65,7 +117,7 @@ export default function IndividualPostCard({ userId, description }) {
                         {username}
                     </Heading>
                     <Text color={colors.gray} size="xs" bold={true}>
-                    Timestamp
+                    {timestamp}
                     </Text>
                 </HStack>
                 <Text color="black" pb="$3" size="md" mt="$3">

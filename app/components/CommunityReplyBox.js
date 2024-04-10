@@ -11,7 +11,7 @@ import colors from '../config/colors.js';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
 
-export default function CommunityReplyBox({ replyUserID, replyComment }) {
+export default function CommunityReplyBox({ replyUserID, replyComment, timestamp }) {
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
@@ -53,7 +53,7 @@ export default function CommunityReplyBox({ replyUserID, replyComment }) {
                         {username}
                     </Heading>
                     <Text color={colors.gray} size="xs" bold={true}>
-                    Timestamp
+                    {timestamp}
                     </Text>
                 </HStack>
                 <Text color="black" pb="$3" size="md" mt="$3">
