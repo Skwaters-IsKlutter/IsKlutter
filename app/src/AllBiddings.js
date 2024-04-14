@@ -13,10 +13,13 @@ import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 import UserAvatar from '../components/Avatar.js';
 
+import BidItemCard from '../components/BidItemCard.js';
 // Firebase Components
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
+import { list } from 'firebase/storage';
+import { Alert } from 'react-native';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -179,93 +182,59 @@ export default function AllBiddingsPage() {
     }
   };
   
-  
-  
+	const renderAllBiddings = () => {
+		return listings.map(listing => (
+			<BidItemCard
+				key={listing.id}
+        listingName={listing.listingName}
+        listingPrice={listing.listingPrice}
+        remainingTime={listing.daysRemaining}
+				toBidding={onPress=() => handleBiddingClick(listing.id)}
+			/>
+		));
+	};
+
   
 
   return (
     <Box w="100%" h="100%">
-      <Box backgroundColor={colors.primary}>
-        <HStack p="$2" w="100%" mt={45} alignItems="center">
-          <Pressable onPress={navigation.goBack}>
-            <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-          </Pressable>
-          <Heading lineHeight={50} fontSize={30} color={colors.white} ml={25} mr={150}>
-            Biddings
-          </Heading>
-          <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
-            <UserAvatar />
-          </Pressable>
-        </HStack>
+      <SearchHeader
+				// userIcon={require('../../assets/img/usericon.jpg')}
+				placeholder="Search in biddings"
+				// search={searchInput}
+				// onSearchChange={handleSearchChange}
+			/>
 
-        <VStack>
-          <HStack p="$3" w="100%" justifyContent="space-evenly">
-            <Input w="90%" bg={colors.white} size="sm" borderRadius={20} left={-5} h={40}>
-              <InputField
-                placeholder="Search"
-              />
-              <InputSlot>
-                <InputIcon>
-                  <MaterialCommunityIcons name="magnify" color={colors.primary} size={15} right={15} />
-                </InputIcon>
-              </InputSlot>
-            </Input>
+			<Box p="$5" w="100%"  flex={1}>
+				<VStack space="xs" pb="$2">
+					<HStack space="xs" justifyContent="space-between" alignItems="center">
+						<Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+							Biddings
+						</Heading>
+
+
+            <Button
+              borderRadius={50}
+              backgroundColor={colors.secondary}
+              onPress={() => Alert.alert('Alert', 'This is a dummy action.')}
+              p={5}
+              m={5}
+              
+            >
+              <ButtonIcon>
+                <MaterialCommunityIcons name="plus-thick" size={20} color={colors.white} />
+              </ButtonIcon>
+              <ButtonText pl={10}>Add item to Bid</ButtonText>
+            </Button>
           </HStack>
-        </VStack>
-      </Box>
 
-      <Button
-        borderRadius={50}
-        backgroundColor={colors.secondary}
-        onPress={() => navigation.navigate(Routes.ADDLISTING)}
-        p={5}
-        m={10}
-      >
-        <ButtonIcon>
-          <MaterialCommunityIcons name="plus-thick" size={20} color={colors.white} />
-        </ButtonIcon>
-        <ButtonText pl={10}>Add item for bidding</ButtonText>
-      </Button>
-
-      <Box>
+     
         <ScrollView>
-        {listings.map(listing => (
-            <Pressable key={listing.id} onPress={() => handleBiddingClick(listing.id)}>
-              <Box>
-                <Text>
-                  Listing Name: {listing.listingName}, Listing Price: {listing.listingPrice}
-                </Text>
-               
-                <Text>
-                  Listing Price: {listing.listingPrice}
-                </Text>
-                
-                <Text>
-                  Remaining time: {listing.daysRemaining} days
-                </Text>
-
-                <HStack justifyContent="space-between" alignItems="center">
-                  
-                <Button
-                  variant="solid"
-                  size="sm"
-                  bg={colors.primary}
-                  borderRadius={8}
-                  ml={3}
-                  mt={5}
-                  onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
-              >
-                  <Text color={colors.black} fontSize="$sm">Bid Now!</Text>
-              </Button>
-
-                </HStack>
-                
-              </Box>
-            </Pressable>
-          ))}
+          {renderAllBiddings()}
 
         </ScrollView>
-      </Box>
+      </VStack>
+    </Box>
     </Box>
   );
 }

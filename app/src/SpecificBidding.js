@@ -184,56 +184,63 @@ export default function SpecificBiddingPage() {
             </Box>
 
             {/* Display the listingId */}
-            <Box w="100%" h="8%" mt={10}>
+            {/* <Box w="100%" h="8%" mt={10}>
                 <Text>ID: {listingId}</Text>
-            </Box>
-            
-            {/* Display the listing name and price if available */}
-            <Box>
-                {listing && (
-                    <VStack>
-                        <Heading>{listing.listingName}</Heading>
-                        <Text>Listing Price: {listing.listingPrice}</Text>
-                    </VStack>
-                )}
-            </Box>
-            <HStack justifyContent="space-between" alignItems="center">
-                  <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
-                    <InputField
-                      multiline={true}
-                      size="md"
-                      placeholder="Place your bid Only numbers!"
-                      onChangeText={text => handleCommentChange(listing.id, text)}
-                    />
-                  </Input>
-                  <Button
-                    variant="solid"
-                    size="sm"
-                    bg={colors.primary}
-                    borderRadius={8}
-                    ml={3}
-                    mt={5}
-                    onPress={() => handleBid(listing.id, comments[listing.id])}
-                  >
-                    <Text color={colors.black} fontSize="$sm">Bid</Text>
-                  </Button>
-                </HStack>
-                <Box>
-                <Text>All bidders and their corresponding bidding prices:</Text>
-                {biddingData.length > 0 ? (
-                    biddingData.map((bid, index) => (
-                        <Text key={index}>
-                            Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
-                        </Text>
-                    ))
-                ) : (
-                    <Text>No bids yet</Text>
-                )}
-            </Box>
+            </Box> */}
+
             {/* Image  */}
             <Box bgColor='$black' w="100%" h="30%">
                 
             </Box>
+
+            {/* Specific Bid Card */}
+            <Box m={10} bg={colors.white} p={15} borderRadius={10}>
+                {/* Display the listing name and price if available */}
+                <Box>
+                    {listing && (
+                        <VStack>
+                            <Heading color={colors.primary}>{listing.listingName}</Heading>
+                            <Text fontSize="$md" color={colors.black} bold='true'>Bidding Price: {listing.listingPrice}</Text>
+                        </VStack>
+                    )}
+                </Box>
+       
+                  <Box mt={10}>
+                    <Text fontSize="$sm" color={colors.black} bold='true'>All bidders and their corresponding bidding prices:</Text>
+                    {biddingData.length > 0 ? (
+                        biddingData.map((bid, index) => (
+                            <Text key={index}>
+                                Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
+                            </Text>
+                        ))
+                    ) : (
+                        <Text>No bids yet</Text>
+                    )}
+                  </Box>
+
+                  <HStack justifyContent="space-between" alignItems="center" mt={10}>
+                    <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0}>
+                      <InputField
+                        multiline={true}
+                        size="md"
+                        placeholder="Place your bid Only numbers!"
+                        onChangeText={text => handleCommentChange(listing.id, text)}
+                      />
+                    </Input>
+                    <Button
+                      variant="solid"
+                      size="md"
+                      bg={colors.primary}
+                      borderRadius={5}
+                      ml={3}
+                      mt={5}
+                      onPress={() => handleBid(listing.id, comments[listing.id])}
+                    >
+                      <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
+                    </Button>
+                  </HStack>
+            </Box>
+            
         </Box>
     );
 }
