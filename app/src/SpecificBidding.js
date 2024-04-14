@@ -1,143 +1,239 @@
-import React, { useState, useEffect } from 'react';
+// React components
+import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Box, Text, Button, Input, InputField, Heading, ButtonText, HStack, VStack, Pressable } from '@gluestack-ui/themed';
-import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { Alert } from 'react-native';
+
+
+// Gluestack-ui components
+import { HStack, VStack, Heading, Text, Box, 
+    ScrollView,Input,InputField,InputSlot,
+    InputIcon, Button, ButtonIcon, ButtonText,Pressable } from '@gluestack-ui/themed';
+
+
+// Local components
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
+import ListingCard from '../components/ListingCard.js';
+import TagLabel from '../components/TagLabel.js';
+import CommentBox from '../components/CommentBox.js';
+import ReplyBox from '../components/ReplyBox.js';
+import colors from '../config/colors.js';
+import UserAvatar from '../components/Avatar.js';
+
+// Firebase components
+// Firebase Components
+import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
-import Routes from '../components/constants/Routes.js';
-import colors from '../config/colors.js';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
-export default function SpecificBiddingPage () {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { selecteditem } = route.params;
-  const [highestBidder, setHighestBidder] = useState('Anonymous');
-  const [currentUser, setCurrentUser] = useState(null);
-  const [comment, setComment] = useState('');
-  const [remainingTime, setRemainingTime] = useState(4 * 3600 + 30 * 60 + 10); // Total time in seconds: 4 hours, 30 minutes, 10 seconds
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setCurrentUser(user);
-    });
-    return unsubscribe;
-  }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRemainingTime(prevTime => prevTime - 1);
-    }, 1000);
+export default function SpecificBiddingPage() {
+    const navigation = useNavigation();
+    const route = useRoute();
+    const { listingId } = route.params;
+    const [listing, setListing] = useState(null); // State to hold the fetched listing
+    const [biddingData, setBiddingData] = useState([]); // State to hold the fetched bidding data
+    const [currentUser, setCurrentUser] = useState(null);
+    const [comments, setComments] = useState({});
 
-    return () => clearInterval(timer);
-  }, []);
 
-  const fetchUsername = async (userId) => {
-    try {
-      const userCollectionRef = collection(db, 'users');
-      const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, user => {
+          setCurrentUser(user);
+        });
+        return unsubscribe;
+      }, []);
 
-      if (!querySnapshot.empty) {
-        const userData = querySnapshot.docs[0].data();
-        return userData.username;
-      } else {
-        console.error('User not found');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching username:', error);
-      return null;
-    }
-  };
 
-  const handleBid = async () => {
-    try {
-      const intValue = parseInt(comment);
-      if (isNaN(intValue)) {
-        throw new Error('Bidding price must be a valid number.');
-      }
-
-      const biddingCollectionRef = collection(db, 'bidding');
-      const username = currentUser ? await fetchUsername(currentUser.uid) : 'Anonymous';
-      await addDoc(biddingCollectionRef, {
-        listingName: selecteditem.listingName,
-        listingPrice: selecteditem.listingPrice,
-        biddingPrice: intValue,
-        user: username
-      });
-
-      // Get the highest bidding price and username for the current listing
-      const querySnapshot = await getDocs(query(biddingCollectionRef, where('listingName', '==', selecteditem.listingName)));
-      let highestBiddingPrice = 0;
-      let highestBidder = 'Anonymous';
-
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        if (data.biddingPrice > highestBiddingPrice) {
-          highestBiddingPrice = data.biddingPrice;
-          highestBidder = data.user;
+      const fetchUsername = async (userId) => {
+        try {
+          const userCollectionRef = collection(db, 'users');
+          const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
+    
+          if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            return userData.username;
+          } else {
+            console.error('User not found');
+            return null;
+          }
+        } catch (error) {
+          console.error('Error fetching username:', error);
+          return null;
         }
-      });
+      };
 
-      setHighestBidder(highestBidder);
+      const updateHighestBidder = (listingId, bidder) => {
+        setHighestBidders(prevState => ({
+          ...prevState,
+          [listingId]: bidder
+        }));
+      };
 
-      alert(`Bid placed successfully!\nCurrent highest bidder in ${selecteditem.listingName}: ${highestBidder}`);
+      const handleCommentChange = (listingId, value) => {
+        const intValue = parseInt(value);
+        if (!isNaN(intValue) || value === '') {
+          setComments(prevState => ({
+            ...prevState,
+            [listingId]: isNaN(intValue) ? '' : intValue.toString()
+          }));
+        }
+      };
 
-    } catch (error) {
-      alert('Input only number');
-      console.error('Error placing bid:', error);
-    }
-  };
 
-  const formatTime = (time) => {
-    const hours = Math.floor(time / 3600);
-    const minutes = Math.floor((time % 3600) / 60);
-    const seconds = time % 60;
-    return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  };
+      const handleBid = async (listingId, biddingPrice) => {
+        try {
+          const intValue = parseInt(biddingPrice);
+          if (isNaN(intValue)) {
+            throw new Error('Bidding price must be a valid number.');
+          }
+      
+          const biddingCollectionRef = collection(db, 'bidding');
+          const username = currentUser ? await fetchUsername(currentUser.uid) : 'Anonymous';
+          await addDoc(biddingCollectionRef, {
+            listingName: listings.find(listing => listing.id === listingId).listingName,
+            listingPrice: listings.find(listing => listing.id === listingId).listingPrice,
+            biddingPrice: intValue,
+            user: username
+          });
+      
+          // Get the highest bidding price for the current listing
+          const querySnapshot = await getDocs(query(biddingCollectionRef, where('listingName', '==', listings.find(listing => listing.id === listingId).listingName)));
+          let highestBiddingPrice = 0;
+          let highestBidder = '';
+      
+          querySnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.biddingPrice > highestBiddingPrice) {
+              highestBiddingPrice = data.biddingPrice;
+              highestBidder = data.user;
+            }
+          });
+      
+          // Update the minimum bid amount to be the highest bidding price plus 1
+          const minimumBid = highestBiddingPrice + 1;
+      
+          // Display alert if the entered bid amount is less than the minimum bid amount
+          if (intValue < minimumBid) {
+            const endTime = listings.find(listing => listing.id === listingId).endTime;
+            const remainingTime = endTime - new Date();
+            const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+            alert(`Minimum bid must be ${minimumBid}. Remaining time: ${daysRemaining} days`);
+            return; // Stop execution if the bid is below the minimum
+          } 
+          
+          else {
+            alert(`Bid placed successfully!`);
+          }
+        } catch (error) {
+          alert('Input only number');
+          console.error('Error placing bid:', error);
+        }
+      };
+  
+      
+    useEffect(() => {
+        const fetchListing = async () => {
+            try {
+                const listingsCollection = collection(db, 'listings');
+                const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
+                if (!querySnapshot.empty) {
+                    const listingData = querySnapshot.docs[0].data();
+                    setListing(listingData);
+                } else {
+                    Alert.alert('Listing not found', 'The specified listing does not exist.');
+                }
+            } catch (error) {
+                console.error('Error fetching listing data:', error);
+                Alert.alert('Error', 'Failed to fetch listing data.');
+            }
+        };
 
-  return (
-    <Box width="100%">
-      <Box backgroundColor={colors.primary}>
-        <HStack p="$2" w="100%" mt={45} alignItems="center">
-          <Pressable onPress={navigation.goBack}>
-            <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-          </Pressable>
-          <Heading lineHeight={20} fontSize={20} color={colors.white} ml={25}>
-            {selecteditem.listingName}
-          </Heading>
-        </HStack>
-      </Box>
-      <Box>
-        <VStack>
-          <Box bgColor={colors.black} height={250}>
-            {/* <Text>Remaining Time: {formatTime(remainingTime)}</Text> */}
-          </Box>
-        </VStack>
-      </Box>
-      <Box m={10} bgColor={colors.white}>
-        <VStack p={10}>
-          <Heading color={colors.primary}>{selecteditem.listingName}</Heading> 
-          <Heading color={colors.secondary}>PHP {selecteditem.listingPrice}</Heading> 
-          <Text>Current Highest Bidder: {highestBidder}</Text> 
-          <Text>Remaining Time: {formatTime(remainingTime)}</Text> 
-          <Text pt={20}>Place your bid:</Text>
-          <Input bg={colors.white} borderColor={colors.secondary} h={50} zIndex={0}>
-                  <InputField
-                    multiline={true}
-                    size="md"
-                    placeholder="Place your bid Only numbers!"
-                    onChangeText={text => setComment(text)}
-                  />
-                </Input>
-        </VStack>
-        <Button bgColor={colors.primary} p={5}  borderRadius={50} width="60%" onPress={handleBid}>
-          <ButtonText>Bid now</ButtonText>
-        </Button>
-      </Box>
-    </Box>
-  );
-};
+        const fetchBiddingData = async () => {
+            try {
+                const biddingCollection = collection(db, 'bidding');
+                const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
+                const data = querySnapshot.docs.map(doc => doc.data());
+                setBiddingData(data);
+            } catch (error) {
+                console.error('Error fetching bidding data:', error);
+                Alert.alert('Error', 'Failed to fetch bidding data.');
+            }
+        };
+
+        fetchListing();
+        fetchBiddingData();
+    }, [listingId]);
+
+
+
+    
+    return (
+        // Parent box
+        <Box w="100%" h="100%">
+            <Box bgColor={colors.primary} w="100%" h="12%">
+                <HStack p="$2" w="100%" mt={30} ml={10} alignItems="center" >
+                    <Pressable onPress={navigation.goBack}>
+                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} />
+                    </Pressable>
+                </HStack>  
+            </Box>
+
+            {/* Display the listingId */}
+            <Box w="100%" h="8%" mt={10}>
+                <Text>ID: {listingId}</Text>
+            </Box>
+            
+            {/* Display the listing name and price if available */}
+            <Box>
+                {listing && (
+                    <VStack>
+                        <Heading>{listing.listingName}</Heading>
+                        <Text>Listing Price: {listing.listingPrice}</Text>
+                    </VStack>
+                )}
+            </Box>
+            <HStack justifyContent="space-between" alignItems="center">
+                  <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
+                    <InputField
+                      multiline={true}
+                      size="md"
+                      placeholder="Place your bid Only numbers!"
+                      onChangeText={text => handleCommentChange(listing.id, text)}
+                    />
+                  </Input>
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    bg={colors.primary}
+                    borderRadius={8}
+                    ml={3}
+                    mt={5}
+                    onPress={() => handleBid(listing.id, comments[listing.id])}
+                  >
+                    <Text color={colors.black} fontSize="$sm">Bid</Text>
+                  </Button>
+                </HStack>
+                <Box>
+                <Text>All bidders and their corresponding bidding prices:</Text>
+                {biddingData.length > 0 ? (
+                    biddingData.map((bid, index) => (
+                        <Text key={index}>
+                            Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
+                        </Text>
+                    ))
+                ) : (
+                    <Text>No bids yet</Text>
+                )}
+            </Box>
+            {/* Image  */}
+            <Box bgColor='$black' w="100%" h="30%">
+                
+            </Box>
+        </Box>
+    );
+}
