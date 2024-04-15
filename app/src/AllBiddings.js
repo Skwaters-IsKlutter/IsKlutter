@@ -13,13 +13,21 @@ import {
     ButtonIcon, 
     ButtonText } from '@gluestack-ui/themed';
 
+    import { StyleSheet, View } from "react-native";
+
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Routes from '../components/constants/Routes.js';
-
+import {
+    Menu,
+    MenuProvider,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+   } from "react-native-popup-menu";
 import colors from '../config/colors.js';
 import SearchHeader from '../components/SearchHeader.js';
 
@@ -203,7 +211,22 @@ export default function AllBiddingsPage() {
 					</HStack>
 				</VStack>
 
-                <Box>
+                <MenuProvider style={styles.container}>
+              <Menu>
+                <MenuTrigger
+                  text="Click for Option menu"
+                  
+                />
+                <MenuOptions>
+                  <MenuOption onSelect={() => alert(`Save`)} text="Save" />
+                  <MenuOption onSelect={() => alert(`Delete`)} text="Delete" />
+                </MenuOptions>
+              </Menu>
+            </MenuProvider>
+ 
+
+
+                {/* <Box>
                     <ScrollView>
                         {listings.map(listing => (
                             <Box key={listing.id}>
@@ -250,8 +273,19 @@ export default function AllBiddingsPage() {
                             </Box>
                         ))}
                     </ScrollView>
-                </Box>
+                </Box> */}
             </Box>
         </Box>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#fff",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 10,
+      flexDirection: "column",
+    },
+   });

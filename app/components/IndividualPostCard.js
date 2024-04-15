@@ -113,12 +113,14 @@ export default function IndividualPostCard({ postKey, userId, description, times
                         style={{ width: 50, height: 50, borderRadius: 25 }}
                         alt="User Avatar"
                     />
-                    <Heading color={colors.primary} size={10} bold={true}>
-                        {username}
-                    </Heading>
-                    <Text color={colors.gray} size="xs" bold={true}>
-                    {timestamp}
-                    </Text>
+                    <VStack>
+                        <Heading color={colors.primary} size={10} bold={true}>
+                            {username}
+                        </Heading>
+                        <Text color={colors.gray} size="xs" bold={true}>
+                        {timestamp}
+                        </Text>
+                    </VStack>
                 </HStack>
                 <Text color="black" pb="$3" size="md" mt="$3">
                     {description}
