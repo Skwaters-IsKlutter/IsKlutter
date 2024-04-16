@@ -128,19 +128,10 @@ export default function AddListingPage() {
     };
 
     return (
-        <Box backgroundColor={colors.white} w="100%">
-            {/* <Box backgroundColor={colors.primary} alignItems="center">
-                <HStack p="$2" w={400} mt={25}>
-                    <Pressable onPress={navigation.goBack} ml={20} mt={10}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} />
-                    </Pressable>
-                    <Heading lineHeight={50} fontSize={25} color={colors.white} m={45}>
-                        Sell Your Product
-                    </Heading>
-                </HStack>
-            </Box> */}
+        <Box w="100%" h="100%">
+           {/* Header */}
             <Box backgroundColor={colors.primary}>
-                <HStack p="$2" w="100%" mt={50} alignItems="center">
+                <HStack p="$2" w="100%" mt={20} alignItems="center">
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
@@ -148,23 +139,23 @@ export default function AddListingPage() {
                 </HStack>
             </Box>
 
-            <ScrollView>
-                <Box w="100%" h="100%">
-                    <Box w="100%" maxWidth="$96">
-                        <Box>
-                            <VStack space="xs">
-                                <AddListingBox
+      
+            <Box w="100%" maxWidth="$96" flex={1}>
+                 <ScrollView>
+                    <Box>
+                        <VStack space="xs">
+                            <AddListingBox
                                     listingImage={require('../../assets/img/item.jpg')}
                                     listingName={listingData.listingName}
                                     listingPrice={listingData.listingPrice}
                                     listingDescription={listingData.listingDescription}
                                     listingTags={listingData.listingTags}
                                     setListingData={setListingData}
-                                />
-                            </VStack>
-                        </Box>
+                            />
+                        </VStack>
+                    </Box>
 
-                        <HStack p="$2" justifyContent="center" mb={10}>
+                    <HStack p="$2" justifyContent="center" mb={10}>
                             <Button
                                 variant="solid"
                                 size="md"
@@ -189,10 +180,9 @@ export default function AddListingPage() {
                                     Cancel
                                 </ButtonText>
                             </Button>
-                        </HStack>
-                    </Box>
-                </Box>
-            </ScrollView>
+                    </HStack>
+                </ScrollView>
+            </Box>
         </Box>
     );
 }
