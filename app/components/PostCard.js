@@ -54,13 +54,15 @@ export default function PostCard({ userId, description, toIndividualPost, timest
               style={{ width: 50, height: 50, borderRadius: 25 }}
               alt="User Avatar"
             />
-            <Text color={colors.secondary} size="md" bold={true}>
-              {username}
-            </Text>
+            <VStack>
+              <Text color={colors.secondary} size="md" bold={true}>
+                {username}
+              </Text>
 
-            <Text color={colors.gray} size="xs" bold={true}>
-              {timestamp}
-            </Text>
+              <Text color={colors.gray} size="xs" bold={true}>
+                {timestamp}
+              </Text>
+            </VStack>
           </HStack>
 
           <Text color="black" pb="$3" size="sm" ml="$3" mt={2}>

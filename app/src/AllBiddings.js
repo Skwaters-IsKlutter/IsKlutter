@@ -10,6 +10,7 @@ import { HStack, VStack, Heading, Text, Box, ScrollView,Input,InputField,InputSl
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeader from '../components/SearchHeader.js';
 import Routes from '../components/constants/Routes.js';
+
 import colors from '../config/colors.js';
 import UserAvatar from '../components/Avatar.js';
 
@@ -231,10 +232,60 @@ export default function AllBiddingsPage() {
      
         <ScrollView>
           {renderAllBiddings()}
-
         </ScrollView>
       </VStack>
     </Box>
     </Box>
   );
 }
+
+
+                {/* <Box>
+                    <ScrollView>
+                        {listings.map(listing => (
+                            <Box key={listing.id}>
+                                <Text>
+                                    Listing Name: {listing.listingName}, Listing Price: {listing.listingPrice}
+                                </Text>
+                                <Text>All bidders and their corresponding bidding prices:</Text>
+                                {biddingData[listing.listingName] ? (
+                                    biddingData[listing.listingName].map((bid, index) => (
+                                        <Text key={index}>
+                                            Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
+                                        </Text>
+                                    ))
+                                ) : (
+                                    <Text>No bids yet</Text>
+                                )}
+                                <HStack justifyContent="space-between" alignItems="center">
+                                    <Input bg={colors.white} borderColor={colors.secondary} h={50} w="60%" zIndex={0}>
+                                        <InputField
+                                            multiline={true}
+                                            size="md"
+                                            placeholder="Place your bid Only numbers!"
+                                            onChangeText={text => handleCommentChange(listing.id, text)}
+                                        />
+                                    </Input>
+                                    <Button
+                                        variant="solid"
+                                        size="sm"
+                                        bg={colors.primary}
+                                        borderRadius={8}
+                                        ml={3}
+                                        mt={5}
+                                        onPress={() => handleBid(listing.id, comments[listing.id])}
+                                    >
+                                        <Text color={colors.black} fontSize="$sm">Bid</Text>
+                                    </Button>
+                                </HStack>
+                                <Text>
+                                    Remaining time: {listing.daysRemaining} days
+                                </Text>
+                                <Text>
+                                    Current highest bidder: {listing.listingName}: {highestBidders[listing.id]}
+                                </Text>
+                            </Box>
+                        ))}
+                    </ScrollView>
+                </Box> */}
+
