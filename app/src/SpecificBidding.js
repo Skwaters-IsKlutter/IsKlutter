@@ -35,10 +35,17 @@ export default function SpecificBiddingPage() {
     const navigation = useNavigation();
     const route = useRoute();
     const { listingId } = route.params;
-    const [listing, setListing] = useState(null); // State to hold the fetched listing
-    const [biddingData, setBiddingData] = useState([]); // State to hold the fetched bidding data
+    const [listing, setListing] = useState({}); 
+    const [biddingData, setBiddingData] = useState([]); 
     const [currentUser, setCurrentUser] = useState(null);
     const [comments, setComments] = useState({});
+    const [biddingprice, setBiddingPrice] = useState({})
+    const [biddingAmount, setBiddingAmount] = useState({})
+    const [highestBidder, setHighestBidder] = useState({});
+    const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
+    const [highestBidderName, sethighestBidderName] = useState('');
+
+
 
 
     useEffect(() => {
@@ -67,74 +74,97 @@ export default function SpecificBiddingPage() {
         }
       };
 
-      const updateHighestBidder = (listingId, bidder) => {
-        setHighestBidders(prevState => ({
-          ...prevState,
-          [listingId]: bidder
-        }));
-      };
+      const updateHighestBidder = (bidder, price) => {
+        setHighestBidder({ bidder, price });
+    };
 
-      const handleCommentChange = (listingId, value) => {
-        const intValue = parseInt(value);
-        if (!isNaN(intValue) || value === '') {
-          setComments(prevState => ({
-            ...prevState,
-            [listingId]: isNaN(intValue) ? '' : intValue.toString()
-          }));
-        }
-      };
+      
 
 
-      const handleBid = async (listingId, biddingPrice) => {
+    const handleBid = async (listingId, biddingAmount) => {
         try {
-          const intValue = parseInt(biddingPrice);
-          if (isNaN(intValue)) {
-            throw new Error('Bidding price must be a valid number.');
-          }
-      
-          const biddingCollectionRef = collection(db, 'bidding');
-          const username = currentUser ? await fetchUsername(currentUser.uid) : 'Anonymous';
-          await addDoc(biddingCollectionRef, {
-            listingName: listings.find(listing => listing.id === listingId).listingName,
-            listingPrice: listings.find(listing => listing.id === listingId).listingPrice,
-            biddingPrice: intValue,
-            user: username
-          });
-      
-          // Get the highest bidding price for the current listing
-          const querySnapshot = await getDocs(query(biddingCollectionRef, where('listingName', '==', listings.find(listing => listing.id === listingId).listingName)));
-          let highestBiddingPrice = 0;
-          let highestBidder = '';
-      
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            if (data.biddingPrice > highestBiddingPrice) {
-              highestBiddingPrice = data.biddingPrice;
-              highestBidder = data.user;
+            const biddingBet = parseFloat(biddingAmount);
+            if (isNaN(biddingBet)) {
+                Alert.alert('Invalid Bid', 'Please enter a valid number for bidding.');
+                return; 
             }
-          });
-      
-          // Update the minimum bid amount to be the highest bidding price plus 1
-          const minimumBid = highestBiddingPrice + 1;
-      
-          // Display alert if the entered bid amount is less than the minimum bid amount
-          if (intValue < minimumBid) {
-            const endTime = listings.find(listing => listing.id === listingId).endTime;
-            const remainingTime = endTime - new Date();
-            const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
-            alert(`Minimum bid must be ${minimumBid}. Remaining time: ${daysRemaining} days`);
-            return; // Stop execution if the bid is below the minimum
-          } 
-          
-          else {
-            alert(`Bid placed successfully!`);
-          }
+    
+            if (biddingBet < listing.listingPrice) {
+                Alert.alert('Invalid Bid', 'Your bid must be higher than the listing price.');
+                return; 
+            }
+    
+            if (biddingBet < highestBiddingPrice + 1) {
+                Alert.alert('Invalid Bid', 'Your bid must be higher than the current highest bid.');
+                return; 
+            }
+    
+            const biddingCollection = collection(db, 'bidding');
+            const username = currentUser ? await fetchUsername(currentUser.uid) : 'Anonymous';
+            const { listingName, listingPrice } = listing;
+    
+            await addDoc(biddingCollection, {
+                listingId: listingId,
+                biddingPrice: biddingBet,
+                user: username,
+                listingName: listingName,
+                listingPrice: listingPrice
+            });
+    
+            updateHighestBidder(username, biddingBet);
+    
+            const querySnapshot = await getDocs(query(biddingCollection, where('listingName', '==', listingName)));
+            let newHighestBiddingPrice = 0;
+            let highestBidderName = '';
+    
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.biddingPrice > newHighestBiddingPrice) {
+                    newHighestBiddingPrice = data.biddingPrice;
+                    highestBidderName = data.user;
+                }
+            });
+    
+            setHighestBiddingPrice(newHighestBiddingPrice);
+            sethighestBidderName(highestBidderName);
+    
+            Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
+    
         } catch (error) {
-          alert('Input only number');
-          console.error('Error placing bid:', error);
+            console.error('Error placing bid:', error);
+            Alert.alert('Error', 'Failed to place bid. Please try again later.');
         }
-      };
-  
+    };
+    
+
+    
+    useEffect(() => {
+        const fetchBiddingData = async () => {
+            try {
+                const biddingCollection = collection(db, 'bidding');
+                const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
+                let maxBiddingPrice = 0;
+                let userWithMaxBiddingPrice = null;
+    
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.biddingPrice > maxBiddingPrice) {
+                        maxBiddingPrice = data.biddingPrice;
+                        userWithMaxBiddingPrice = data.user;
+                    }
+                });
+    
+                setHighestBiddingPrice(maxBiddingPrice);
+                sethighestBidderName(userWithMaxBiddingPrice);
+            } catch (error) {
+                console.error('Error fetching bidding data:', error);
+            }
+        };
+    
+        fetchBiddingData();
+    }, []);
+        
+    
       
     useEffect(() => {
         const fetchListing = async () => {
@@ -143,7 +173,8 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    setListing(listingData);
+                    const { listingName, listingPrice } = listingData; 
+                    setListing({ listingName, listingPrice }); 
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
@@ -152,6 +183,7 @@ export default function SpecificBiddingPage() {
                 Alert.alert('Error', 'Failed to fetch listing data.');
             }
         };
+        
 
         const fetchBiddingData = async () => {
             try {
@@ -218,26 +250,36 @@ export default function SpecificBiddingPage() {
                     )}
                   </Box>
 
+                  <Box mt={10}>
+                    
+                  <Text>Highest Bidding Price: {highestBiddingPrice}</Text>
+                  <Text>Highest Bidder: {highestBidderName}</Text>
+    
+                </Box>
                   <HStack justifyContent="space-between" alignItems="center" mt={10}>
                     <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0}>
-                      <InputField
-                        multiline={true}
-                        size="md"
-                        placeholder="Place your bid Only numbers!"
-                        onChangeText={text => handleCommentChange(listing.id, text)}
-                      />
-                    </Input>
-                    <Button
-                      variant="solid"
-                      size="md"
-                      bg={colors.primary}
-                      borderRadius={5}
-                      ml={3}
-                      mt={5}
-                      onPress={() => handleBid(listing.id, comments[listing.id])}
-                    >
-                      <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
-                    </Button>
+                          <InputField
+                                    multiline={true}
+                                    size="md"
+                                    value={biddingAmount} 
+                                    placeholder="Place your bet amount."
+                                    onChangeText={(text) => setBiddingAmount(text)} 
+                                                 
+                                />
+                            </Input>
+                            <Button
+                                variant="solid"
+                                size="md"
+                                bg={colors.primary}
+                                borderRadius={5}
+                                ml={3}
+                                mt={5}
+                                onPress={() => handleBid(listingId, biddingAmount)} 
+                            >
+                                <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
+                            </Button>
+
+
                   </HStack>
             </Box>
             
