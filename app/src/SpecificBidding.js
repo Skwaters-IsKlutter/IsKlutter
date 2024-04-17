@@ -20,6 +20,7 @@ import ReplyBox from '../components/ReplyBox.js';
 import colors from '../config/colors.js';
 import UserAvatar from '../components/Avatar.js';
 import AllBidderListCard from '../components/AllBidderListCard.js';
+import SpecificBidCard from '../components/SpecificBidCard.js';
 
 // Firebase components
 // Firebase Components
@@ -202,6 +203,17 @@ export default function SpecificBiddingPage() {
         fetchBiddingData();
     }, [listingId]);
 
+
+    const renderSpecificBidding = () => {
+        return listing && (
+            <SpecificBidCard
+                listingName={listing.listingName}
+                listingPrice={listing.listingPrice}
+                highestBidderName={highestBidderName}
+                highestBiddingPrice={highestBiddingPrice}
+            />
+        )};
+
     const renderAllBidderList = () => {
         return biddingData.length > 0 ? (
             biddingData.map((bid, index) => (
@@ -221,8 +233,9 @@ export default function SpecificBiddingPage() {
     return (
         // Parent box
         <Box w="100%" h="100%">
+            {/* Header */}
             <Box bgColor={colors.primary} w="100%" h="10%">
-                <HStack p="$2" w="100%" mt={25} ml={10} alignItems="center" >
+                <HStack p="$2" w="100%" mt={25} ml={10} alignItems="center">
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} />
                     </Pressable>
@@ -230,90 +243,44 @@ export default function SpecificBiddingPage() {
                 </HStack>  
             </Box>
 
-            {/* Display the listingId */}
-            {/* <Box w="100%" h="8%" mt={10}>
-                <Text>ID: {listingId}</Text>
-            </Box> */}
-
-            {/* Image  */}
-            <Box bgColor='$black' w="100%" h="30%">
-                
-            </Box>
-
             {/* Specific Bid Card */}
-           
-                    <Box m={15} bg={colors.white} p={15} borderRadius={10}>
-                        
-                            {/* Display the listing name and price if available */}
-                            <Box>
-                                {listing && (
-                                    <VStack>
-                                        <Heading color={colors.primary}>{listing.listingName}</Heading>
-                                        <Text fontSize="$md" color={colors.black} bold='true'>Bidding Price: {listing.listingPrice}</Text>
-                                    </VStack>
-                                )}
-                            </Box>
+                <Box>
+                    {renderSpecificBidding()} 
+                    <Text fontSize="$xl" color={colors.secondary} bold='true' ml={15}>Bids</Text>
+                        <Box h="20%" m={10}  mt={5} >
+                            <ScrollView>
+                                {renderAllBidderList()}
+                            </ScrollView>
+                        </Box> 
+                </Box>
 
-                            <Box mt={10}>
-                            
-                            <Text>Highest Bidder: {highestBidderName}</Text>
-                            <Text>Highest Bidding Price: {highestBiddingPrice}</Text>
-                            
-                            </Box>
-                    </Box>
 
-                {/* All Bidders */}
-                        <Text fontSize="$xl" color={colors.secondary} bold='true' ml={15}>Bids</Text>
-                        <Box h="20%" m={15}  mt={5} mb={5}>
-                        <ScrollView>
-                            {/* <AllBidderListCard></AllBidderListCard> */}
-                            {renderAllBidderList()}
-                            {/* <Box>
-                                
-                                {biddingData.length > 0 ? (
-                                    biddingData.map((bid, index) => (
-                                        <Text key={index}>
-                                            Bidder: {bid.user}, Bidding Price: {bid.biddingPrice}
-                                        </Text>
-                                        
-                                    ))
-                                ) : (
-                                    <Text>No bids yet</Text>
-                                )}  
-                            </Box> */}
-                        </ScrollView>
-                        </Box>
-
-                    
-                {/* Bet Input*/}
-                    <Box m={10}  p={15} borderRadius={10} mt={0}>
-                            <HStack justifyContent="space-between" alignItems="center" >
-                                <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0}>
-                                    <InputField
-                                                multiline={true}
-                                                size="md"
-                                                value={biddingAmount} 
-                                                placeholder="Place your bet amount."
-                                                onChangeText={(text) => setBiddingAmount(text)} 
+            {/* Bet Input*/}
+                <Box m={10}  p={15} borderRadius={10} top={-40}>
+                    <HStack justifyContent="space-between" alignItems="center" >
+                         <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0}>
+                            <InputField
+                                multiline={true}
+                                size="md"
+                                value={biddingAmount} 
+                                placeholder="Place your bet amount."
+                                onChangeText={(text) => setBiddingAmount(text)} 
                                                             
-                                            />
-                                        </Input>
-                                        <Button
-                                            variant="solid"
-                                            size="md"
-                                            bg={colors.primary}
-                                            borderRadius={5}
-                                            ml={3}
-                                            mt={5}
-                                            onPress={() => handleBid(listingId, biddingAmount)} 
-                                        >
-                                            <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
-                                        </Button>
-                            </HStack>
-                    </Box>
-                
-            </Box>
-          
-            
+                            />
+                        </Input>
+                            <Button
+                                variant="solid"
+                                size="md"
+                                bg={colors.primary}
+                                borderRadius={5}
+                                ml={3}
+                                mt={5}
+                                onPress={() => handleBid(listingId, biddingAmount)} 
+                            >
+                            <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
+                            </Button>
+                    </HStack>
+                </Box>
+            </Box>     
     );
 }
