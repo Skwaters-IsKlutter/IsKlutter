@@ -27,7 +27,7 @@ export default function BidItemCard({ listingPrice, listingName,remainingTime, t
           <VStack p="$3" flex={1}>
             <Heading fontSize="$xl" color={colors.primary}>{listingName}</Heading>
             <Heading fontSize="$md" color={colors.secondary} p={0}>PHP {listingPrice}</Heading>
-            <Heading fontSize="$sm" color={colors.black}>Remaining Time: {remainingTime} days</Heading>
+            <Heading fontSize="$sm" color={colors.black}>Ends in: {remainingTime} days</Heading>
             <Button bgColor={colors.primary} p={5}  borderRadius={50} mt={10} width="70%" onPress={toBidding}>
               <ButtonText>Bid Now</ButtonText>
             </Button>
