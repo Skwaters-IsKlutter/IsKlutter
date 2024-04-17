@@ -10,5 +10,5 @@ export default Object.freeze({
     PRIVATEMESSAGE: "PrivateMessage",
     VIEWPROFILE: "ViewProfile",
     INDIVIDUALPOST: "IndividualPost",
-    SPECIFICBIDDING: "SpecificBidding"
-});
+    SPECIFICBIDDING: "SpecificBidding",
+ });
