@@ -44,7 +44,7 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Input w="70%" bg={colors.white}  size="sm" borderRadius={20} left={-5} h={40}>
+                    <Input w="70%" bg={colors.white}  size="sm" borderRadius={20} left={3} h={40} >
                         <InputField placeholder="Search" />
                         <InputSlot>
                             <InputIcon>
@@ -60,6 +60,10 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                     {/* <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={10}>
                         <MaterialCommunityIcons name="message" color={colors.medium} size={25}  />
                     </Pressable> */}
+
+                <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={5} mt={5} pr={5}>
+                    <MaterialCommunityIcons name="message" color={colors.white} size={25} />
+                </Pressable>
 
                     <Pressable onPress={() => navigation.navigate(Routes.PROFILE)}>
                         <UserAvatar username={username} userIcon={userIcon} userProfileImg={userProfileImg} size={25}/>

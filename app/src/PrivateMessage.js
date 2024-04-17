@@ -141,11 +141,6 @@ export default function PrivateMessagePage() {
       }, [auth, recipient, username]);
       
 
-    
-  
-
-  
-
     const privMessagesData = [
         { 
             senderIcon: require("../../assets/img/sassa.jpg"),
@@ -191,24 +186,56 @@ export default function PrivateMessagePage() {
       const loggedInUser = username; // Get the logged-in user
     
       return (
-        <View>
+        <View style={{ flexWrap: 'wrap', width: "100%"}}>
           {messages.map((messageData, index) => (
-              <View key={index} style={{alignContent: 'center', alignSelf: messageData.currentUserSent ? 'flex-end' : 'flex-start', // Align sender's message to the right, receiver's to the left
-            }}>
-              {messageData.message && (
-                <View style={{ 
-                  backgroundColor: messageData.currentUserSent ? 'green' : 'white', // Set background color based on currentUserSent'
-                  padding: 10, 
-                  marginVertical: 5,
-                  }}>
-                  <Text color={messageData.currentUserSent ? 'white' : 'black'}>{messageData.message}</Text>
-                </View>
+            <View
+              key={index}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: messageData.currentUserSent ? 'flex-end' : 'flex-start',
+                width: "100%",
+                marginBottom: 10,
+                // Align sender's message to the right, receiver's to the left
+              }}>
+              {/* Place holder for recipient icon */}
+              <HStack>
+              {!messageData.currentUserSent && (
+                  <View
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 50,
+                      backgroundColor: 'black',
+                      marginRight: 10, // Add margin right for spacing between icon and message
+                      marginTop: 10
+                    }}
+                  />
+              
               )}
+              {messageData.message && (
+                <View
+                  style={{
+                    backgroundColor: messageData.currentUserSent ? '#285656' : 'white', 
+                    padding: 10,
+                    marginVertical: 5,
+                    borderRadius: 20,
+                  }}>
+                  <Text color={messageData.currentUserSent ? 'white' : 'black'}>
+                    {messageData.message}
+                    
+                  </Text>
+                </View>
+                
+              )}
+              </HStack>
             </View>
+            
           ))}
         </View>
       );
     };
+    
     
     
     
@@ -220,9 +247,9 @@ export default function PrivateMessagePage() {
             <SenderBox recipientName={recipient} back={navigation.goBack} />
 
             {/* Container */}
-            <Box h="75%">
+            <Box h="75%" width="100%">
               <ScrollView>
-                <HStack space={0} flexWrap="wrap" m={10}>
+                <HStack space={0} flexWrap="wrap" m={10} >
                   {renderSpecificMessage()}
                     {/* Render message components or sender boxes */}
                 </HStack>
@@ -245,7 +272,7 @@ export default function PrivateMessagePage() {
                     variant="solid"
                     size="sm"
                     bg={colors.secondary}
-                    borderRadius={8}
+                    borderRadius={10}
                     onPress={sendMessage}
                     m={10}
                 >
