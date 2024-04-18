@@ -77,31 +77,43 @@ export default function ViewProfile() {
   return (
     <Box w="100%" h="100%">
       <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
-      <Box p="$2" w="100%">
-        {sellerProfile && (
-          <ViewProfileCard
-            userProfileImg={sellerProfile.userProfileImg}
-            username={sellerProfile.username}
-            profileName={sellerProfile.userProfile || sellerProfile.username}
-            bio={sellerProfile.userBio || "I have no interesting info."}
-            userID={sellerProfile.userID}
-          />
-        )}
-      </Box>
-        
-      <Heading lineHeight={40}  pl={20} fontSize={20} color={colors.white} bgColor={colors.secondary} mt={6}>
-          {`${sellerProfile?.username}'s Listings`}
-       </Heading>
+      <ScrollView>
+        <Box p="$2" w="100%">
+          {sellerProfile && (
+            <ViewProfileCard
+              userProfileImg={sellerProfile.userProfileImg}
+              username={sellerProfile.username}
+              profileName={sellerProfile.userProfile || sellerProfile.username}
+              bio={sellerProfile.userBio || "I have no interesting info."}
+              userID={sellerProfile.userID}
+            />
+          )}
+        </Box>
 
-      <Box  p="$5" w="100%" maxWidth="$96" >
-              <ScrollView>
-              <HStack space="xs" flexWrap="wrap" justifyContent="center" >
-                  {renderUserListings()}
-                </HStack>
-              </ScrollView>
-            </Box>
+        {/* User Listings */}
+          
+        <Heading lineHeight={40}  pl={20} fontSize={20} color={colors.secondary} mt={6}>
+            {`${sellerProfile?.username}'s Listings`}
+        </Heading>
         
-      
+          <Box  p="$5" w="100%" maxWidth="$96" >
+              <HStack space="xs" flexWrap="wrap" justifyContent="center" >
+                    {renderUserListings()}
+              </HStack>   
+          </Box>
+          
+        {/* User Biddings */}
+        <Heading lineHeight={40}  pl={20} fontSize={20} color={colors.secondary} mt={6}>
+            {`${sellerProfile?.username}'s Biddings`}
+        </Heading>
+
+        <Box  p="$5" w="100%" maxWidth="$96" >
+            <HStack space="xs" flexWrap="wrap" justifyContent="center" >
+                  {/* {renderUserBiddings()} */}
+            </HStack>
+              
+        </Box>
+      </ScrollView>
     </Box>
   );
 }

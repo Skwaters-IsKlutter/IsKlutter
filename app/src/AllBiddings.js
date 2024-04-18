@@ -161,10 +161,10 @@ export default function AllBiddingsPage() {
                   size="$sm"
                   bg={colors.primary}
                   borderRadius={8}
-                  top={-20}
+                  // top={-20}
                   onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
               >
-                  <Text color={colors.black} fontSize="$sm">Bid Now!</Text>
+                  <Text color={colors.white} fontSize="$md" bold="true">Bid Now!</Text>
               </Button>
           </HStack>
       )}
@@ -191,11 +191,11 @@ export default function AllBiddingsPage() {
                     Biddings
                   </Heading>
 
-                <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
+                <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
                   <ButtonIcon>
                     <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
                   </ButtonIcon>
-                  <ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+                  <ButtonText pl={10} lineHeight={35}>Add item</ButtonText>
                 </Button>
                 </HStack>
               </VStack>

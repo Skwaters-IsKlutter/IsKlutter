@@ -11,4 +11,5 @@ export default Object.freeze({
     VIEWPROFILE: "ViewProfile",
     INDIVIDUALPOST: "IndividualPost",
     SPECIFICBIDDING: "SpecificBidding",
+    ADDBIDDING: "AddBidding",
  });
