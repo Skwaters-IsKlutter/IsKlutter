@@ -148,9 +148,9 @@ export default function BidItemCard({ listingPrice, listingName,remainingTime, t
             <Heading fontSize="$xl" color={colors.primary}>{listingName}</Heading>
             <Heading fontSize="$md" color={colors.secondary} p={0}>PHP {listingPrice}</Heading>
             <Heading fontSize="$sm" color={colors.black}>{remainingTime}</Heading>
+            {buttonCondition} 
             <Text fontSize="$sm" color={colors.black}>{highestBidder}</Text>
             <Text fontSize="$sm" color={colors.black}>{highestBid}</Text>
-           {buttonCondition} 
           </VStack>
         </HStack>
       </VStack>

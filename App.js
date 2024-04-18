@@ -18,6 +18,7 @@ import IndividualPostScreen from './app/components/screens/IndividualPostScreen.
 import ViewProfileScreen from './app/components/screens/ViewProfileScreen.js';
 import AllBiddingsScreen from './app/components/screens/AllBiddingsScreen.js';
 import SpecificBiddingScreen from './app/components/screens/SpecificBiddingPageScreen.js';
+import AddBiddingScreen from './app/components/screens/AddBiddingScreen.js';
 
 import colors from './app/config/colors.js';
 import { UserProvider } from './app/components/UserIcon.js';
@@ -74,6 +75,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="IndividualPost" component={IndividualPostScreen} />
 				<Stack.Screen options={{headerShown:false}} name="ViewProfile" component={ViewProfileScreen} />
 				<Stack.Screen options={{headerShown:false}} name="SpecificBidding" component={SpecificBiddingScreen} /> 
+				<Stack.Screen options={{headerShown:false}} name="AddBidding" component={AddBiddingScreen} /> 
 			</Stack.Navigator>
 		</NavigationContainer>
 		</UserProvider>

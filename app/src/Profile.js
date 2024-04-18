@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 
 // Gluestack UI
-import {Box, ScrollView, Heading, HStack } from '@gluestack-ui/themed';
+import {Box, ScrollView, Heading, HStack, VStack } from '@gluestack-ui/themed';
 
 // Local Components
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
@@ -118,6 +118,7 @@ export default function ProfilePage() {
                           h="100%" 
                         
                     >
+                    <VStack>
                         <HStack 
                                  p={5}
                                   alignItems="center"
@@ -138,11 +139,33 @@ export default function ProfilePage() {
                           </HStack>
 
                         {/* Listing Box Container */}
-                          <ScrollView>
+                        
                             <HStack space="xs" flexWrap="wrap">
                               {renderUserListings()}
                             </HStack>
-                          </ScrollView>
+                          
+                        
+                          <HStack 
+                                 p={5}
+                                  alignItems="center"
+                                  borderRadius={30} >
+                            <MaterialCommunityIcons 
+                                      name="cash-multiple" 
+                                      color={colors.secondary} 
+                                      size={20}
+                            />
+                            {/* Display user biddings */}
+                            <Heading lineHeight={40}
+                                    fontSize={20} 
+                                    color={colors.secondary} 
+                                    pl={10}>
+                                    My Biddings
+                                    
+                              </Heading>
+                          </HStack>
+
+                          {/* Biddings Container */}
+                        </VStack>
                      
                         
                     </Box>
