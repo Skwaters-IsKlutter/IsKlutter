@@ -131,32 +131,32 @@ export default function AllMessagesPage( { user } ) {
         fetchSenderandMessage();
       }, [auth]);
     
-      // const renderUsernames = () => {
-      //   return usernames.map((username, index) => (
-      //         <TouchableOpacity key={index} onPress={() => handleUsernameClick(username)}>
-      //           <ScrollView>
-      //           <VStack width={380} backgroundColor={colors.white}  m={5}>
-      //               <View style={{ 
-      //                 // width: 50, 
-      //                 // height: 50, 
-      //                 // borderRadius: 25, 
-      //                 // backgroundColor: 'lightblue', 
-      //                 justifyContent: 'center',
-      //                 fontSize: 10,
-      //                 margin: 5,
-      //                 padding:10
-      //               }}>
-      //                 <HStack>
-      //                   <UserAvatar></UserAvatar>
-      //                   <Text p={10}>{username}</Text>
-      //                 </HStack>
-      //               </View>
-      //             </VStack>
-      //           </ScrollView>
-      //         </TouchableOpacity>
+      const renderUsernames = () => {
+        return usernames.map((username, index) => (
+              <TouchableOpacity key={index} onPress={() => handleUsernameClick(username)}>
+                <ScrollView>
+                <VStack width={380} backgroundColor={colors.white}  m={5}>
+                    <View style={{ 
+                      // width: 50, 
+                      // height: 50, 
+                      // borderRadius: 25, 
+                      // backgroundColor: 'lightblue', 
+                      justifyContent: 'center',
+                      fontSize: 10,
+                      margin: 5,
+                      padding:10
+                    }}>
+                      <HStack>
+                        <UserAvatar></UserAvatar>
+                        <Text p={10}>{username}</Text>
+                      </HStack>
+                    </View>
+                  </VStack>
+                </ScrollView>
+              </TouchableOpacity>
              
-      //   ));
-      // };
+        ));
+      };
       
       const renderSender = () => {
         return sender.map((senderName, index) => (
@@ -203,6 +203,8 @@ export default function AllMessagesPage( { user } ) {
         navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: selectedUsername });
       };
 
+   
+
     return(
         // Parent box
         <Box w="100%" h="100%">
@@ -217,13 +219,15 @@ export default function AllMessagesPage( { user } ) {
             </VStack>
 
             {/* Container */}
-            <Box p="$4" maxWidth="100%" flex={0} bgColor="#cfcfcf">
-                <ScrollView>
-                    <HStack space="4xl" flexWrap="wrap">
-                                {/* {renderUsernames()} */}
+            <Box p="$2" maxWidth="100%" flex={0} >
+
+
+              <ScrollView>
+                    <HStack space="xs" flexWrap="wrap">
+                                {renderUsernames()} 
                                 {renderSpecificMessage()}
                     </HStack>
-                </ScrollView> 
+                </ScrollView>  
           </Box>
         </Box>
     )
