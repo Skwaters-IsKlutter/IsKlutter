@@ -68,31 +68,36 @@ export default function PrivateMessagePage() {
       
 
   
-    const sendMessage = async () => {
+      const sendMessage = async () => {
         try {
-          if (recipient && messageContent) {
-            const timestamp = serverTimestamp(); // Get the server timestamp
-          
-            const messageData = {
-              sender: username,
-              recipient: recipient,
-              message: messageContent,
-              timestamp: timestamp, // Include the timestamp in the message data
-            };
+            if (recipient && messageContent) {
+                const timestamp = serverTimestamp(); 
+            
+                const messageData = {
+                    sender: username,
+                    recipient: recipient,
+                    message: messageContent,
+                    timestamp: timestamp, 
+                };
     
-            // Add data to Firestore collection 'Messages' with the timestamp
-            const docRef = await addDoc(collection(db, 'Messages'), messageData);
+                const docRef = await addDoc(collection(db, 'Messages'), messageData);
+                
+                setMessages(prevMessages => [...prevMessages, {
+                    sender: username,
+                    message: messageContent,
+                    currentUserSent: true 
+                }]);
     
-            setMessageContent('');
-            alert('Message sent');
-            console.log('Document written with ID: ', docRef.id);
-          } else {
-            console.error('Recipient or message content missing');
-          }
+                setMessageContent('');
+                // alert('Message sent');
+                console.log('Document written with ID: ', docRef.id);
+            } else {
+                console.error('Recipient or message content missing');
+            }
         } catch (error) {
-          console.error('Error adding document: ', error);
+            console.error('Error adding document: ', error);
         }
-      };
+    };
 
       useEffect(() => {
         const fetchMessages = async () => {
@@ -137,9 +142,8 @@ export default function PrivateMessagePage() {
           }
         };
       
-        fetchMessages();
-      }, [auth, recipient, username]);
-      
+         fetchMessages();
+}, [auth, recipient, username, messages]);
 
     const privMessagesData = [
         { 
