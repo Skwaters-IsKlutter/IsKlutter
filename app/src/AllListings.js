@@ -18,16 +18,20 @@ export default function AllListingsPage() {
 	const [searchInput, setSearchInput] = useState('');
 
 	const fetchListings = useCallback(() => {
-		const unsubscribeListings = onSnapshot(collection(database, 'listings'), (querySnapshot) => {
-			const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-
-			Promise.all(listingsData.map(updateSellerInfo))
-				.then(updatedListings => setAllListingsData(updatedListings))
-				.catch(error => console.error('Error updating seller info:', error));
-		});
-
+		const unsubscribeListings = onSnapshot(
+			query(collection(database, 'listings'), where('bidding', '==', false)), 
+			(querySnapshot) => {
+				const listingsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+	
+				Promise.all(listingsData.map(updateSellerInfo))
+					.then(updatedListings => setAllListingsData(updatedListings))
+					.catch(error => console.error('Error updating seller info:', error));
+			}
+		);
+	
 		return () => unsubscribeListings();
 	}, []);
+	
 
 	useFocusEffect(fetchListings);
 
