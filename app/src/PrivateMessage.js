@@ -225,10 +225,11 @@ export default function PrivateMessagePage() {
                     backgroundColor: messageData.currentUserSent ? '#285656' : 'white', 
                     padding: 10,
                     marginVertical: 5,
+                    flexShrink: 1,
                     borderRadius: 20,
                   }}>
                   <Text color={messageData.currentUserSent ? 'white' : 'black'}>
-                    {messageData.message}
+                    {messageData.message.trim()}
                     
                   </Text>
                 </View>
@@ -262,10 +263,11 @@ export default function PrivateMessagePage() {
               </ScrollView>
             </Box>
 
-            <HStack m={20}>
+            <HStack m={20} alignContent='center'>
 
-              <Input bg={colors.white} borderColor={colors.secondary} h={50} w="75%" zIndex={0}>
+              <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0} borderRadius={15}>
                       <InputField
+        
                           multiline={true}
                           size="md"
                           placeholder="Chat here..."
@@ -277,8 +279,8 @@ export default function PrivateMessagePage() {
                   <Button
                     variant="solid"
                     size="sm"
-                    bg={colors.secondary}
-                    borderRadius={10}
+                    bg={colors.primary}
+                    borderRadius={50}
                     onPress={sendMessage}
                     m={10}
                 >
