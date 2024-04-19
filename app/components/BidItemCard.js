@@ -140,8 +140,8 @@ export default function BidItemCard({ listingPrice, listingName,remainingTime, t
 }, [listings]);
 
   return (
-    <Box p="$2">
-      <VStack bg={colors.white} borderRadius={10} width="100%" maxHeight={350}>
+    <Box p="$2" >
+      <VStack bg={colors.white} borderRadius={10} width="100%" height={180} >
         <HStack width="100%">
           <Box bg={colors.black} borderRadius={10} height={180} width={150} />
           <VStack p="$3" flex={1}>
