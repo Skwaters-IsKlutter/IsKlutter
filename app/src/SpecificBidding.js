@@ -80,9 +80,6 @@ export default function SpecificBiddingPage() {
         setHighestBidder({ bidder, price });
     };
 
-      
-
-
     const handleBid = async (listingId, biddingAmount) => {
         try {
             const biddingBet = parseFloat(biddingAmount);
@@ -130,6 +127,12 @@ export default function SpecificBiddingPage() {
             setHighestBiddingPrice(newHighestBiddingPrice);
             sethighestBidderName(highestBidderName);
     
+            setListing(prevListing => ({
+                ...prevListing,
+                highestBidderName: highestBidderName,
+                highestBiddingPrice: newHighestBiddingPrice
+            }));
+    
             Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
     
         } catch (error) {
@@ -158,13 +161,21 @@ export default function SpecificBiddingPage() {
     
                 setHighestBiddingPrice(maxBiddingPrice);
                 sethighestBidderName(userWithMaxBiddingPrice);
+    
+                // Update listing state
+                setListing(prevListing => ({
+                    ...prevListing,
+                    highestBidderName: userWithMaxBiddingPrice,
+                    highestBiddingPrice: maxBiddingPrice
+                }));
             } catch (error) {
                 console.error('Error fetching bidding data:', error);
             }
         };
     
         fetchBiddingData();
-    }, []);
+    }, [listingId, listing, highestBidderName, highestBiddingPrice]);
+    
         
     
       
