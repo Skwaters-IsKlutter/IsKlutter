@@ -56,16 +56,18 @@ export default function AllBiddingsPage() {
             const resolvedListingsData = await Promise.all(listingsData);
             setListings(resolvedListingsData);
         };
-        fetchListings();
-    }, []);
+        console.log("Fetching listings...");
+    fetchListings();
+}, []);
 
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
             setCurrentUser(user);
         });
-        return unsubscribe;
-    }, []);
+        console.log("Auth state changed, current user:", currentUser);
+    return unsubscribe;
+}, [currentUser]);
 
     useEffect(() => {
         const fetchBiddingData = async () => {
@@ -81,8 +83,9 @@ export default function AllBiddingsPage() {
             });
             setBiddingData(biddingData);
         };
-        fetchBiddingData();
-    }, []);
+        console.log("Fetching bidding data...");
+    fetchBiddingData();
+}, []);
 
     const handleBiddingClick = (listingId) => {
       navigation.navigate(Routes.SPECIFICBIDDING, { listingId });
@@ -139,8 +142,9 @@ export default function AllBiddingsPage() {
           setHighestBidders(highestBiddersData);
       };
   
-      fetchHighestBidders();
-  }, [listings]);
+      console.log("Fetching highest bidders...");
+    fetchHighestBidders();
+}, [listings]);
   
   const renderAllBiddings = () => {
     return listings.map(listing => (
