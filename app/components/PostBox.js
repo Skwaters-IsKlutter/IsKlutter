@@ -38,7 +38,7 @@ export default function PostBox() {
 
                 setListingDescription('');
                 await updateDoc(docRef, { key: docRef.id });
-                alert('Posted');
+                alert('Success', 'Post added successfully');
                 console.log("Post added successfully");
             } else {
                 console.error('Listing description is empty');
@@ -49,17 +49,17 @@ export default function PostBox() {
     };
 
     return (
-        <Box bgColor={colors.white} p={20}>
+        <Box>
             <HStack space="sm" justifyContent="space-evenly" alignItems="center">
-                {userProfileImg && (
+                {/* {userProfileImg && (
                     <Image
                         source={{ uri: userProfileImg }}
                         style={{ width: 50, height: 50, borderRadius: 25 }}
                         alt="user profile"
                     />
-                )}
+                )} */}
 
-                <Input bg={colors.white} borderColor={colors.secondary} h={75} w="65%" zIndex={0}>
+                <Input bg={colors.white} borderColor={colors.secondary} h={75} w="80%" zIndex={0}>
                     <InputField
                         multiline={true}
                         size="md"
@@ -69,7 +69,7 @@ export default function PostBox() {
                     />
                 </Input>
 
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={postForum} ml={3}>
+                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={30} onPress={postForum} ml={3}>
                     <Text color={colors.white} fontSize="$sm">
                         Post
                     </Text>

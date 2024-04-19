@@ -98,8 +98,9 @@ export default function CommunityPage() {
                         Community
                     </Heading>
                     
-                    <ScrollView height="95%">
-                        <PostBox />
+                    <PostBox />
+                    
+                    <ScrollView height="80%">
                         <VStack>{renderAllCommunityPosts()}</VStack>
                     </ScrollView>
                 </VStack>

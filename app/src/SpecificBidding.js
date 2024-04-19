@@ -1,44 +1,40 @@
-// React components
 import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
+import {
+    HStack, 
+    VStack,
+    Text, 
+    Heading,
+    Box,
+    ScrollView, 
+    Input, 
+    InputField, 
+    Button, 
+    Pressable
+} from '@gluestack-ui/themed';
 
-// Gluestack-ui components
-import { HStack, VStack, Heading, Text, Box, 
-    ScrollView,Input,InputField,InputSlot,
-    InputIcon, Button, ButtonIcon, ButtonText,Pressable } from '@gluestack-ui/themed';
-
-
-// Local components
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
-import ListingCard from '../components/ListingCard.js';
-import TagLabel from '../components/TagLabel.js';
-import CommentBox from '../components/CommentBox.js';
-import ReplyBox from '../components/ReplyBox.js';
-import colors from '../config/colors.js';
-import UserAvatar from '../components/Avatar.js';
 import AllBidderListCard from '../components/AllBidderListCard.js';
 import SpecificBidCard from '../components/SpecificBidCard.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
-// Firebase components
-// Firebase Components
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
+import colors from '../config/colors.js';
+
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
-
-
 
 export default function SpecificBiddingPage() {
     const navigation = useNavigation();
     const route = useRoute();
     const { listingId } = route.params;
-    const [listing, setListing] = useState({}); 
-    const [biddingData, setBiddingData] = useState([]); 
+    const [listing, setListing] = useState({});
+    const [biddingData, setBiddingData] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [comments, setComments] = useState({});
     const [biddingprice, setBiddingPrice] = useState({})
@@ -47,36 +43,32 @@ export default function SpecificBiddingPage() {
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [highestBidderName, sethighestBidderName] = useState('');
 
-
-
-
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
-          setCurrentUser(user);
+            setCurrentUser(user);
         });
         return unsubscribe;
-      }, []);
+    }, []);
 
-
-      const fetchUsername = async (userId) => {
+    const fetchUsername = async (userId) => {
         try {
-          const userCollectionRef = collection(db, 'users');
-          const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
-    
-          if (!querySnapshot.empty) {
-            const userData = querySnapshot.docs[0].data();
-            return userData.username;
-          } else {
-            console.error('User not found');
-            return null;
-          }
-        } catch (error) {
-          console.error('Error fetching username:', error);
-          return null;
-        }
-      };
+            const userCollectionRef = collection(db, 'users');
+            const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
 
-      const updateHighestBidder = (bidder, price) => {
+            if (!querySnapshot.empty) {
+                const userData = querySnapshot.docs[0].data();
+                return userData.username;
+            } else {
+                console.error('User not found');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching username:', error);
+            return null;
+        }
+    };
+
+    const updateHighestBidder = (bidder, price) => {
         setHighestBidder({ bidder, price });
     };
 
@@ -85,23 +77,23 @@ export default function SpecificBiddingPage() {
             const biddingBet = parseFloat(biddingAmount);
             if (isNaN(biddingBet)) {
                 Alert.alert('Invalid Bid', 'Please enter a valid number for bidding.');
-                return; 
+                return;
             }
-    
+
             if (biddingBet < listing.listingPrice) {
                 Alert.alert('Invalid Bid', 'Your bid must be higher than the listing price.');
-                return; 
+                return;
             }
-    
+
             if (biddingBet < highestBiddingPrice + 1) {
                 Alert.alert('Invalid Bid', 'Your bid must be higher than the current highest bid.');
-                return; 
+                return;
             }
-    
+
             const biddingCollection = collection(db, 'bidding');
             const username = currentUser ? await fetchUsername(currentUser.uid) : 'Anonymous';
             const { listingName, listingPrice } = listing;
-    
+
             await addDoc(biddingCollection, {
                 listingId: listingId,
                 biddingPrice: biddingBet,
@@ -109,13 +101,13 @@ export default function SpecificBiddingPage() {
                 listingName: listingName,
                 listingPrice: listingPrice
             });
-    
+
             updateHighestBidder(username, biddingBet);
-    
+
             const querySnapshot = await getDocs(query(biddingCollection, where('listingName', '==', listingName)));
             let newHighestBiddingPrice = 0;
             let highestBidderName = '';
-    
+
             querySnapshot.forEach(doc => {
                 const data = doc.data();
                 if (data.biddingPrice > newHighestBiddingPrice) {
@@ -123,26 +115,24 @@ export default function SpecificBiddingPage() {
                     highestBidderName = data.user;
                 }
             });
-    
+
             setHighestBiddingPrice(newHighestBiddingPrice);
             sethighestBidderName(highestBidderName);
-    
+
             setListing(prevListing => ({
                 ...prevListing,
                 highestBidderName: highestBidderName,
                 highestBiddingPrice: newHighestBiddingPrice
             }));
-    
+
             Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
-    
+
         } catch (error) {
             console.error('Error placing bid:', error);
             Alert.alert('Error', 'Failed to place bid. Please try again later.');
         }
     };
-    
 
-    
     useEffect(() => {
         const fetchBiddingData = async () => {
             try {
@@ -150,7 +140,7 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
                 let maxBiddingPrice = 0;
                 let userWithMaxBiddingPrice = null;
-    
+
                 querySnapshot.forEach(doc => {
                     const data = doc.data();
                     if (data.biddingPrice > maxBiddingPrice) {
@@ -158,10 +148,10 @@ export default function SpecificBiddingPage() {
                         userWithMaxBiddingPrice = data.user;
                     }
                 });
-    
+
                 setHighestBiddingPrice(maxBiddingPrice);
                 sethighestBidderName(userWithMaxBiddingPrice);
-    
+
                 // Update listing state
                 setListing(prevListing => ({
                     ...prevListing,
@@ -172,13 +162,10 @@ export default function SpecificBiddingPage() {
                 console.error('Error fetching bidding data:', error);
             }
         };
-    
+
         fetchBiddingData();
     }, [listingId, listing, highestBidderName, highestBiddingPrice]);
-    
-        
-    
-      
+
     useEffect(() => {
         const fetchListing = async () => {
             try {
@@ -186,8 +173,8 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice } = listingData; 
-                    setListing({ listingName, listingPrice }); 
+                    const { listingName, listingPrice } = listingData;
+                    setListing({ listingName, listingPrice });
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
@@ -196,7 +183,6 @@ export default function SpecificBiddingPage() {
                 Alert.alert('Error', 'Failed to fetch listing data.');
             }
         };
-        
 
         const fetchBiddingData = async () => {
             try {
@@ -214,7 +200,6 @@ export default function SpecificBiddingPage() {
         fetchBiddingData();
     }, [listingId]);
 
-
     const renderSpecificBidding = () => {
         return listing && (
             <SpecificBidCard
@@ -223,7 +208,8 @@ export default function SpecificBiddingPage() {
                 highestBidderName={highestBidderName}
                 highestBiddingPrice={highestBiddingPrice}
             />
-        )};
+        )
+    };
 
     const renderAllBidderList = () => {
         return biddingData.length > 0 ? (
@@ -235,63 +221,53 @@ export default function SpecificBiddingPage() {
                 />
             ))
         ) : (
-            <Text>No bids yet</Text>
-        )};
+            <Text p="$3">No bids yet</Text>
+        )
+    };
 
-
-
-    
     return (
         // Parent box
         <Box w="100%" h="100%">
-            {/* Header */}
-            <Box bgColor={colors.primary} w="100%" h="10%">
-                <HStack p="$2" w="100%" mt={25} ml={10} alignItems="center">
-                    <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} />
-                    </Pressable>
-                    <Text fontSize="$xl" color={colors.white} bold='true' ml={15}>Bid Now</Text>
-                </HStack>  
-            </Box>
+            <SearchHeaderBack userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
 
             {/* Specific Bid Card */}
-                <Box>
-                    {renderSpecificBidding()} 
-                    <Text fontSize="$xl" color={colors.secondary} bold='true' ml={15}>Bids</Text>
-                        <Box h="20%" m={10}  mt={5} >
-                            <ScrollView>
-                                {renderAllBidderList()}
-                            </ScrollView>
-                        </Box> 
+            <Box>
+                <VStack space="xs">
+                    {renderSpecificBidding()}
+                </VStack> 
+                <Box h="20%" m="$3">
+                    <Heading fontSize="$xl" color={colors.secondary}>Bids</Heading>
+                    <ScrollView>
+                        {renderAllBidderList()}
+                    </ScrollView>
                 </Box>
-
+            </Box>
 
             {/* Bet Input*/}
-                <Box m={10}  p={15} borderRadius={10} top={-40}>
-                    <HStack justifyContent="space-between" alignItems="center" >
-                         <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0}>
-                            <InputField
-                                multiline={true}
-                                size="md"
-                                value={biddingAmount} 
-                                placeholder="Place your bet amount."
-                                onChangeText={(text) => setBiddingAmount(text)} 
-                                                            
-                            />
-                        </Input>
-                            <Button
-                                variant="solid"
-                                size="md"
-                                bg={colors.primary}
-                                borderRadius={5}
-                                ml={3}
-                                mt={5}
-                                onPress={() => handleBid(listingId, biddingAmount)} 
-                            >
-                            <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
-                            </Button>
-                    </HStack>
-                </Box>
-            </Box>     
+            <Box m={10} p={15} borderRadius={10} top={-60}>
+                <HStack alignItems="center" justifyContent='space-around'>
+                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
+                        <InputField
+                            multiline={true}
+                            size="md"
+                            value={biddingAmount}
+                            placeholder="Place your bet amount in PHP"
+                            onChangeText={(text) => setBiddingAmount(text)}
+
+                        />
+                    </Input>
+                    <Button 
+                        variant="solid"
+                        size="md"
+                        bg={colors.primary}
+                        borderRadius={5}
+                        ml={3}
+                        onPress={() => handleBid(listingId, biddingAmount)}
+                    >
+                        <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
+                    </Button>
+                </HStack>
+            </Box>
+        </Box>
     );
 }
