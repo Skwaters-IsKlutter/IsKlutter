@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { 
-    HStack, 
-    VStack, 
-    Heading, 
-    Text, 
-    Box, 
-    ScrollView, 
-    Input, 
+import {
+    HStack,
+    VStack,
+    Heading,
+    Text,
+    Box,
+    ScrollView,
+    Input,
     InputField,
-    Button, 
-    ButtonIcon, 
-    ButtonText } from '@gluestack-ui/themed';
+    Button,
+    ButtonIcon,
+    ButtonText
+} from '@gluestack-ui/themed';
 
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -57,8 +58,8 @@ export default function AllBiddingsPage() {
             setListings(resolvedListingsData);
         };
         console.log("Fetching listings...");
-    fetchListings();
-}, []);
+        fetchListings();
+    }, []);
 
 
     useEffect(() => {
@@ -66,8 +67,8 @@ export default function AllBiddingsPage() {
             setCurrentUser(user);
         });
         console.log("Auth state changed, current user:", currentUser);
-    return unsubscribe;
-}, [currentUser]);
+        return unsubscribe;
+    }, [currentUser]);
 
     useEffect(() => {
         const fetchBiddingData = async () => {
@@ -84,11 +85,11 @@ export default function AllBiddingsPage() {
             setBiddingData(biddingData);
         };
         console.log("Fetching bidding data...");
-    fetchBiddingData();
-}, []);
+        fetchBiddingData();
+    }, []);
 
     const handleBiddingClick = (listingId) => {
-      navigation.navigate(Routes.SPECIFICBIDDING, { listingId });
+        navigation.navigate(Routes.SPECIFICBIDDING, { listingId });
     };
     const fetchUsername = async (userId) => {
         try {
@@ -109,108 +110,105 @@ export default function AllBiddingsPage() {
     };
 
     useEffect(() => {
-      const fetchHighestBidders = async () => {
-          const biddingCollection = collection(db, 'bidding');
-          const listingIds = listings.map(listing => listing.id);
-  
-          const promises = listingIds.map(async listingId => {
-              const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
-              let maxBiddingPrice = 0;
-              let userWithMaxBiddingPrice = null;
-  
-              querySnapshot.forEach(doc => {
-                  const data = doc.data();
-                  if (data.biddingPrice > maxBiddingPrice) {
-                      maxBiddingPrice = data.biddingPrice;
-                      userWithMaxBiddingPrice = data.user;
-                  }
-              });
-  
-              return { listingId, highestBiddingPrice: maxBiddingPrice, highestBidderName: userWithMaxBiddingPrice };
-          });
-  
-          const results = await Promise.all(promises);
-          const highestBiddersData = {};
-  
-          results.forEach(result => {
-              highestBiddersData[result.listingId] = {
-                  highestBiddingPrice: result.highestBiddingPrice,
-                  highestBidderName: result.highestBidderName
-              };
-          });
-  
-          setHighestBidders(highestBiddersData);
-      };
-  
-      console.log("Fetching highest bidders...");
-    fetchHighestBidders();
-}, [listings]);
-  
-  const renderAllBiddings = () => {
-    return listings.map(listing => (
-      <BidItemCard
-        key={listing.id}
-        listingName={listing.listingName}
-        listingPrice={listing.listingPrice}
-        remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} days`}
-        toBidding={() => handleBiddingClick(listing.id)}
-        highestBidder={listing.daysRemaining <= 0 && highestBidders[listing.id] ? 
-          `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
-        highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ? 
-          `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
-        buttonCondition={listing.daysRemaining >= 0 && ( 
-          <HStack justifyContent="space-between" alignItems="center">
-              <Button
-                  variant="solid"
-                  size="$sm"
-                  bg={colors.primary}
-                  borderRadius={8}
-                  // top={-20}
-                  onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
-              >
-                  <Text color={colors.white} fontSize="$md" bold="true">Bid Now!</Text>
-              </Button>
-          </HStack>
-      )}
-      />
-    ));
-  };
+        const fetchHighestBidders = async () => {
+            const biddingCollection = collection(db, 'bidding');
+            const listingIds = listings.map(listing => listing.id);
 
-  
-    
+            const promises = listingIds.map(async listingId => {
+                const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
+                let maxBiddingPrice = 0;
+                let userWithMaxBiddingPrice = null;
+
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.biddingPrice > maxBiddingPrice) {
+                        maxBiddingPrice = data.biddingPrice;
+                        userWithMaxBiddingPrice = data.user;
+                    }
+                });
+
+                return { listingId, highestBiddingPrice: maxBiddingPrice, highestBidderName: userWithMaxBiddingPrice };
+            });
+
+            const results = await Promise.all(promises);
+            const highestBiddersData = {};
+
+            results.forEach(result => {
+                highestBiddersData[result.listingId] = {
+                    highestBiddingPrice: result.highestBiddingPrice,
+                    highestBidderName: result.highestBidderName
+                };
+            });
+
+            setHighestBidders(highestBiddersData);
+        };
+
+        console.log("Fetching highest bidders...");
+        fetchHighestBidders();
+    }, [listings]);
+
+    const renderAllBiddings = () => {
+        return listings.map(listing => (
+            <BidItemCard
+                key={listing.id}
+                listingName={listing.listingName}
+                listingPrice={listing.listingPrice}
+                remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} day(s)`}
+                toBidding={() => handleBiddingClick(listing.id)}
+                highestBidder={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
+                    `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
+                highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
+                    `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
+                buttonCondition={listing.daysRemaining >= 0 && (
+                    <HStack justifyContent="space-between" alignItems="center">
+                        <Button
+                            variant="solid"
+                            size="$sm"
+                            bg={colors.primary}
+                            borderRadius={8}
+                            // top={-20}
+                            onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
+                        >
+                            <Text color={colors.white} fontSize="$md" bold="true">Bid Now</Text>
+                        </Button>
+                    </HStack>
+                )}
+            />
+        ));
+    };
 
     return (
         <Box w="100%" h="100%">
             <SearchHeader
                 userIcon={require('../../assets/img/usericon.jpg')}
-                        placeholder="Search in biddings"
-                // search={searchInput}
-                // onSearchChange={handleSearchChange}
-              />
+                placeholder="Search in biddings"
+            // search={searchInput}
+            // onSearchChange={handleSearchChange}
+            />
 
             <Box p="$5" w="100%" maxWidth="$96" flex={1}>
-              <VStack space="xs" pb="$2">
-                <HStack space="xs" justifyContent="space-between" alignItems="center">
-                  <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
-                    Biddings
-                  </Heading>
+                <VStack space="xs" pb="$2">
+                    <HStack space="xs" justifyContent="space-between" alignItems="center">
+                        <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+                            Biddings
+                        </Heading>
 
-                <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
-                  <ButtonIcon>
-                    <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
-                  </ButtonIcon>
-                  <ButtonText pl={10} lineHeight={35}>Add item</ButtonText>
-                </Button>
-                </HStack>
-              </VStack>
+                        <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+                            </ButtonIcon>
+                            <ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+                        </Button>
+                    </HStack>
+                </VStack>
 
                 <ScrollView>
-                  {renderAllBiddings()}
+                    {renderAllBiddings()}
                 </ScrollView>
-      
+
             </Box>
-    </Box>
-  );
-  
-  
+        </Box>
+    );
+
+
 }

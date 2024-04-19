@@ -31,22 +31,31 @@ import colors from '../config/colors.js';
 //     }
 // };
 
-export default function SpecificBidCard({ listingName, listingPrice,highestBidderName,highestBiddingPrice, remainingTime }) {
+export default function SpecificBidCard({ listingName, listingPrice, highestBidderName, highestBiddingPrice, remainingTime }) {
     const navigation = useNavigation();
     const route = useRoute();
     
 
     return (
-        <Box backgroundColor="$white" m={15} bg={colors.white} p={5} borderRadius={10}>
-            <VStack space="xs" p="$2">
-                <Box bgColor='$black' w="100%" h={240}></Box>
-                <Heading fontSize="$2xl" color={colors.primary}>{listingName}</Heading>
-                <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${listingPrice}`}</Text>
-                <Text color={colors.black} bold="true">Remaining Time: {remainingTime}</Text>
-                <Text color={colors.black}>Highest Bidder: {highestBidderName}</Text>
-                <Text color={colors.black}>Highest Bidding Price: PHP {highestBiddingPrice}</Text>
-            </VStack>
+        <Box p="$3" w="100%">
+            <Box bg={colors.white} >
+                <VStack space="md" p="$2">
+                    <Box bgColor='$black' w="100%" h={240} />
+                </VStack>
+                
+                <VStack space="md" p="$2">
+                    <HStack w="100%" justifyContent="space-between">
+                        <Heading fontSize="$2xl" color={colors.primary}>{listingName}</Heading>
+                    </HStack>
+                    <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${listingPrice}`}</Text>
+                </VStack>
+                
+                <VStack space="md" p="$2">
+                    <Heading color={colors.black} size="md">Remaining Time: {remainingTime}</Heading>
+                    <Text color={colors.black}>Highest Bidder: {highestBidderName}</Text>
+                    <Text color={colors.black}>Highest Bid: PHP {highestBiddingPrice}</Text>
+                </VStack>
+            </Box>    
         </Box>
-       
     )
 }
