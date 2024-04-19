@@ -99,51 +99,53 @@ export default function PrivateMessagePage() {
         }
     };
 
-      useEffect(() => {
-        const fetchMessages = async () => {
-          try {
-            if (!auth || !auth.currentUser || !recipient) {
-              return;
-            }
-      
-            const user = auth.currentUser;
-            const loggedInUsername = username;
-      
-            const messagesCollection = collection(db, 'Messages');
-            const messagesSnapshot = await getDocs(messagesCollection);
-      
-            const filteredMessages = [];
-      
-            messagesSnapshot.forEach((doc) => {
-              const messageData = doc.data();
-              const sender = messageData.sender;
-              const currentRecipient = messageData.recipient;
-              const message = messageData.message;
-      
-              // Check if the message is sent by the current user to the recipient
-              const currentUserSent = sender === loggedInUsername && currentRecipient === recipient;
-      
-              // Check if the message is sent by the recipient to the current user
-              const recipientSent = sender === recipient && currentRecipient === loggedInUsername;
-      
-              // Push messages with an indicator for sender differentiation
-              if (currentUserSent || recipientSent) {
-                filteredMessages.push({
-                  sender: sender,
-                  message: message,
-                  currentUserSent: currentUserSent, // Indicator for the sender
-                });
-              }
-            });
-      
-            setMessages(filteredMessages);
-          } catch (error) {
-            console.error('Error fetching messages:', error.message);
+    useEffect(() => {
+      const fetchMessages = async () => {
+        try {
+          if (!auth || !auth.currentUser || !recipient) {
+            return;
           }
-        };
-      
-         fetchMessages();
-}, [auth, recipient, username, messages]);
+    
+          const user = auth.currentUser;
+          const loggedInUsername = username;
+    
+          const messagesCollection = collection(db, 'Messages');
+          const messagesSnapshot = await getDocs(messagesCollection);
+    
+          const filteredMessages = [];
+    
+          messagesSnapshot.forEach((doc) => {
+            const messageData = doc.data();
+            const sender = messageData.sender;
+            const currentRecipient = messageData.recipient;
+            const message = messageData.message;
+            const timestamp = messageData.timestamp; 
+    
+            const currentUserSent = sender === loggedInUsername && currentRecipient === recipient;
+    
+            const recipientSent = sender === recipient && currentRecipient === loggedInUsername;
+    
+            if (currentUserSent || recipientSent) {
+              filteredMessages.push({
+                sender: sender,
+                message: message,
+                currentUserSent: currentUserSent, 
+                timestamp: timestamp 
+              });
+            }
+          });
+    
+          const sortedMessages = filteredMessages.sort((a, b) => a.timestamp - b.timestamp);
+    
+          setMessages(sortedMessages); 
+        } catch (error) {
+          console.error('Error fetching messages:', error.message);
+        }
+      };
+    
+      fetchMessages();
+  }, [auth, recipient, username, messages]);
+  
 
     const privMessagesData = [
         { 
