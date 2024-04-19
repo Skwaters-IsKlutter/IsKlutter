@@ -225,7 +225,7 @@ export default function AllMessagesPage( { user } ) {
               <ScrollView>
                     <HStack space="xs" flexWrap="wrap">
                                 {renderUsernames()} 
-                                {renderSpecificMessage()}
+                                {/* {renderSpecificMessage()} */}
                     </HStack>
                 </ScrollView>  
           </Box>
