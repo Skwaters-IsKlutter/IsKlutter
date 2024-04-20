@@ -29,6 +29,7 @@ export default function AddListingPage() {
         listingPrice: '',
         listingDescription: '',
         listingTags: [],
+        bidding: false 
     });
     const [username, setUsername] = useState('');
     const [isFirestoreOnline, setIsFirestoreOnline] = useState(true);
@@ -114,6 +115,7 @@ export default function AddListingPage() {
                 listingPrice: '',
                 listingDescription: '',
                 listingTags: [],
+                bidding: false
             });
             navigation.goBack();
         } catch (error) {
