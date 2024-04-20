@@ -7,14 +7,12 @@ import colors from '../config/colors.js';
 const db = getFirestore();
 
 export default function PostCard({ userId, description, toIndividualPost, timestamp }) {
-
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
 
     const fetchUserData = useCallback(async () => {
         try {
-
             const userCollection = collection(db, 'users');
             const userQuery = query(userCollection, where('userID', '==', userId));
             const userSnapshot = await getDocs(userQuery);
@@ -45,9 +43,10 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     backgroundColor={colors.white}
                     borderRadius={5}
                     width={380}
+                    maxHeight={300}
                     m={5}
-                    display="flex"
-                    flexShrink={1}
+                    pb={3}
+                    overflow="hidden"
                 >
                     <HStack space="sm" alignItems="center" p="$3" m={5}>
                         <Image
