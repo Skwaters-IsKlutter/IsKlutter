@@ -47,6 +47,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     m={5}
                     pb={3}
                     overflow="hidden"
+
                 >
                     <HStack space="sm" alignItems="center" p="$3" m={5}>
                         <Image
@@ -66,7 +67,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     </HStack>
 
                     <VStack size="md">
-                        <Text color="black" pb="$3" size="sm" ml="$3" mr={50} textAlign='justify'>
+                        <Text color="black" pb="$3" size="sm" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7}>
                             {description}
                         </Text>
                     </VStack>
