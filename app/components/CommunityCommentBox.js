@@ -10,9 +10,12 @@ import {
     Input,
     InputField,
 } from '@gluestack-ui/themed';
-import colors from '../config/colors.js';
+import { Alert } from 'react-native';
+
 import { getFirestore, collection, addDoc, serverTimestamp, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+
+import colors from '../config/colors.js';
 
 // Define the CommunityCommentBox component
 export default function CommunityCommentBox({ posterUserId, selectedPost }) {
@@ -48,7 +51,8 @@ export default function CommunityCommentBox({ posterUserId, selectedPost }) {
 
             console.log('Comment added successfully');
             setCommentText('');
-            setShowSuccessPopup(true);
+            // setShowSuccessPopup(true);
+            Alert.alert("Success", "Comment added successfully.");
 
             // Close the success popup after 2 seconds
             setTimeout(() => {
@@ -65,7 +69,7 @@ export default function CommunityCommentBox({ posterUserId, selectedPost }) {
         <Box>
             <Box flex={1}>
                 <HStack space="md" justifyContent="space-evenly" p={2} alignItems="center" mt={20}>
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="100%" borderRadius={50}>
+                    <Input bg={colors.white} borderColor={colors.secondary} h={50} w="100%" borderRadius={30} multiline={true}>
                         <InputField multiline={true} 
                             size="md" 
                             placeholder="Write a comment..." 
@@ -75,7 +79,7 @@ export default function CommunityCommentBox({ posterUserId, selectedPost }) {
                     </Input>
                 </HStack>
 
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={handleComment} mt={25} w="30%" alignSelf="flex-end">
+                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={handleComment} mt={30} w="30%" alignSelf="flex-end">
                     {isLoading ? (
                         <ButtonText color={colors.white} fontSize="$sm">Loading</ButtonText>
                     ) : (
@@ -83,12 +87,12 @@ export default function CommunityCommentBox({ posterUserId, selectedPost }) {
                     )}
                 </Button>
             </Box>
-            {/* Success Popup */}
+            {/* Success Popup
             {showSuccessPopup && (
                 <Box position="absolute" bottom={20} right={20} bg="green" p={3} borderRadius={10}>
                     <Text color="white">Comment added successfully!</Text>
                 </Box>
-            )}
+            )} */}
         </Box>
     )
 }

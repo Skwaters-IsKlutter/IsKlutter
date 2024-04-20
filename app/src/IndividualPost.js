@@ -79,24 +79,28 @@ export default function IndividualPostPage() {
         <Box w="100%" h="100%">
             <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
             <Box p="$3" w="100%" flex={1} h="100%">
-                <ScrollView>
-                    <VStack space="xs" p="$1">
-                        {renderCommunityPosts()}
-                    </VStack>
+                <VStack>
+                    <ScrollView h="85%">
+                        <VStack space="xs" p="$1">
+                            {renderCommunityPosts()}
+                        </VStack>
 
-                    {/* Comment Box */}
-                    <VStack>
-                        <CommunityCommentBox posterUserId={selectedPost.userID} selectedPost={selectedPost} />  
-                    </VStack>
-
-                    {/* Render comments */}
-                    <VStack mt={10}>
-                        <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
-                            {renderComments()}
-                    </VStack>
-                            
-                </ScrollView>
+                        {/* Render comments */}
+                        <VStack mt={10}>
+                            <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
+                                {renderComments()}
+                        </VStack>
+                    </ScrollView>
+                </VStack>
+            
             </Box>
-        </Box>
+            {/* Comment Box */}
+            <VStack size="md" top={-90} p="$3">
+                <CommunityCommentBox 
+                    posterUserId={selectedPost.userID}
+                    selectedPost={selectedPost} 
+                />  
+                </VStack>
+        </Box> 
     );
 }

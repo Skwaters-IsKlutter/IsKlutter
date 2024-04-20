@@ -56,7 +56,7 @@ export default function CommunityReplyBox({ replyUserID, replyComment, timestamp
                     {timestamp}
                     </Text>
                 </HStack>
-                <Text color="black" pb="$3" size="md" mt="$3">
+                <Text color="black" pb="$3" size="md" mt="$3" >
                     {replyComment}
                 </Text>
             </VStack>
