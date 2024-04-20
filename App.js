@@ -39,7 +39,7 @@ function HomepageScreenTabs() {
 									
 								tabBarLabelStyle: {top:-5},
 								}} 
-						name="View Listings" component={AllListingsScreen} />
+						name="Listings" component={AllListingsScreen} />
 			<Tab.Screen options={{headerShown: false, 
 								tabBarIcon: ({ color, size }) => (
 									<MaterialCommunityIcons name="account-group" color={colors.white} size={35} />
