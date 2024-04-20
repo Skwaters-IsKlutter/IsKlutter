@@ -5,6 +5,7 @@ import {
     Heading,
     Text,
     Box,
+    Image,
     ScrollView,
     Input,
     InputField,
@@ -25,7 +26,7 @@ import { FIREBASE_APP } from '../../config/firebase';
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
-export default function BidItemCard({ listingPrice, listingName, remainingTime, toBidding, highestBidder, highestBid, buttonCondition }) {
+export default function BidItemCard({ listingPrice, listingImage, listingName, remainingTime, toBidding, highestBidder, highestBid, buttonCondition }) {
     const navigation = useNavigation();
     const [listings, setListings] = useState([]);
     const [comments, setComments] = useState({});
@@ -34,6 +35,8 @@ export default function BidItemCard({ listingPrice, listingName, remainingTime, 
     const [biddingData, setBiddingData] = useState({});
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [highestBidderName, sethighestBidderName] = useState('');
+    const isImageUrl = typeof listingImage === 'string';
+    
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -144,9 +147,20 @@ export default function BidItemCard({ listingPrice, listingName, remainingTime, 
     return (
         <Box p="$2" flex={1}>
             <VStack bg={colors.white} borderRadius={10} width="100%" height={200}>
+                
                 <HStack width="100%">
                     {/* Update to listing image */}
-                    <Box bg={colors.black} borderRadius={10} height={200} width={150} />
+                    
+                    {isImageUrl ? (
+                        <Image
+                            source={{ uri: listingImage }}
+                            style={{ height: 200, width: 150, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+                            resizeMode="cover"
+                            alt="icon"
+                        />
+                    ) : (
+                        <Text>No Image Available</Text>
+                    )}
                     <VStack p="$3" flex={1}>
                         <Heading fontSize="$2xl" color={colors.primary} letterSpacing={-1}>{listingName}</Heading>
                         <Heading fontSize="$xl" color={colors.secondary} p={0}>PHP {listingPrice}</Heading>
