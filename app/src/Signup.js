@@ -61,7 +61,7 @@ export default function SignupScreen() {
                     setError('Username is already taken. Please choose a different one.');
                 } else {
                     const response = await createUserWithEmailAndPassword(auth, email, password);
-                    const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterfinal.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=8763c0e7-c1a4-40f1-a9ce-91f9164d71ae";
+                    const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterdb.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=c026e2ce-062b-4952-a5a3-8232cb3b85d5";
 
                     try {
                         await addDoc(collection(db, 'users'), {
