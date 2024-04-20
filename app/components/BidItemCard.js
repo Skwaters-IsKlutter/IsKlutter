@@ -143,10 +143,10 @@ export default function BidItemCard({ listingPrice, listingName, remainingTime, 
 
     return (
         <Box p="$2" flex={1}>
-            <VStack bg={colors.white} borderRadius={10} width="100%" height={200}>
+            <VStack bg={colors.white} borderRadius={10} width="100%" height="auto" >
                 <HStack width="100%">
                     {/* Update to listing image */}
-                    <Box bg={colors.black} borderRadius={10} height={200} width={150} />
+                    <Box bg={colors.black} borderRadius={10} height="auto" width={150} />
                     <VStack p="$3" flex={1}>
                         <Heading fontSize="$2xl" color={colors.primary} letterSpacing={-1}>{listingName}</Heading>
                         <Heading fontSize="$xl" color={colors.secondary} p={0}>PHP {listingPrice}</Heading>
