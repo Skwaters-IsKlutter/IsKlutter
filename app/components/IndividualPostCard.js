@@ -87,7 +87,7 @@ export default function IndividualPostCard({ postKey, userId, description, times
     }, [isFocused]);
 
     return (
-        <Box p="$3" w="100%" backgroundColor="$white">
+        <Box p="$1" w="100%">
                 {isCurrentUserPost() && (
                     <Button
                         variant="solid"
@@ -122,7 +122,7 @@ export default function IndividualPostCard({ postKey, userId, description, times
                         </Text>
                     </VStack>
                 </HStack>
-                <Text color="black" pb="$3" size="md" mt="$3">
+                <Text color="black" pb="$3" size="md" mt="$3" textAlign='justify'>
                     {description}
                 </Text>
             </VStack>
