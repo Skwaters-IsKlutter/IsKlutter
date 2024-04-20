@@ -84,17 +84,17 @@ export default function IndividualPostPage() {
                         {renderCommunityPosts()}
                     </VStack>
 
-                    {/* Comment Box */}
-                    <VStack>
-                        <CommunityCommentBox posterUserId={selectedPost.userID} selectedPost={selectedPost} />  
-                    </VStack>
-
                     {/* Render comments */}
                     <VStack mt={10}>
                         <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
                             {renderComments()}
                     </VStack>
-                            
+
+                    {/* Comment Box */}
+                    <VStack>
+                        <CommunityCommentBox posterUserId={selectedPost.userID} selectedPost={selectedPost} />  
+                    </VStack>
+
                 </ScrollView>
             </Box>
         </Box>

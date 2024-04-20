@@ -44,7 +44,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
         <Box
           backgroundColor={colors.white}
           borderRadius={5}
-          width={370}
+          width={380}
           ml={10}
           mt={10}
         >
