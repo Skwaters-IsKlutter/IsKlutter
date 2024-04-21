@@ -93,7 +93,7 @@ export default function LoginPage() {
                         </FormControl>
                     </VStack>
 
-                    <VStack space="lg" pt="$2" pb="$2" width="$80">
+                    <VStack space="lg" pt="$2" pb="$2" width="100">
                         <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin} borderRadius={10}>
                             <ButtonText>{loading ? 'Logging In' : 'Log In' }</ButtonText>
                         </Button>
