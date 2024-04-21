@@ -35,8 +35,6 @@ export default function AllBiddingsPage() {
     const [currentUser, setCurrentUser] = useState(null);
     const [highestBidders, setHighestBidders] = useState({});
     const [biddingData, setBiddingData] = useState({});
-    const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
-    const [highestBidderName, sethighestBidderName] = useState('');
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -49,6 +47,7 @@ export default function AllBiddingsPage() {
                 const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24)); // Convert remaining time to days
                 return {
                     id: doc.id,
+                    listingImageURL: data.listingImageURL,
                     listingName: data.listingName,
                     listingPrice: data.listingPrice,
                     daysRemaining: daysRemaining
@@ -151,6 +150,7 @@ export default function AllBiddingsPage() {
         return listings.map(listing => (
             <BidItemCard
                 key={listing.id}
+                listingImage={listing.listingImageURL}
                 listingName={listing.listingName}
                 listingPrice={listing.listingPrice}
                 remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} day(s)`}

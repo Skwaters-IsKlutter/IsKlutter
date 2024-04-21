@@ -20,7 +20,7 @@ import AllBidderListCard from '../components/AllBidderListCard.js';
 import SpecificBidCard from '../components/SpecificBidCard.js';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
-import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
@@ -42,6 +42,8 @@ export default function SpecificBiddingPage() {
     const [highestBidder, setHighestBidder] = useState({});
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [highestBidderName, sethighestBidderName] = useState('');
+    const [listingImage, setListingImage] = useState(null);
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -67,6 +69,26 @@ export default function SpecificBiddingPage() {
             return null;
         }
     };
+
+    useEffect(() => {
+        const fetchListingImage = async () => {
+            try {
+                const docRef = doc(db, 'listings', listingId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const listingData = docSnap.data();
+                    if (listingData && listingData.listingImageURL) {
+                        setListingImage(listingData.listingImageURL);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching listing image:', error);
+            }
+        };
+    
+        fetchListingImage();
+    }, [listingId]);
+    
 
     const updateHighestBidder = (bidder, price) => {
         setHighestBidder({ bidder, price });
@@ -207,6 +229,7 @@ export default function SpecificBiddingPage() {
                 listingPrice={listing.listingPrice}
                 highestBidderName={highestBidderName}
                 highestBiddingPrice={highestBiddingPrice}
+                listingImage={listingImage}
             />
         )
     };
