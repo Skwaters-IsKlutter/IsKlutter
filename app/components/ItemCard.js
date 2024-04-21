@@ -9,7 +9,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
 
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} width={160} maxHeight={256} m={2} flex={1} overflow="hidden">
+            <Box bg={colors.white} borderRadius={10} width={150} maxHeight={256} m={2} flex={1} overflow="hidden">
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image

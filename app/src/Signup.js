@@ -101,9 +101,9 @@ export default function SignupScreen() {
                 borderBottomEndRadius={100}
                 borderBottomLeftRadius={100}
             >
-                <VStack space="xs" mt={90} alignItems="center">
+                <VStack space="xs" mt="30%" alignItems="center">
                     <Heading lineHeight={60} fontSize="$5xl" color={colors.white}>New here?</Heading>
-                    <Heading lineHeight={30} fontSize="$2xl" color={colors.white}>Sign up to start decluttering.</Heading>
+                    <Heading lineHeight={30} fontSize="$2xl" color={colors.white} >Sign up to start decluttering.</Heading>
                 </VStack>
             </Box>
 
