@@ -12,7 +12,7 @@ import {
     Input,
     InputField,
     ScrollView,
-    Pressable
+    Image
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -31,10 +31,10 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
-
 export default function PrivateMessagePage() {
     const route = useRoute();
     const recipient = route.params?.recipient || '';
+    const userProfileImg = route.params?.userProfileImg || ''; 
     const [username, setUsername] = useState('');
     const navigation = useNavigation();
     const [messageContent, setMessageContent] = React.useState(''); // State to capture message content
@@ -145,44 +145,6 @@ export default function PrivateMessagePage() {
     
       fetchMessages();
   }, [auth, recipient, username, messages]);
-  
-
-    const privMessagesData = [
-        { 
-            senderIcon: require("../../assets/img/sassa.jpg"),
-            senderName: "Sassa",
-            senderUsername: "@sassagurl",
-        }
-    ]
-    const renderMessages = () => {
-      if (!messages || messages.length === 0) {
-        return <Text>No messages available</Text>; // Handle the case where messages are empty
-      }
-    
-      return messages.map((message, index) => (
-        <SenderBox
-          key={index}
-          senderIcon={message.senderIcon}
-          senderName={message.senderName}
-          senderUsername={message.senderUsername}
-          message={message.message}
-        />
-      ));
-    };
-
-    
-    const renderSenderBox = () => {
-        return privMessagesData.map((privMessage, index) =>
-            <SenderBox
-                key = {index}
-                senderIcon={privMessage.senderIcon}
-                senderName={privMessage.senderName}
-                senderUsername={privMessage.senderUsername}
-                //message={message.message}
-
-            />
-        );
-    }
 
     const renderSpecificMessage = () => {
       if (!messages || messages.length === 0) {
@@ -207,17 +169,14 @@ export default function PrivateMessagePage() {
               {/* Place holder for recipient icon */}
               <HStack>
               {!messageData.currentUserSent && (
-                  <View
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 50,
-                      backgroundColor: 'black',
-                      marginRight: 10, // Add margin right for spacing between icon and message
-                      marginTop: 10
-                    }}
-                  />
-              
+                  <Image
+                  source={{ uri: userProfileImg }}
+                  h={45}
+                  w={45}
+                  alt="icon"
+                  borderRadius={100}
+                  style={{ marginRight: 10, marginTop: 10 }}
+                />                
               )}
               {messageData.message && (
                 <View

@@ -127,13 +127,13 @@ export default function AllMessagesPage({ user }) {
       fetchSenderandMessage();
   }, [auth]);
 
-  const handleUsernameClick = (selectedUsername) => {
-      navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: selectedUsername });
+  const handleUsernameClick = (selectedUsername, selectedUserProfileImg) => {
+      navigation.navigate(Routes.PRIVATEMESSAGE, { recipient: selectedUsername, userProfileImg: selectedUserProfileImg })
   };
 
   const renderUsernames = () => {
     return usernames.map((username, index) => (
-        <TouchableOpacity key={index} onPress={() => handleUsernameClick(username)}>
+        <TouchableOpacity key={index} onPress={() => handleUsernameClick(username, userProfileImgs[index])}>
             <ScrollView>
                 <VStack width={380} backgroundColor={colors.white} m={5}>
                     <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 10 }}>
