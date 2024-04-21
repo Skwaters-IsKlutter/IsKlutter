@@ -2,7 +2,7 @@ export default Object.freeze({
     LOGIN: "Login",
     SIGNUP: "Signup",
     HOMEPAGE: "Homepage",
-    LISTINGS: "Listings",
+    LISTINGS: "ListingsPage",
     COMMUNITY: "Community",
     PROFILE: "Profile",
     MESSAGES: "Messages",
