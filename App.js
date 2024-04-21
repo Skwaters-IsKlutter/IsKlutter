@@ -66,7 +66,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} /> 
 				<Stack.Screen options={{headerShown:false}} name="Homepage" component={HomepageScreenTabs} />
-				<Stack.Screen options={{headerShown:false}} name="Listings" component={ListingsScreen} />
+				<Stack.Screen options={{headerShown:false}} name="ListingsPage" component={ListingsScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} />
 				<Stack.Screen options={{headerShown:false}} name="Messages" component={AllMessagesScreen} />
 				<Stack.Screen options={{headerShown:false}} name="PrivateMessage" component={PrivateMessageScreen} />

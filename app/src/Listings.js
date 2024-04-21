@@ -21,6 +21,7 @@ export default function ListingsPage() {
     const sellerImageURL = route?.params?.sellerImageURL || null;
 
     useEffect(() => {
+        console.log('Selected Item:', selectedItem);
         const auth = getAuth();
         const firestore = getFirestore();
 

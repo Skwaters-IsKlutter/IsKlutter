@@ -9,8 +9,11 @@ import { database } from '../../config/firebase';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
 
+import PostCard from '../components/PostCard';
+
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import PostBox from '../components/PostBox';
 
 export default function AllListingsPage() {
     const navigation = useNavigation();
@@ -77,7 +80,7 @@ export default function AllListingsPage() {
     });
 
     const renderAllListings = () => {
-        console.log("Rendering listings...")
+        console.log("Rendering listings...");
         return filteredListings.map((item) => (
             <ItemCard
                 key={item.id}
@@ -87,11 +90,14 @@ export default function AllListingsPage() {
                 productSeller={item.username}
                 sellerID={item.sellerID}
                 tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: item.sellerImageURL })}
+                toListing={() => navigation.navigate(Routes.LISTINGS, {
+                    selectedItem: item,
+                    sellerImageURL: item.sellerImageURL
+                })}
             />
         ));
     };
-
+    
     return (
         <Box w="100%" h="100%">
             <SearchHeader
