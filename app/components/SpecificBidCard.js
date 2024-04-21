@@ -31,7 +31,7 @@ import colors from '../config/colors.js';
 //     }
 // };
 
-export default function SpecificBidCard({ listingName, listingPrice, highestBidderName, highestBiddingPrice, remainingTime }) {
+export default function SpecificBidCard({ listingName, listingPrice, highestBidderName, highestBiddingPrice, remainingTime, listingImage }) {
     const navigation = useNavigation();
     const route = useRoute();
     
@@ -40,7 +40,17 @@ export default function SpecificBidCard({ listingName, listingPrice, highestBidd
         <Box p="$3" w="100%">
             <Box bg={colors.white} >
                 <VStack space="md" p="$2">
-                    <Box bgColor='$black' w="100%" h={240} />
+                {listingImage ? (
+                    <Image
+                        source={{ uri: listingImage }}
+                        style={{ height: 240, width: "100%", borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+                        resizeMode="cover"
+                        alt="Listing Image"
+                    />
+                ) : (
+                    <Text>No Image Available</Text>
+                )}
+
                 </VStack>
                 
                 <VStack space="md" p="$2">
