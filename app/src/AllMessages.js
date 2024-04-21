@@ -138,13 +138,17 @@ export default function AllMessagesPage({ user }) {
                 <VStack width={380} backgroundColor={colors.white} m={5}>
                     <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 10 }}>
                         <HStack>
-                            <Image
-                                source={{ uri: userProfileImgs[index] }}
-                                h={45}
-                                w={45}
-                                alt="icon"
-                                borderRadius={100}
-                            />
+                            {userProfileImgs[index] && typeof userProfileImgs[index] === 'string' ? (
+                                <Image
+                                    source={{ uri: userProfileImgs[index] }}
+                                    h={45}
+                                    w={45}
+                                    alt="icon"
+                                    borderRadius={100}
+                                />
+                            ) : (
+                                <UserAvatar /> // Render a placeholder or default avatar component
+                            )}
                             <Text p={10}>{username}</Text>
                         </HStack>
                     </View>
@@ -153,6 +157,7 @@ export default function AllMessagesPage({ user }) {
         </TouchableOpacity>
     ));
 };
+
 
 
   return (
