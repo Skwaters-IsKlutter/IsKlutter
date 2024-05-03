@@ -11,9 +11,8 @@ import {
   FormControlError, 
   FormControlErrorText, 
   FormControlLabelText, 
-  FormControlHelper, 
-  FormControlHelperText, 
-  FormControlErrorIcon, 
+  Avatar,
+  AvatarImage,
   Input, 
   InputField,
   Pressable,
@@ -230,8 +229,16 @@ export default function EditProfileScreen({ route, navigation }) {
           <TouchableOpacity onPress={handleChooseImage}>
             {newProfileImage && <Image source={{ uri: newProfileImage }} style={styles.image}
             />}
-            <Text style={styles.text}>Upload New Image</Text>
-          
+            {/* <Text style={styles.text}>Upload New Image</Text> */}
+            <Avatar borderRadius="$full" alignSelf="center" size="2xl">
+                {userProfileImg && (
+                    <AvatarImage source={{ uri: userProfileImg }} style={{ width: '100%', height: '100%', borderRadius: 999 }} />
+                )}
+                {!userProfileImg && <AvatarFallbackText>{/* Empty Fallback Text */}</AvatarFallbackText>}
+                {!userProfileImg && (
+                    <AvatarImage source={profileImgPlaceHolder} style={{ width: '100%', height: '100%', borderRadius: 999 }} />
+                )}
+            </Avatar>
           </TouchableOpacity>
         </VStack>
 
@@ -285,26 +292,35 @@ export default function EditProfileScreen({ route, navigation }) {
         </VStack>
 
       {/* Save Button */}
-      <VStack space="lg" pt="$4">
-                <Button size="sm" backgroundColor={colors.primary} onPress={handleSaveProfile} disabled={loading}>
-                    <ButtonText>{loading ? 'Saving...' : 'Save'}</ButtonText>
-                </Button>
-      </VStack>
+      <HStack space="lg" p="$3" justifyContent="center">
+            <Button size="sm" backgroundColor={colors.primary} onPress={handleSaveProfile} disabled={loading}>
+                <ButtonText>{loading ? 'Saving...' : 'Save'}</ButtonText>
+            </Button>
+
+            <Button size="sm" backgroundColor={colors.gray} onPress={handleCancel} disabled={loading}>
+                <ButtonText>Cancel</ButtonText>
+            </Button>
+      </HStack>
 
       {/* Cancel Button */}
-      <VStack space="lg" pt="$4">
-                <Button size="sm" backgroundColor={colors.gray} onPress={handleCancel} disabled={loading}>
-                    <ButtonText>Cancel</ButtonText>
-                </Button>
-      </VStack>
+      {/* <VStack space="lg" p="$4">
+                
+      </VStack> */}
 
       {/* Delete Account Button */}
-      <VStack space="lg" pt="$4">
+      {/* <VStack space="lg" pt="$4">
           <Button size="sm" backgroundColor={colors.gray} onPress={handleDeleteAccount} disabled={loading}>
             <ButtonText>{loading ? 'Deleting...' : 'Delete Account'}</ButtonText>
           </Button>
+      </VStack> */}
+
+      {/* Settings Button */}
+      <VStack space="lg" p="$3">
+          <Button size="sm" backgroundColor={colors.secondary}>
+            <ButtonText>Settings</ButtonText>
+          </Button>
       </VStack>
-      
+
       </Box>
     </Box>
     // </Box>
