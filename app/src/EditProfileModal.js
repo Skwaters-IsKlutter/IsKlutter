@@ -294,7 +294,7 @@ export default function EditProfileScreen({ route, navigation }) {
       {/* Save Button */}
       <HStack space="lg" p="$3" justifyContent="center">
             <Button size="sm" backgroundColor={colors.primary} onPress={handleSaveProfile} disabled={loading}>
-                <ButtonText>{loading ? 'Saving...' : 'Save'}</ButtonText>
+                <ButtonText>{loading ? 'Saving' : 'Save'}</ButtonText>
             </Button>
 
             <Button size="sm" backgroundColor={colors.gray} onPress={handleCancel} disabled={loading}>
@@ -309,6 +309,8 @@ export default function EditProfileScreen({ route, navigation }) {
 
       {/* Delete Account Button */}
       {/* <VStack space="lg" pt="$4">
+
+      
           <Button size="sm" backgroundColor={colors.gray} onPress={handleDeleteAccount} disabled={loading}>
             <ButtonText>{loading ? 'Deleting...' : 'Delete Account'}</ButtonText>
           </Button>
