@@ -35,6 +35,7 @@ import { getDownloadURL } from 'firebase/storage';
 import AddListingBox from '../components/AddListingBox.js';
 
 import colors from '../config/colors.js';
+import AddBiddingBox from '../components/AddBiddingBox';
 
 export default function AddListingPage() {
     const navigation = useNavigation();
@@ -178,7 +179,7 @@ export default function AddListingPage() {
                  <ScrollView>
                     <Box>
                         <VStack space="xs">
-                            <AddListingBox
+                            <AddBiddingBox
                                     listingImage={require('../../assets/img/item.jpg')}
                                     listingName={listingData.listingName}
                                     listingPrice={listingData.listingPrice}
