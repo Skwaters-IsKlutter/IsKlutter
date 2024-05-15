@@ -29,7 +29,8 @@ export default function AddListingPage() {
         listingPrice: '',
         listingDescription: '',
         listingTags: [],
-        bidding: false 
+        bidding: false,
+        sold: false
     });
     const [username, setUsername] = useState('');
     const [isFirestoreOnline, setIsFirestoreOnline] = useState(true);

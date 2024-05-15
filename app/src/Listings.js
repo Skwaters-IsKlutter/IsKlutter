@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { VStack, Box, ScrollView, Heading } from '@gluestack-ui/themed';
+import { VStack, Box, ScrollView, Heading, Button, Text } from '@gluestack-ui/themed';
+import { Alert } from 'react-native';  // Import Alert
 import SearchHeaderBack from '../components/SearchHeaderBack';
 import ListingCard from '../components/ListingCard';
 import TagLabel from '../components/TagLabel';
@@ -8,7 +9,11 @@ import CommentBox from '../components/CommentBox';
 import ReplyBox from '../components/ReplyBox';
 import colors from '../config/colors';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, query, where, getDocs, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, onSnapshot, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
+import { FIREBASE_APP } from '../../config/firebase';
+
+const db = getFirestore(FIREBASE_APP);
+const auth = getAuth();
 
 export default function ListingsPage() {
     const navigation = useNavigation();
@@ -22,12 +27,10 @@ export default function ListingsPage() {
 
     useEffect(() => {
         console.log('Selected Item:', selectedItem);
-        const auth = getAuth();
-        const firestore = getFirestore();
 
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userCollectionRef = collection(firestore, 'users');
+                const userCollectionRef = collection(db, 'users');
                 const userQuery = query(userCollectionRef, where('userID', '==', user.uid));
                 setCurrentUser(user);
                 try {
@@ -63,9 +66,8 @@ export default function ListingsPage() {
 
     const fetchListingComments = async () => {
         console.log('Fetching comments for listing ID:', selectedItem.id);
-        const firestore = getFirestore();
 
-        const commentsCollectionRef = collection(firestore, 'ListingsComments');
+        const commentsCollectionRef = collection(db, 'ListingsComments');
         const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
 
         try {
@@ -89,8 +91,7 @@ export default function ListingsPage() {
     };
 
     const setupCommentsListener = () => {
-        const firestore = getFirestore();
-        const commentsCollectionRef = collection(firestore, 'ListingsComments');
+        const commentsCollectionRef = collection(db, 'ListingsComments');
         const listingCommentsQuery = query(commentsCollectionRef, where('itemId', '==', selectedItem.id));
 
         const unsubscribe = onSnapshot(listingCommentsQuery, (snapshot) => {
@@ -102,10 +103,8 @@ export default function ListingsPage() {
     };
 
     const addComment = async () => {
-        const firestore = getFirestore();
-
         try {
-            const newCommentRef = await addDoc(collection(firestore, 'ListingsComments'), {
+            const newCommentRef = await addDoc(collection(db, 'ListingsComments'), {
                 itemId: selectedItem.id,
                 userId: currentUser.uid,
                 comment: newComment,
@@ -123,6 +122,22 @@ export default function ListingsPage() {
             setNewComment('');
         } catch (error) {
             console.error('Error adding new comment:', error);
+        }
+    };
+
+    const handleSoldClick = async () => {
+        if (!selectedItem) return;
+
+        const listingRef = doc(db, 'listings', selectedItem.id);
+
+        try {
+            await updateDoc(listingRef, {
+                sold: true,
+            });
+            console.log(`Listing ${selectedItem.id} marked as sold.`);
+            Alert.alert("Success", "This item is now sold");
+        } catch (error) {
+            console.error('Error updating listing as sold:', error);
         }
     };
 
@@ -164,6 +179,18 @@ export default function ListingsPage() {
                     <VStack space="xs">
                         {renderListings()}
                     </VStack>
+                    {currentUser && selectedItem && currentUser.uid === selectedItem.sellerID && (
+                        <Button
+                            variant="solid"
+                            size="sm"
+                            bg={colors.primary}
+                            borderRadius={50}
+                            onPress={handleSoldClick}
+                            m={5}
+                        >
+                            <Text color={colors.white} fontSize="$sm">Sold</Text>
+                        </Button>
+                    )}
                     <VStack space="xs">
                         <CommentBox
                             selectedItem={selectedItem}
