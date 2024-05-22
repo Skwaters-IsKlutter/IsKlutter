@@ -121,7 +121,7 @@ export default function AllListingsPage() {
                 onSearchChange={handleSearchChange}
             />
 
-            <Box p="$5" w="100%" maxWidth="$96" flex={1}>
+            <Box p="$5" w="100%" flex={1} >
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
                         <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
@@ -137,8 +137,8 @@ export default function AllListingsPage() {
                     </HStack>
                 </VStack>
 
-                <ScrollView>
-                    <HStack space="xs" width="100%" flexWrap="wrap" justifyContent="center">
+                <ScrollView  >
+                    <HStack space="xs"  w="100%"flexWrap="wrap" justifyContent="center" >
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>

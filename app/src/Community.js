@@ -92,7 +92,7 @@ export default function CommunityPage() {
                 onSearchChange={setSearchQuery}
             />
 
-            <Box p="$5" w="100%" maxWidth="$96" flex={1}>
+            <Box p="$5" w="100%"  flex={1}>
                 <VStack space="xs" pb="$2">
                     <Heading lineHeight={40} fontSize={40} color={colors.secondary}>
                         Community
