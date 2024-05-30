@@ -43,19 +43,32 @@ export default function CommunityPage() {
 
     const fetchAllCommunityPosts = async () => {
         try {
-            const userCollection = collection(db, 'forum');
-            const querySnapshot = await getDocs(userCollection);
+            const forumCollection = collection(db, 'forum');
+            const userCollection = collection(db, 'users');
+            const querySnapshot = await getDocs(forumCollection);
             const userData = [];
-            querySnapshot.forEach((doc) => {
+            
+            for (const doc of querySnapshot.docs) {
                 const data = doc.data();
+                const userID = data.userID;
+                const userSnapshot = await getDocs(query(userCollection, where('userID', '==', userID)));
+                let username = "Unknown";
+                
+                if (!userSnapshot.empty) {
+                    username = userSnapshot.docs[0].data().username;
+                }
+                
                 const userDataObj = {
                     key: doc.id,
                     description: data.description,
                     userID: data.userID,
+                    username: username,
                     timeposted: data.timestamp,
+                    userProfileImg: data.userProfileImg
                 };
                 userData.push(userDataObj);
-            });
+            }
+
             setDescription(userData);
         } catch (error) {
             console.error('Error fetching user data:', error.message);
@@ -70,7 +83,8 @@ export default function CommunityPage() {
     const renderAllCommunityPosts = () => {
         const sortedDescription = description.slice().sort((a, b) => b.timeposted - a.timeposted);
         const filteredPosts = sortedDescription.filter(post =>
-            post.description.toLowerCase().includes(searchQuery.toLowerCase())
+            post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            post.username.toLowerCase().includes(searchQuery.toLowerCase())
         );
         return filteredPosts.map((userData, index) => (
             <PostCard
