@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
     HStack,
     VStack,
@@ -7,14 +7,10 @@ import {
     Text,
     Box,
     ScrollView,
-    Input,
-    InputField,
-    Button,
-    ButtonIcon,
-    ButtonText
+    Button
 } from '@gluestack-ui/themed';
 
-import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, getDocs, collection, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
@@ -31,16 +27,14 @@ const auth = getAuth();
 export default function AllBiddingsPage() {
     const navigation = useNavigation();
     const [listings, setListings] = useState([]);
-    const [comments, setComments] = useState({});
     const [currentUser, setCurrentUser] = useState(null);
     const [highestBidders, setHighestBidders] = useState({});
-    const [biddingData, setBiddingData] = useState({});
 
     useEffect(() => {
         const fetchListings = async () => {
             const listingsCollection = collection(db, 'listings');
             const snapshot = await getDocs(query(listingsCollection, where('bidding', '==', true)));
-            const listingsData = snapshot.docs.map(async doc => {
+            const listingsData = snapshot.docs.map(doc => {
                 const data = doc.data();
                 const endTime = data.endTime.toDate(); // Convert Firestore Timestamp to JavaScript Date object
                 const remainingTime = endTime - new Date(); // Calculate remaining time in milliseconds
@@ -54,20 +48,17 @@ export default function AllBiddingsPage() {
                 };
             });
             const resolvedListingsData = await Promise.all(listingsData);
-            setListings(resolvedListingsData);
+            setListings(resolvedListingsData.filter(listing => listing.daysRemaining > -1)); // Filter out listings that ended more than a day ago
         };
-        console.log("Fetching listings...");
         fetchListings();
     }, []);
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
             setCurrentUser(user);
         });
-        console.log("Auth state changed, current user:", currentUser);
         return unsubscribe;
-    }, [currentUser]);
+    }, []);
 
     useEffect(() => {
         const fetchBiddingData = async () => {
@@ -83,29 +74,11 @@ export default function AllBiddingsPage() {
             });
             setBiddingData(biddingData);
         };
-        console.log("Fetching bidding data...");
         fetchBiddingData();
     }, []);
 
     const handleBiddingClick = (listingId) => {
         navigation.navigate(Routes.SPECIFICBIDDING, { listingId });
-    };
-    const fetchUsername = async (userId) => {
-        try {
-            const userCollectionRef = collection(db, 'users');
-            const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
-
-            if (!querySnapshot.empty) {
-                const userData = querySnapshot.docs[0].data();
-                return userData.username;
-            } else {
-                console.error('User not found');
-                return null;
-            }
-        } catch (error) {
-            console.error('Error fetching username:', error);
-            return null;
-        }
     };
 
     useEffect(() => {
@@ -142,7 +115,6 @@ export default function AllBiddingsPage() {
             setHighestBidders(highestBiddersData);
         };
 
-        console.log("Fetching highest bidders...");
         fetchHighestBidders();
     }, [listings]);
 
@@ -159,14 +131,13 @@ export default function AllBiddingsPage() {
                     `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
                 highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
                     `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
-                buttonCondition={listing.daysRemaining >= 0 && (
+                buttonCondition={listing.daysRemaining > 0 && (
                     <HStack justifyContent="space-between" alignItems="center">
                         <Button
                             variant="solid"
                             size="$sm"
                             bg={colors.primary}
                             borderRadius={8}
-                            // top={-20}
                             onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
                         >
                             <Text color={colors.white} fontSize="$md" bold="true">Bid Now</Text>
@@ -182,11 +153,9 @@ export default function AllBiddingsPage() {
             <SearchHeader
                 userIcon={require('../../assets/img/usericon.jpg')}
                 placeholder="Search in biddings"
-            // search={searchInput}
-            // onSearchChange={handleSearchChange}
             />
 
-            <Box p="$5" w="100%"  flex={1}>
+            <Box p="$5" w="100%" flex={1}>
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
                         <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
@@ -194,10 +163,8 @@ export default function AllBiddingsPage() {
                         </Heading>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
-                            <ButtonIcon>
-                                <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
-                            </ButtonIcon>
-                            <ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+                            <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+                            <Text pl={10} lineHeight={35}>Post</Text>
                         </Button>
                     </HStack>
                 </VStack>
@@ -209,6 +176,4 @@ export default function AllBiddingsPage() {
             </Box>
         </Box>
     );
-
-
 }
