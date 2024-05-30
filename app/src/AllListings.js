@@ -64,6 +64,9 @@ export default function AllListingsPage() {
     };
 
     const filteredListings = allListingsData.filter((item) => {
+        if (item.sold) {
+            return false; 
+        }
         const listingName = item.listingName.toLowerCase();
         const username = item.username.toLowerCase();
         const tags = item.listingTags.map(tag => tag.toLowerCase());
@@ -77,39 +80,21 @@ export default function AllListingsPage() {
 
     const renderAllListings = () => {
         console.log("Rendering listings...");
-        return filteredListings.map((item) => {
-            if (item.sold) {
-                return (
-                    <ItemCard
-                        key={item.id}
-                        productImage={item.listingImageURL}
-                        productPrice={item.listingPrice}
-                        productName={item.listingName}
-                        productSeller={item.username}
-                        sellerID={item.sellerID}
-                        tags={"Sold"}
-                        color={colors.dark}                        
-                        disabled
-                    />
-                );
-            } else {
-                return (
-                    <ItemCard
-                        key={item.id}
-                        productImage={item.listingImageURL}
-                        productPrice={item.listingPrice}
-                        productName={item.listingName}
-                        productSeller={item.username}
-                        sellerID={item.sellerID}
-                        tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-                        toListing={() => navigation.navigate(Routes.LISTINGS, {
-                            selectedItem: item,
-                            sellerImageURL: item.sellerImageURL
-                        })}
-                    />
-                );
-            }
-        });
+        return filteredListings.map((item) => (
+            <ItemCard
+                key={item.id}
+                productImage={item.listingImageURL}
+                productPrice={item.listingPrice}
+                productName={item.listingName}
+                productSeller={item.username}
+                sellerID={item.sellerID}
+                tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+                toListing={() => navigation.navigate(Routes.LISTINGS, {
+                    selectedItem: item,
+                    sellerImageURL: item.sellerImageURL
+                })}
+            />
+        ));
     };
 
     return (
