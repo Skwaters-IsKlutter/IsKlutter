@@ -82,88 +82,7 @@ const [userListings, setUserListings] = React.useState({ myListings: [], myBiddi
         
         fetchData(); 
         }, []) // Empty dependency array means it will only run once when the component mounts
-      );
-
-      const renderUserListings = () => {
-        return (
-            <>
-                {/* My Listings */}
-                <VStack>
-                    <HStack 
-                        p={5}
-                        alignItems="center"
-                        borderRadius={30} 
-                    >
-                        <MaterialCommunityIcons 
-                            name="view-grid" 
-                            color={colors.secondary} 
-                            size={20}
-                        />
-                        <Heading 
-                            lineHeight={40}
-                            fontSize={20} 
-                            color={colors.secondary} 
-                            pl={10}
-                        >
-                            My Listings
-                        </Heading>
-                    </HStack>
-                    {/* My Listings Container */}
-                    <HStack space="xs" flexWrap="wrap">
-                        {userListings.myListings.map(item => (
-                            <ItemCard
-                                key={item.id}
-                                productImage={item.listingImageURL}
-                                productPrice={item.listingPrice}
-                                productName={item.listingName}
-                                productSeller={currentUser?.username}
-                                tags={item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null}
-                                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}
-                            />
-                        ))}
-                    </HStack>
-                </VStack>
-    
-                {/* My Biddings */}
-                <VStack>
-                    <HStack 
-                        p={5}
-                        alignItems="center"
-                        borderRadius={30} 
-                    >
-                        <MaterialCommunityIcons 
-                            name="cash-multiple" 
-                            color={colors.secondary} 
-                            size={20}
-                        />
-                        <Heading 
-                            lineHeight={40}
-                            fontSize={20} 
-                            color={colors.secondary} 
-                            pl={10}
-                        >
-                            My Biddings
-                        </Heading>
-                    </HStack>
-                    {/* My Biddings Container */}
-                    <HStack space="xs" flexWrap="wrap">
-                        {userListings.myBiddings.map(item => (
-                            <ItemCard
-                                key={item.id}
-                                productImage={item.listingImageURL}
-                                productPrice={item.listingPrice}
-                                productName={item.listingName}
-                                productSeller={currentUser?.username}
-                                tags={item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null}
-                                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}
-                            />
-                        ))}
-                    </HStack>
-                </VStack>
-            </>
-        );
-    };
-    
+      );    
 
     return (
       <Box w="100%" h="100%">
@@ -206,8 +125,7 @@ const [userListings, setUserListings] = React.useState({ myListings: [], myBiddi
                                       productName={item.listingName}
                                       productSeller={currentUser?.username}
                                       tags={item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null}
-                                      toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}
-                                  />
+                                      toListing={item.sold ? null : () => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}                                  />
                               ))}
                           </HStack>
                           
