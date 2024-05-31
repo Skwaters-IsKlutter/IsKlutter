@@ -3,12 +3,13 @@ import {
     VStack,
     Box,
     ScrollView,
-    Heading
+    Heading,
+    Text
 } from '@gluestack-ui/themed';
-import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import { getFirestore, collection, getDocs, query, where} from 'firebase/firestore';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
-import { getAuth} from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import SearchHeader from '../components/SearchHeader.js';
 import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
@@ -47,17 +48,17 @@ export default function CommunityPage() {
             const userCollection = collection(db, 'users');
             const querySnapshot = await getDocs(forumCollection);
             const userData = [];
-            
+
             for (const doc of querySnapshot.docs) {
                 const data = doc.data();
                 const userID = data.userID;
                 const userSnapshot = await getDocs(query(userCollection, where('userID', '==', userID)));
                 let username = "Unknown";
-                
+
                 if (!userSnapshot.empty) {
                     username = userSnapshot.docs[0].data().username;
                 }
-                
+
                 const userDataObj = {
                     key: doc.id,
                     description: data.description,
@@ -86,17 +87,36 @@ export default function CommunityPage() {
             post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
             post.username.toLowerCase().includes(searchQuery.toLowerCase())
         );
-        return filteredPosts.map((userData, index) => (
-            <PostCard
-                key={index}
-                userId={userData.userID}
-                posterIcon={userData.userProfileImg}
-                description={userData.description}
-                timestamp={userData.timeposted ? userData.timeposted.toDate().toLocaleString() : "N/A"}
-                toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
-            />
-        ));
+
+        if (filteredPosts.length === 0) {
+            return <Text style={styles.endOfResults}>No Results Found</Text>;
+        }
+
+        return (
+            <>
+                {filteredPosts.map((userData, index) => (
+                    <PostCard
+                        key={index}
+                        userId={userData.userID}
+                        posterIcon={userData.userProfileImg}
+                        description={userData.description}
+                        timestamp={userData.timeposted ? userData.timeposted.toDate().toLocaleString() : "N/A"}
+                        toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
+                    />
+                ))}
+                <Text style={styles.endOfResults}>End of Results</Text>
+            </>
+        );
     }
+
+    const styles = {
+        endOfResults: {
+            textAlign: 'center',
+            paddingVertical: 20,
+            fontSize: 18,
+            color: 'gray'
+        }
+    };
 
     return (
         <Box w="100%" h="100%">
@@ -106,16 +126,18 @@ export default function CommunityPage() {
                 onSearchChange={setSearchQuery}
             />
 
-            <Box p="$5" w="100%"  flex={1}>
+            <Box p="$5" w="100%" flex={1}>
                 <VStack space="xs" pb="$2">
                     <Heading lineHeight={40} fontSize={40} color={colors.secondary}>
                         Community
                     </Heading>
-                    
+
                     <PostBox />
-                    
+
                     <ScrollView height="80%">
-                        <VStack>{renderAllCommunityPosts()}</VStack>
+                        <VStack>
+                            {renderAllCommunityPosts()}
+                        </VStack>
                     </ScrollView>
                 </VStack>
             </Box>

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText } from '@gluestack-ui/themed';
+import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText, Text } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -80,23 +80,42 @@ export default function AllListingsPage() {
 
     const renderAllListings = () => {
         console.log("Rendering listings...");
-        return filteredListings.map((item) => (
-            <ItemCard
-                key={item.id}
-                productImage={item.listingImageURL}
-                productPrice={item.listingPrice}
-                productName={item.listingName}
-                productSeller={item.username}
-                sellerID={item.sellerID}
-                tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-                toListing={() => navigation.navigate(Routes.LISTINGS, {
-                    selectedItem: item,
-                    sellerImageURL: item.sellerImageURL
-                })}
-            />
-        ));
+
+        if (filteredListings.length === 0) {
+            return <Text style={styles.endOfResults}>No Results Found</Text>;
+        }
+
+        return (
+            <>
+                {filteredListings.map((item) => (
+                    <ItemCard
+                        key={item.id}
+                        productImage={item.listingImageURL}
+                        productPrice={item.listingPrice}
+                        productName={item.listingName}
+                        productSeller={item.username}
+                        sellerID={item.sellerID}
+                        tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+                        toListing={() => navigation.navigate(Routes.LISTINGS, {
+                            selectedItem: item,
+                            sellerImageURL: item.sellerImageURL
+                        })}
+                    />
+                ))}
+                <Text style={styles.endOfResults}>End of Results</Text>
+            </>
+        );
     };
 
+    const styles = {
+        endOfResults: {
+            textAlign: 'center',
+            paddingVertical: 20,
+            fontSize: 18,
+            color: 'gray'
+        }
+    };
+    
     return (
         <Box w="100%" h="100%">
             <SearchHeader
