@@ -1,15 +1,14 @@
 import React from 'react';
 import { Box, VStack, HStack, Heading, Text, Image, Pressable } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import colors from '../config/colors.js';
 
-export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags }) {
+export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags, sold }) {
     const isImageUrl = typeof productImage === 'string';
 
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} width={175} maxHeight={256} m={2} flex={1} overflow="hidden">
+            <Box bg={colors.white} borderRadius={10} width={150} maxHeight={256} m={2} flex={1} overflow="hidden">
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image
@@ -21,6 +20,8 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                     ) : (
                         <Text>No Image Available</Text>
                     )}
+
+                   
 
                     <Heading fontSize="$2xl" color={colors.primary} mt={2}>
                         {`PHP ${productPrice}`}
@@ -36,6 +37,17 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                     
                     <HStack space="sm" flexWrap="wrap" mt={2}>
                         <Text bgColor={colors.secondary} color={colors.white} borderRadius={10} p={7}>{tags}</Text>
+                        {sold && (
+                        <Text
+                            bg={colors.red}
+                            color={colors.white}
+                            fontSize="$md"
+                            padding={7}
+                            borderRadius={10}
+                        >
+                            Sold
+                        </Text>
+                    )}
                     </HStack>
                 </Box>
             </Box>
