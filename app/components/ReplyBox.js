@@ -45,34 +45,36 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
     }
 
     return (
-        <Box p="$2" h="auto" bg={colors.white} flex={1}>
-            <VStack space="sm" m={6}>
-                <HStack justifyContent="space-between" alignItems="center">
-                    <TouchableOpacity onPress={handleViewProfile}>
-                        <HStack alignItems="center">
-                            <Image source={{ uri: userData?.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
-                            <Text color={colors.secondary} fontSize="$md" fontWeight="$bold" pl={5}>{userData?.username}</Text>
-                        </HStack>
-                    </TouchableOpacity>
-                    <HStack space="sm">
-                        <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
-                        <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
-                    </HStack>
-                </HStack>
-            </VStack>
+        <Box  h="auto"  flex={1} m="$1">
+            <VStack space="sm" >
+                <HStack  alignItems="center" bg={colors.white}  borderRadius={15}>
+                    <HStack p="$1" ></HStack>
+                        <TouchableOpacity onPress={handleViewProfile} >
+                        <Image source={{ uri: userData?.userProfileImg }} h={45} w={45} alt="icon" borderRadius={100} />
+                        </TouchableOpacity>
 
-            <HStack space="sm" justifyContent="center" alignItems="center">
-                <ScrollView style={{ flex: 1, maxHeight: 100 }}>
-                    <Box h="auto" w="100%">
-                        <TextInput
-                            multiline
-                            value={commentText}
-                            onChangeText={(text) => setCommentText(text)}
-                            style={{ minHeight: 40 }}
-                        />
-                    </Box>
-                </ScrollView>
-            </HStack>
+                    <VStack  width="90%"  m="$2"  >
+                        <Text color={colors.secondary} fontSize="$md" fontWeight="$bold" >{userData?.username}</Text>
+                        <HStack space="sm">
+                            <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
+                            <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
+                        </HStack>
+                        <HStack space="sm" justifyContent="center" alignItems="center">
+                            <ScrollView style={{ flex: 1, maxHeight: 100 }}>
+                                <Box h="auto" w="100%">
+                                    <TextInput
+                                        multiline
+                                        value={commentText}
+                                        onChangeText={(text) => setCommentText(text)}
+                                        style={{ minHeight: 30 }}
+                                    />
+                                </Box>
+                            </ScrollView>
+                        </HStack>
+                    </VStack>
+                 </HStack>
+
+            </VStack>             
         </Box>
     );
 };

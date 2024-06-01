@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Text,
     VStack,
     HStack,
-    Image,
-    Button,
-    ButtonText,
+    Header,
     Input,
     InputField,
+    InputSlot,
+    InputIcon,
+    Avatar,
+    AvatarFallbackText,
+    AvatarImage,
+    Pressable,
+    Image
 } from '@gluestack-ui/themed';
+import { useNavigation,  useFocusEffect } from '@react-navigation/native';
+import { Alert } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -50,27 +58,28 @@ export default function CommentBox({ posterUserId, selectedItem }) {
     };
 
     return (
-        <Box p="$2" bg={colors.white}>
-            <Box w="100%" maxWidth="$60" pb="$2">
+        <Box p="$3" bg={colors.white}>
+            <Box w="100%" >
                 <HStack space="sm" justifyContent="center" alignItems="center">
                     <Image source={userProfileImg} h={45} w={45} alt="icon" borderRadius={100} />
-                    <Input bg={colors.white} borderColor={colors.secondary} h={80} w="75%">
+                    <Input bg={colors.white} borderColor={colors.secondary} h={50} w="75%" borderRadius={50}>
                     <InputField
                         multiline={true}
-                        size="md"
+                        size="sm"
                         placeholder="Write a comment..."
                         value={commentText}
                         onChangeText={(text) => setCommentText(text)} 
+                        
                     />
                     </Input>
+                    <Pressable onPress={handleComment}>
+                        <MaterialCommunityIcons name="send" color={colors.primary} size={30} p={5} />
+                    </Pressable>
+                    {/* <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={10} onPress={handleComment}> */}
+                    {/* <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText> */}
+                {/* </Button> */}
                 </HStack>
             </Box>
-            
-            <VStack space="sm" p="$2" alignItems="right">
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={10} onPress={handleComment}>
-                    <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
-                </Button>
-            </VStack>
         </Box>
     )
 }

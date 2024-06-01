@@ -11,8 +11,16 @@ import ItemCard from '../components/ItemCard.js';
 
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 export default function AllListingsPage() {
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_600SemiBold,
+        Poppins_700Bold
+    })
+
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
     const [searchInput, setSearchInput] = useState('');
@@ -128,9 +136,9 @@ export default function AllListingsPage() {
             <Box p="$5" w="100%" flex={1} >
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
-                            Listings
-                        </Heading>
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold}>
+                            Discover
+                        </Text>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
                             <ButtonIcon>

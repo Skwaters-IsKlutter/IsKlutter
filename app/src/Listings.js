@@ -11,11 +11,20 @@ import colors from '../config/colors';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs, onSnapshot, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
+import BackHeader from '../components/BackHeader';
+import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import fonts from '../config/fonts.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
 export default function ListingsPage() {
+
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_600SemiBold,
+        Poppins_700Bold
+    })
     const navigation = useNavigation();
     const route = useRoute();
     const [currentUser, setCurrentUser] = useState(null);
@@ -173,8 +182,8 @@ export default function ListingsPage() {
 
     return (
         <Box w="100%" h="100%">
-            <SearchHeaderBack userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
-            <Box p="$2" w="100%" maxWidth="$96" flex={1}>
+            <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
+            <Box p="$2" w="100%"  flex={1}>
                 <ScrollView>
                     <VStack space="xs">
                         {renderListings()}
@@ -191,7 +200,8 @@ export default function ListingsPage() {
                             <Text color={colors.white} fontSize="$sm">Sold</Text>
                         </Button>
                     )}
-                    <VStack space="xs">
+
+                    <VStack pt="$5">
                         <CommentBox
                             selectedItem={selectedItem}
                             posterUserId={currentUser ? currentUser.uid : null}
@@ -200,12 +210,15 @@ export default function ListingsPage() {
                             onAddComment={addComment}
                         />
                     </VStack>
-                    <VStack space="xs">
-                        <Heading pt="$3" fontSize="$2xl" color={colors.secondary}>Comments</Heading>
-                        <VStack space="xs">
+                    
+                    <VStack >
+                        <Text pt="$5" pl="$2"fontSize="$xl" color={colors.secondary} fontFamily={fonts.semibold}>Comments</Text>
+                        <VStack >
                             {renderListingComments()}
                         </VStack>
                     </VStack>
+
+                    
                 </ScrollView>
             </Box>
         </Box>
