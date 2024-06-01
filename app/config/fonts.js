@@ -45,7 +45,8 @@ export default {
     thin: "Poppins_100Thin",
     bold: "Poppins_700Bold",
     semibold: "Poppins_600SemiBold",
-    regular: "Poppins_400Regular"
+    regular: "Poppins_400Regular",
+    medium: "Poppins_500Medium",
 }
 
 

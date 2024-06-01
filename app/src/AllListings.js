@@ -144,13 +144,13 @@ export default function AllListingsPage() {
                             <ButtonIcon>
                                 <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
                             </ButtonIcon>
-                            <ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} alignItems='center'>Post</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>
 
-                <ScrollView  >
-                    <HStack space="xs"  w="100%"flexWrap="wrap" justifyContent="center" >
+                <ScrollView>
+                    <HStack space="xs" w="100%"flexWrap="wrap" justifyContent="center" >
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>
