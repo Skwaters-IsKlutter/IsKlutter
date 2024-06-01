@@ -20,8 +20,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+import { usePoppinsFonts} from '../config/fonts.js';
 
 export default function LoginPage() {
+    const { bold } = usePoppinsFonts();
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

@@ -25,26 +25,26 @@ export const usePoppinsFonts = () => {
         Poppins_900Black
     });
 
-    usePoppinsFonts();
+    // usePoppinsFonts();
 
-    // return {
-    //     thin: { fontFamily: 'Poppins_100Thin' },
-    //     extraLight: { fontFamily: 'Poppins_200ExtraLight' },
-    //     light: { fontFamily: 'Poppins_300Light' },
-    //     regular: { fontFamily: 'Poppins_400Regular' },
-    //     medium: { fontFamily: 'Poppins_500Medium' },
-    //     semiBold: { fontFamily: 'Poppins_600SemiBold' },
-    //     bold: { fontFamily: 'Poppins_700Bold' },
-    //     extraBold: { fontFamily: 'Poppins_800ExtraBold' },
-    //     black: { fontFamily: 'Poppins_900Black' },
-    //     fontsLoaded
-    // };
+    return {
+        thin: { fontFamily: 'Poppins_100Thin' },
+        extraLight: { fontFamily: 'Poppins_200ExtraLight' },
+        light: { fontFamily: 'Poppins_300Light' },
+        regular: { fontFamily: 'Poppins_400Regular' },
+        medium: { fontFamily: 'Poppins_500Medium' },
+        semiBold: { fontFamily: 'Poppins_600SemiBold' },
+        bold: { fontFamily: 'Poppins_700Bold' },
+        extraBold: { fontFamily: 'Poppins_800ExtraBold' },
+        black: { fontFamily: 'Poppins_900Black' },
+        fontsLoaded
+    };
 };
 
-export default {
-    thin: "Poppins_100Thin",
-    bold: "Poppins_700Bold",
-}
+// export default {
+//     thin: "Poppins_100Thin",
+//     bold: "Poppins_700Bold",
+// }
 
 
 /* Monserrat Font

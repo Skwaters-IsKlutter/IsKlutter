@@ -11,8 +11,10 @@ import ItemCard from '../components/ItemCard.js';
 
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import { usePoppinsFonts } from '../config/fonts.js';
 
 export default function AllListingsPage() {
+    const { bold, thin} = usePoppinsFonts();
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
     const [searchInput, setSearchInput] = useState('');
@@ -128,7 +130,7 @@ export default function AllListingsPage() {
             <Box p="$5" w="100%" flex={1} >
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+                        <Heading lineHeight={50} fontSize={40} color={colors.secondary} style={thin}>
                             Listings
                         </Heading>
 

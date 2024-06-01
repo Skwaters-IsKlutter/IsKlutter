@@ -16,6 +16,7 @@ import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import { usePoppinsFonts } from '../config/fonts.js';
 
 const getCurrentUserID = () => {
     const currentUser = auth.currentUser;
@@ -28,6 +29,7 @@ const getCurrentUserID = () => {
 };
 
 export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags, timestamp }) {
+    const { bold, boldItalic } = usePoppinsFonts();
     const navigation = useNavigation();
     const currentUserId = getCurrentUserID();
 
@@ -104,7 +106,7 @@ export default function ListingCard({ productID, productName, productImage, prod
                     <Heading fontSize="$2xl" color={colors.primary}>{productName}</Heading>   
                 </HStack>
                 <Text fontSize="$sm" color={colors.gray} fontWeight="$bold" >{timestamp}</Text>
-                <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${productPrice}`}</Text>
+                <Text fontSize="$lg" color={colors.secondary} Text style={boldItalic}>{`PHP ${productPrice}`}</Text>
             </VStack>
 
             <HStack space="sm" p="$2">
