@@ -24,7 +24,7 @@ import colors from './app/config/colors.js';
 import { UserProvider } from './app/components/UserIcon.js';
 import SpecificBiddingPage from './app/src/SpecificBidding.js';
 
-
+import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
 

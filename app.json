@@ -1,5 +1,4 @@
 {
-  "expo": {
     "name": "IsKlutter",
     "slug": "isklutter",
     "version": "1.0.0",
@@ -7,7 +6,5 @@
 		"icon": "./assets/img/icon.png",
     "assetBundlePatterns": [
       "**/*"
-    ]
-  },
-  "name": "IsKlutter"
+    ],
 }

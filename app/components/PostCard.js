@@ -3,6 +3,9 @@ import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/theme
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+
+// import usePoppinsFonts from '../config/fonts.js/index.js';
 
 const db = getFirestore();
 
@@ -10,6 +13,8 @@ export default function PostCard({ userId, description, toIndividualPost, timest
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
+
+    // const { bold } = usePoppinsFonts();
 
     const fetchUserData = useCallback(async () => {
         try {
@@ -67,7 +72,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     </HStack>
 
                     <VStack size="md">
-                        <Text color="black" pb="$3" size="sm" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7}>
+                        <Text color="black" pb="$3" size="sm" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7} fontFamily={fonts.bold}>
                             {description}
                         </Text>
                     </VStack>
