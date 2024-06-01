@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-    VStack,
-    Box,
-    ScrollView,
-    Heading,
-    Text
-} from '@gluestack-ui/themed';
+import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText, Text } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
@@ -15,6 +9,8 @@ import PostBox from '../components/PostBox.js';
 import PostCard from '../components/PostCard.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
+import fonts from '../config/fonts.js';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -127,19 +123,34 @@ export default function CommunityPage() {
             />
 
             <Box p="$5" w="100%" flex={1}>
-                <VStack space="xs" pb="$2">
-                    <Heading lineHeight={40} fontSize={40} color={colors.secondary}>
+                {/* <VStack space="xs" pb="$2"> */}
+                    {/* <Heading lineHeight={40} fontSize={40} color={colors.secondary}>
                         Community
-                    </Heading>
+                    </Heading> */}
 
-                    <PostBox />
+                    {/* <PostBox /> */}
+                    <VStack space="xs" pb="$2">
+                    <HStack space="xs" justifyContent="space-between" alignItems="center">
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold}>
+                            Community
+                        </Text>
+
+                        <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+                            </ButtonIcon>
+                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} alignItems='center'>Post</ButtonText>
+                        </Button>
+                    </HStack>
+                </VStack>
+                    
 
                     <ScrollView height="80%">
                         <VStack>
                             {renderAllCommunityPosts()}
                         </VStack>
                     </ScrollView>
-                </VStack>
+                {/* </VStack> */}
             </Box>
         </Box>
     )

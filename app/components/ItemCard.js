@@ -9,7 +9,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
 
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} width={170} maxHeight={256} m={6} flex={1} overflow="hidden">
+            <Box bg={colors.white} borderRadius={10} width={160} maxHeight={256} m={6} flex={1} overflow="hidden">
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image
@@ -31,11 +31,11 @@ export default function ItemCard({ productImage, productPrice, productName, prod
 
                     <VStack space="xs" p={3}>
                         <Text fontSize="$md"  fontFamily={fonts.regular} color={colors.black}>{productName}</Text>
-                        {/* <HStack alignItems='center'>
+                        <HStack alignItems='center'>
                             <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary}   />      
                             <Text fontSize="$sm" color={colors.black} fontFamily={fonts.regular} pl="$2">{productSeller}
                             </Text>
-                        </HStack> */}
+                        </HStack>
                     </VStack>
                     
                     <HStack space="sm" flexWrap="wrap" mt={5}>

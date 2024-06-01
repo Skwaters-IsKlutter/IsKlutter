@@ -53,7 +53,7 @@ export default function AddListingImagePicker({ setListingData }) {
     };
 
     return (
-        <VStack space="xl" m={5} mt={-10}>
+        <VStack space="xl" ml={15} mt={-10}>
             {imageSource ? (
                 <TouchableOpacity onPress={handleImagePress}>
                     <View style={styles.imageContainer}>
