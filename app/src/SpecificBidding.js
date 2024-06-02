@@ -201,8 +201,8 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice, bidIncrement, sellerID, endTime } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID, endTime });
+                    const { listingName, listingPrice, bidIncrement, sellerID, endTime, productSeller } = listingData;
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, endTime, productSeller });
 
                     const endTimeDate = new Date(endTime.seconds * 1000);
                     setEndTimeDate(endTimeDate);
@@ -282,6 +282,7 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice={highestBiddingPrice}
                 listingImage={listingImage}
                 bidIncrement={bidIncrement}
+                productSeller={listing.productSeller}
             />
         )
     };
