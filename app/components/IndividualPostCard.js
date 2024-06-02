@@ -7,6 +7,7 @@ import { useIsFocused } from '@react-navigation/native';
 import colors from '../config/colors.js';
 import { Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import fonts from '../config/fonts.js';
 
 const getCurrentUserID = () => {
     const currentUser = auth.currentUser;
@@ -101,7 +102,7 @@ export default function IndividualPostCard({ postKey, userId, description, times
                         zIndex={1}
                     >
                         
-                        <ButtonIcon>
+                        <ButtonIcon >
                             <MaterialCommunityIcons name="delete" size={15} color={colors.white}/>
                         </ButtonIcon>
                     </Button>
@@ -110,19 +111,18 @@ export default function IndividualPostCard({ postKey, userId, description, times
                 <HStack space="sm" alignItems="center">
                     <Image
                         source={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/profile-holder.jpg')}
-                        style={{ width: 50, height: 50, borderRadius: 25 }}
+                        style={{ width: 60, height: 60, borderRadius: 25 }}
                         alt="User Avatar"
                     />
                     <VStack>
-                        <Heading color={colors.primary} size={10} bold={true}>
-                            {username}
-                        </Heading>
-                        <Text color={colors.gray} size="xs" bold={true}>
+                        <Text color={colors.primary} fontSize="$xl" fontFamily={fonts.semibold}>
+                                {username}</Text>
+                        <Text color={colors.black} size="xs" fontFamily={fonts.regular}>
                         {timestamp}
                         </Text>
                     </VStack>
                 </HStack>
-                <Text color="black" pb="$3" size="md" mt="$3" textAlign='justify'>
+                <Text color="black" pb="$3" fontSize="$xl" mt="$5" textAlign='justify'fontFamily={fonts.regular} >
                     {description}
                 </Text>
             </VStack>
