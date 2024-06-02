@@ -127,7 +127,7 @@ export default function ProfilePage() {
                                 </HStack>
                                 <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userListings.myListings.length > 0 ? "space-between" : "center"}>
                                     {userListings.myListings.length > 0 ? (
-                                        serListings.myListings.map(item => (
+                                        userListings.myListings.map(item => (
                                             <ItemCard
                                                 key={item.id}
                                                 productImage={item.listingImageURL}
