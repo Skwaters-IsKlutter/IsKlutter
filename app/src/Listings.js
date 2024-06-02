@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { VStack, Box, ScrollView, Heading, Button, Text } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';  // Import Alert
-import SearchHeaderBack from '../components/SearchHeaderBack';
 import ListingCard from '../components/ListingCard';
 import TagLabel from '../components/TagLabel';
 import CommentBox from '../components/CommentBox';
