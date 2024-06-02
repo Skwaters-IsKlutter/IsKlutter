@@ -43,10 +43,13 @@ export default function SpecificBiddingPage() {
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [highestBidderName, sethighestBidderName] = useState('');
     const [listingImage, setListingImage] = useState(null);
+    const [forceRender, setForceRender] = useState(false);  // State to force re-render
 
 
     useEffect(() => {
+        console.log("Component mounted or updated.");
         const unsubscribe = onAuthStateChanged(auth, user => {
+            console.log("Auth state changed:", user);
             setCurrentUser(user);
         });
         return unsubscribe;
@@ -54,11 +57,13 @@ export default function SpecificBiddingPage() {
 
     const fetchUsername = async (userId) => {
         try {
+            console.log("Fetching username for userId:", userId);
             const userCollectionRef = collection(db, 'users');
             const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
 
             if (!querySnapshot.empty) {
                 const userData = querySnapshot.docs[0].data();
+                console.log("Username fetched:", userData.username);
                 return userData.username;
             } else {
                 console.error('User not found');
@@ -73,11 +78,13 @@ export default function SpecificBiddingPage() {
     useEffect(() => {
         const fetchListingImage = async () => {
             try {
+                console.log("Fetching listing image for listingId:", listingId);
                 const docRef = doc(db, 'listings', listingId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const listingData = docSnap.data();
                     if (listingData && listingData.listingImageURL) {
+                        console.log("Listing image fetched:", listingData.listingImageURL);
                         setListingImage(listingData.listingImageURL);
                     }
                 }
@@ -91,11 +98,14 @@ export default function SpecificBiddingPage() {
     
 
     const updateHighestBidder = (bidder, price) => {
+        console.log("Updating highest bidder to:", bidder, "with price:", price);
         setHighestBidder({ bidder, price });
+        setForceRender(prev => !prev);  // Force re-render
     };
 
     const handleBid = async (listingId, biddingAmount) => {
         try {
+            console.log("Handling bid for listingId:", listingId, "with amount:", biddingAmount);
             const biddingBet = parseFloat(biddingAmount);
             if (isNaN(biddingBet)) {
                 Alert.alert('Invalid Bid', 'Please enter a valid number for bidding.');
@@ -107,8 +117,8 @@ export default function SpecificBiddingPage() {
                 return;
             }
 
-            if (biddingBet < highestBiddingPrice + 1) {
-                Alert.alert('Invalid Bid', 'Your bid must be higher than the current highest bid.');
+            if (biddingBet < highestBiddingPrice + 10) {
+                Alert.alert('Invalid Bid', 'Your bid must be 10 higher than the current highest bid.');
                 return;
             }
 
@@ -147,6 +157,7 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice: newHighestBiddingPrice
             }));
 
+            console.log("Bid successful. New highest bidder:", highestBidderName, "with price:", newHighestBiddingPrice);
             Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
 
         } catch (error) {
@@ -158,6 +169,7 @@ export default function SpecificBiddingPage() {
     useEffect(() => {
         const fetchBiddingData = async () => {
             try {
+                console.log("Fetching bidding data for listingId:", listingId);
                 const biddingCollection = collection(db, 'bidding');
                 const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
                 let maxBiddingPrice = 0;
@@ -180,23 +192,26 @@ export default function SpecificBiddingPage() {
                     highestBidderName: userWithMaxBiddingPrice,
                     highestBiddingPrice: maxBiddingPrice
                 }));
+                console.log("Bidding data fetched. Highest price:", maxBiddingPrice, "by user:", userWithMaxBiddingPrice);
             } catch (error) {
                 console.error('Error fetching bidding data:', error);
             }
         };
 
         fetchBiddingData();
-    }, [listingId, listing, highestBidderName, highestBiddingPrice]);
+    }, [listingId, listing, highestBidderName, highestBiddingPrice, forceRender]);
 
     useEffect(() => {
         const fetchListing = async () => {
             try {
+                console.log("Fetching listing for listingId:", listingId);
                 const listingsCollection = collection(db, 'listings');
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
                     const { listingName, listingPrice } = listingData;
                     setListing({ listingName, listingPrice });
+                    console.log("Listing data fetched:", { listingName, listingPrice });
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
@@ -208,10 +223,12 @@ export default function SpecificBiddingPage() {
 
         const fetchBiddingData = async () => {
             try {
+                console.log("Fetching all bidding data for listingId:", listingId);
                 const biddingCollection = collection(db, 'bidding');
                 const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
                 const data = querySnapshot.docs.map(doc => doc.data());
                 setBiddingData(data);
+                console.log("All bidding data fetched:", data);
             } catch (error) {
                 console.error('Error fetching bidding data:', error);
                 Alert.alert('Error', 'Failed to fetch bidding data.');
@@ -220,7 +237,7 @@ export default function SpecificBiddingPage() {
 
         fetchListing();
         fetchBiddingData();
-    }, [listingId]);
+    }, [listingId, forceRender]);
 
     const renderSpecificBidding = () => {
         return listing && (
@@ -276,7 +293,6 @@ export default function SpecificBiddingPage() {
                             value={biddingAmount}
                             placeholder="Place your bet amount in PHP"
                             onChangeText={(text) => setBiddingAmount(text)}
-
                         />
                     </Input>
                     <Button 
