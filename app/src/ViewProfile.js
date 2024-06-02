@@ -113,7 +113,7 @@ export default function ViewProfile() {
             <Text lineHeight={40} pl={20} fontSize={20} color={colors.secondary} mt={6} fontFamily={fonts.semibold}>
               {`${sellerProfile?.username}'s Listings`}
             </Text>
-            <HStack space="xs" flexWrap="wrap" justifyContent="center">
+            <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="space-between">
               {renderListings(userListings)}
             </HStack>
 

@@ -77,7 +77,7 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
       };
 
     return (
-        <Box p="$1" maxHeight={cardHeight} flex={1} >
+        <Box p="$1" w="100%" maxHeight={cardHeight} flex={1} >
             <VStack bg={colors.white} width="100%" borderRadius={10} >
               {/* {showDeleteButton && (
                     <Button 
