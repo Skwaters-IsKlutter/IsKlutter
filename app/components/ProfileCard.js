@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import colors from '../config/colors.js';
 import profileImgPlaceHolder from '../../assets/img/profile-holder.jpg';
 import { auth } from '../../config/firebase';
+import fonts from '../config/fonts.js';
 
 export default function ProfileCard({ userProfileImg, username, profileName, bio, userID, setProfileName, setUsername, setBio, loading }) {
   const navigation = useNavigation();
@@ -34,7 +35,7 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
   };
 
   return (
-    <Box bgColor="white" p={15} borderRadius={5}  width="100%">
+    <Box  p={15} borderRadius={5}  width="100%">
       {/* Avatar*/}
       <Avatar borderRadius="$full" alignSelf="center" size="2xl">
         {userProfileImg && (
@@ -46,9 +47,9 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
         )}
       </Avatar>
 
-      <VStack space="xs" pb="$2" py="$3">
+      <VStack space="xs" pb="$2" py="$5" alignItems='center'>
         <HStack justifyContent="space-between" alignItems="center">
-          <Heading pt="$1.5"  fontSize={25} color={colors.primary}>{profileName}</Heading>
+          <Text pt="$5"  fontSize={35} color={colors.white} fontFamily={fonts.semibold}>{profileName}</Text>
           
         </HStack>
 
@@ -56,15 +57,15 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
           <Text>Loading...</Text>
         ) : (
           <>
-            <HStack justifyContent="space-between" alignItems="center">
-            <Heading fontSize={20} color={colors.black} mt={0} mb={0}>
+            <HStack justifyContent="space-between" alignItems="center" >
+            <Text fontSize={20} color={colors.white} mt={0} mb={0} fontFamily={fonts.regular}>
               {`@${username}`}
-            </Heading>
+            </Text>
             
             </HStack>
             
 
-            <Text px="$10" pl="$1" fontSize={15} color={colors.black} pt="0" pb="0">
+            <Text px="$10" fontSize={15} color={colors.white} fontFamily={fonts.regular}pt="0" pb={5}>
               {bio}
             </Text>
             <HStack alignItems="center">
@@ -74,7 +75,7 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
                     borderRadius={20} 
                     mt={10}
                     onPress={handleEditProfile}>
-              <ButtonText color={colors.white} fontSize="$sm">
+              <ButtonText color={colors.white} fontSize="$sm"  fontFamily={fonts.bold} >
                 Edit Profile
               </ButtonText>
             </Button>
@@ -82,7 +83,7 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
             <Button 
               variant="solid" 
               size="xs" backgroundColor={colors.gray} borderRadius={20} mt={10} ml={10}onPress={handleLogout}>
-              <ButtonText color={colors.white} fontSize="$sm">
+              <ButtonText color={colors.white} fontSize="$sm" fontFamily={fonts.bold}>
                 Logout
               </ButtonText>
             </Button>

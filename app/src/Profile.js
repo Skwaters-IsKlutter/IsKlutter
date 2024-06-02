@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Box, ScrollView, Heading, HStack, VStack } from '@gluestack-ui/themed';
+import { Box, ScrollView, Heading, HStack, VStack,Pressable,Text } from '@gluestack-ui/themed';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import HelloCard from '../components/ProfileHello.js'; 
 import ProfileCard from '../components/ProfileCard.js';
@@ -10,6 +10,7 @@ import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { auth, database } from '../../config/firebase';
+import fonts from '../config/fonts.js';
 
 export default function ProfilePage() {
     const navigation = useNavigation();
@@ -66,37 +67,56 @@ export default function ProfilePage() {
             fetchData(); 
         }, []) 
     );    
+    
 
     return (
-      <Box w="100%" h="100%">
-          <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+      <Box w="100%" h="100%" bgColor={colors.white}>
           
-          <Box p="$3" w="100%" flex={1}>
-              <HelloCard username={currentUser?.username} />
-              <ScrollView>
-                  <ProfileCard
-                      userProfileImg={profileImg}
-                      username={currentUser?.username}
-                      profileName={currentUser?.userProfile || currentUser?.username}
-                      bio={currentUser?.userBio || "I have no interesting info."}
-                      userID={currentUser?.userID}
-                      setProfileName={setProfileName}
-                      setUsername={setUsername}
-                      setBio={setBio}
-                      loading={loadingProfile}
-                  />
-              
-                  <Box bgColor="white" p="$3" m={5} h="100%">
+            <VStack>
+                    <HStack p="$3" w="100%" mt={25} alignItems="center">
+                        <Pressable onPress={navigation.goBack}>
+                            <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
+                        </Pressable>
+                    </HStack>
+                </VStack>
+         
+          
+        <Box height= "55%" w="100%" 
+            bg={colors.secondary} 
+            position= 'absolute'  
+            zIndex={-100} 
+            borderBottomLeftRadius={50}
+            borderBottomRightRadius={50} ></Box>
+        <VStack>
+
+            <Box w="100%" flex={1} zIndex= {1} position= 'absolute'  >
+                <HelloCard username={currentUser?.username} />
+                <ProfileCard
+                        userProfileImg={profileImg}
+                        username={currentUser?.username}
+                        profileName={currentUser?.userProfile || currentUser?.username}
+                        bio={currentUser?.userBio || "I have no interesting info."}
+                        userID={currentUser?.userID}
+                        setProfileName={setProfileName}
+                        setUsername={setUsername}
+                        setBio={setBio}
+                        loading={loadingProfile}
+                    />
+            </Box>
+
+            <Box p="$3" w="100%"  height="100%"  >
+              <ScrollView mt={400}>
+                  <Box  p="$3" m={5} h="100%">
                       <VStack>
                           <HStack p={5} alignItems="center" borderRadius={30}>
                               <MaterialCommunityIcons 
                                   name="view-grid" 
                                   color={colors.secondary} 
-                                  size={20}
+                                  size={25}s
                               />
-                              <Heading lineHeight={40} fontSize={20} color={colors.secondary} pl={10}>
-                                  My Listings
-                              </Heading>
+                                <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
+                                    My Listings
+                                </Text>
                           </HStack>
                           <HStack space="xs" flexWrap="wrap">
                               {userListings.myListings.map(item => (
@@ -117,11 +137,11 @@ export default function ProfilePage() {
                               <MaterialCommunityIcons 
                                   name="cash-multiple" 
                                   color={colors.secondary} 
-                                  size={20}
+                                  size={25}
                               />
-                              <Heading lineHeight={40} fontSize={20} color={colors.secondary} pl={10}>
-                                  My Biddings
-                              </Heading>
+                               <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
+                                    My Biddings
+                                </Text>
                           </HStack>
                           <HStack space="xs" flexWrap="wrap">
                               {userListings.myBiddings.map(item => (
@@ -140,7 +160,8 @@ export default function ProfilePage() {
                       </VStack>
                   </Box>
               </ScrollView>
-          </Box>
+            </Box>
+          </VStack>
       </Box>
     );
 }
