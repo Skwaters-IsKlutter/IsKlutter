@@ -22,12 +22,13 @@ import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
 import fonts from '../config/fonts.js';
-import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular, Poppins_100Thin } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 
 export default function LoginPage() {
 
     const [fontsLoaded] = useFonts({
+        Poppins_100Thin,
         Poppins_400Regular,
         Poppins_600SemiBold,
         Poppins_700Bold

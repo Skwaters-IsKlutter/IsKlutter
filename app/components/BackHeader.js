@@ -24,7 +24,6 @@ import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 import fonts from '../config/fonts.js';
-import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 export default function BackHeader({ headerText }) {
     const navigation = useNavigation();

@@ -22,6 +22,7 @@ import AddBiddingScreen from './app/components/screens/AddBiddingScreen.js';
 import AddPostScreen from './app/components/screens/AddPostScreen.js';
 
 import colors from './app/config/colors.js';
+import fonts from './app/config/fonts.js';
 import { UserProvider } from './app/components/UserIcon.js';
 import SpecificBiddingPage from './app/src/SpecificBidding.js';
 
@@ -36,22 +37,22 @@ function HomepageScreenTabs() {
 									   tabBarActiveTintColor:'white'}}>
 			<Tab.Screen options={{headerShown: false, 
 								tabBarIcon: ({ color, size }) => (
-									<MaterialCommunityIcons name="apps" color={colors.white} size={35} />),
+									<MaterialCommunityIcons name="apps" color={colors.white} size={32} />),
 									
-								tabBarLabelStyle: {top:-5},
+								tabBarLabelStyle: {top:-3, fontFamily:fonts.bold},
 								}} 
 						name="Listings" component={AllListingsScreen} />
 			<Tab.Screen options={{headerShown: false, 
 								tabBarIcon: ({ color, size }) => (
-									<MaterialCommunityIcons name="account-group" color={colors.white} size={35} />
+									<MaterialCommunityIcons name="account-group" color={colors.white} size={34} />
 								), 
-								tabBarLabelStyle: {top:-5},}}
+								tabBarLabelStyle: {top:-3, fontFamily:fonts.bold},}}
 						name="Community" component={CommunityScreen} />
 			<Tab.Screen options={{headerShown: false, 
 								tabBarIcon: ({ color, size }) => (
 									<MaterialCommunityIcons name="cash-multiple" color={colors.white} size={30} />
 								), 
-								tabBarLabelStyle: {top:-5},}}
+								tabBarLabelStyle: {top:-3, fontFamily:fonts.bold},}}
 						name="Biddings" component={AllBiddingsScreen} />
 		</Tab.Navigator>
 	);
