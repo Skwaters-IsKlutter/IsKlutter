@@ -6,13 +6,13 @@ import { getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
 
 // Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyBxkOdC6HIzGg6ci5R8sA5CqDDRYPj3SmI",
-  authDomain: "isklutterdb.firebaseapp.com",
-  projectId: "isklutterdb",
-  storageBucket: "isklutterdb.appspot.com",
-  messagingSenderId: "17672508121",
-  appId: "1:17672508121:web:3187971cf58c66e3bbe4c8",
-  measurementId: "G-ETWQ6PKHYC"
+  apiKey: "AIzaSyCme7gwMsGiiaflf4X6Sm6hIyrHBHoCDNM",
+  authDomain: "isklutterfinaldb.firebaseapp.com",
+  projectId: "isklutterfinaldb",
+  storageBucket: "isklutterfinaldb.appspot.com",
+  messagingSenderId: "570201752762",
+  appId: "1:570201752762:web:a8239c48cfba6896fbee83",
+  measurementId: "G-WNQTGPT3EH"
 };
 
 const app = initializeApp(firebaseConfig);
