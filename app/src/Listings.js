@@ -182,7 +182,7 @@ export default function ListingsPage() {
 
     return (
         <Box w="100%" h="100%">
-            <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
+            <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Product Details" />
             <Box p="$2" w="100%"  flex={1}>
                 <ScrollView>
                     <VStack space="xs">

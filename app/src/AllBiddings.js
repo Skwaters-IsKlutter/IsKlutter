@@ -152,7 +152,7 @@ export default function AllBiddingsPage() {
                     />
                 ))}
             </VStack>
-            <Text style={styles.endOfResults}>End of Results</Text>
+            <Text style={styles.endOfResults} fontFamily={fonts.semibold}>End of Results</Text>
         </>
     };
 

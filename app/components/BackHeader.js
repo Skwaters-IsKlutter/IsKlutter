@@ -26,16 +26,7 @@ import Routes from '../components/constants/Routes.js';
 import fonts from '../config/fonts.js';
 import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
-export default function BackHeader({username, userIcon, userProfile, back }) {
-    const [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-        Poppins_600SemiBold,
-        Poppins_700Bold
-    })
-    
-
-
-
+export default function BackHeader({ headerText }) {
     const navigation = useNavigation();
     const { userProfileImg } = useUser();
     const [, setForceUpdate] = useState(false);
@@ -59,7 +50,7 @@ export default function BackHeader({username, userIcon, userProfile, back }) {
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
                     <Box >
-                        <Text fontSize={24} color={colors.white} ml={85} lineHeight={40} fontFamily="Poppins_600SemiBold" >Product Details</Text>
+                        <Text fontSize={24} color={colors.white} m={10} lineHeight={40} fontFamily={fonts.semibold} >{headerText}</Text>
                     </Box>
                 </HStack>
             </VStack>
