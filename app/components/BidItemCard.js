@@ -11,6 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
+import { useWindowDimensions } from 'react-native';
 
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
@@ -22,6 +23,8 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
     const [highestBid, setHighestBid] = useState(null);
     const [highestBidder, setHighestBidder] = useState(null);
     const [isImageUrl, setIsImageUrl] = useState(typeof listingImage === 'string');
+    const { height } = useWindowDimensions();
+    const cardHeight = height / 3;
 
     useEffect(() => {
         const fetchHighestBid = async () => {
@@ -51,7 +54,9 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
 
         fetchHighestBid();
     }, [listingName]);
-  
+
+    const truncatedListingName = listingName.length > 20 ? listingName.substring(0, 17) + '...' : listingName;
+
     const confirmDelete = () => {
           Alert.alert(
               "Delete Listing",
@@ -72,8 +77,8 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
       };
 
     return (
-        <Box p="$2" maxHeight={200} flex={1} >
-            <VStack bg={colors.white} width="100%" height="auto" borderRadius={10} >
+        <Box p="$1" maxHeight={cardHeight} flex={1} >
+            <VStack bg={colors.white} width="100%" borderRadius={10} >
               {/* {showDeleteButton && (
                     <Button 
                         variant="solid" 
@@ -103,7 +108,7 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
                         <Text>No Image Available</Text>
                     )}
                     <VStack p="$2" flex={1}>
-                        <Text fontSize="$xl" color={colors.primary} fontFamily={fonts.bold}>{listingName}</Text>
+                        <Text fontSize="$xl" color={colors.primary} fontFamily={fonts.bold}>{truncatedListingName}</Text>
                         
                         {highestBid ? (
                             <>

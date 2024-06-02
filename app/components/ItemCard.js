@@ -3,13 +3,18 @@ import { Box, VStack, HStack, Heading, Text, Image, Pressable } from '@gluestack
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
+import { useWindowDimensions } from 'react-native';
 
 export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags, sold }) {
     const isImageUrl = typeof productImage === 'string';
-
+    const { width } = useWindowDimensions(); // Get screen width
+    const cardWidth = (width - 60) / 2;
+    
+    const truncatedproductName = productName.length > 20 ? productName.substring(0, 17) + '...' : productName;
+    
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} width={160} maxHeight={270} m={6} flex={1} overflow="hidden">
+            <Box bg={colors.white} borderRadius={10} height={270} width={cardWidth} m={3} mb={5}>
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image
@@ -22,7 +27,6 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                         <Text>No Image Available</Text>
                     )}
 
-                   
                     <Text fontFamily={fonts.semibold} height={25} mt="$2" >
                         <Heading fontSize="$2xl" color={colors.primary} >
                             {`₱ ${productPrice}`}
@@ -30,7 +34,9 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                     </Text>
 
                     <VStack space="xs" p={3}>
-                        <Text fontSize="$md"  fontFamily={fonts.bold} color={colors.secondary}>{productName}</Text>
+                        <Text fontSize="$md"  fontFamily={fonts.bold} color={colors.secondary}>
+                            {truncatedproductName}
+                        </Text>
                         <HStack alignItems='center'>
                             <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary}   />      
                             <Text fontSize="$sm" color={colors.gray} fontFamily={fonts.regular} pl="$2">{productSeller}
