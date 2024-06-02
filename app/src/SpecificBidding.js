@@ -97,7 +97,7 @@ export default function SpecificBiddingPage() {
             }
 
             if (biddingBet < listing.listingPrice + bidIncrement) {
-                Alert.alert('Invalid Bid', 'Your bid must be higher than the listing price.');
+                Alert.alert('Invalid Bid', `Your bid must be ${bidIncrement} higher than the starting bid.`);
                 return;
             }
 

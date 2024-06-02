@@ -81,7 +81,7 @@ export default function ProfilePage() {
                 </VStack>
          
           
-        <Box height= "55%" w="100%" 
+        <Box height= "60%" w="100%" 
             bg={colors.secondary} 
             position= 'absolute'  
             zIndex={-100} 
@@ -112,7 +112,7 @@ export default function ProfilePage() {
                               <MaterialCommunityIcons 
                                   name="view-grid" 
                                   color={colors.secondary} 
-                                  size={25}s
+                                  size={25}
                               />
                                 <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
                                     My Listings

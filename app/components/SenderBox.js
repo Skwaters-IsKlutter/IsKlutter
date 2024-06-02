@@ -19,6 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import UserAvatar from './Avatar.js';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import Routes from '../components/constants/Routes.js';
 
 
@@ -31,12 +32,8 @@ export default function SenderBox( {recipientName} ) {
                     <MaterialCommunityIcons name="arrow-left-bold" color={colors.primary} size={30} p={5} />
                 </Pressable>
                 {/* <UserAvatar username={recipientName} /> */}
-                <VStack>
-                    <Pressable >
-                        <Text color={colors.primary} m={10} size='2xl' bold={true}>{recipientName}</Text>
-                    </Pressable>
+                <Text color={colors.primary} m={10} size='2xl' fontFamily={fonts.bold}>{recipientName}</Text>
                     {/* <Text color={colors.black} size="xs">{senderUsername}</Text>   */}
-                </VStack>
             </HStack>
         </Box>
     )
