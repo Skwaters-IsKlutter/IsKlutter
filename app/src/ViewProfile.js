@@ -15,118 +15,144 @@ import BackHeader from '../components/BackHeader.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ViewProfile() {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const [sellerProfile, setSellerProfile] = useState(null);
-  const [userListings, setUserListings] = useState([]);
-  const [userBiddings, setUserBiddings] = useState([]);
+    const navigation = useNavigation();
+    const route = useRoute();
+    const [sellerProfile, setSellerProfile] = useState(null);
+    const [userListings, setUserListings] = useState([]);
+    const [userBiddings, setUserBiddings] = useState([]);
 
-  useEffect(() => {
-    const sellerID = route.params?.sellerID;
+    useEffect(() => {
+        const sellerID = route.params?.sellerID;
 
-    if (!sellerID) {
-      console.error("Seller ID is undefined in route params");
-      return;
-    }
-
-    const fetchSellerProfile = async () => {
-      const q = query(collection(database, 'users'), where('userID', '==', sellerID));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        const sellerDoc = querySnapshot.docs[0];
-        const sellerDocSnapshot = await getDoc(doc(database, sellerDoc.ref.path));
-
-        if (sellerDocSnapshot.exists()) {
-          const sellerData = sellerDocSnapshot.data();
-          setSellerProfile(sellerData);
-        } else {
-          console.error('Seller document does not exist.');
+        if (!sellerID) {
+            console.error("Seller ID is undefined in route params");
+            return;
         }
-      } else {
-        console.error('Seller document not found.');
-      }
+
+        const fetchSellerProfile = async () => {
+            const q = query(collection(database, 'users'), where('userID', '==', sellerID));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const sellerDoc = querySnapshot.docs[0];
+                const sellerDocSnapshot = await getDoc(doc(database, sellerDoc.ref.path));
+
+                if (sellerDocSnapshot.exists()) {
+                    const sellerData = sellerDocSnapshot.data();
+                    setSellerProfile(sellerData);
+                } else {
+                    console.error('Seller document does not exist.');
+                }
+            } else {
+                console.error('Seller document not found.');
+            }
+        };
+
+        const fetchSellerListings = async () => {
+            const sellerListingQuery = query(collection(database, 'listings'), where('sellerID', '==', sellerID));
+            const sellerListingQuerySnapshot = await getDocs(sellerListingQuery);
+            const listings = sellerListingQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            const biddings = listings.filter(listing => listing.bidding === true);
+            const nonBiddings = listings.filter(listing => listing.bidding === false);
+
+            setUserListings(nonBiddings);
+            setUserBiddings(biddings);
+        };
+
+        fetchSellerProfile();
+        fetchSellerListings();
+    }, [route.params]);
+
+    const renderListings = (listings) => {
+        return listings.map((item) => {
+            const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
+
+            return (
+                <ItemCard
+                    key={item.id}
+                    productImage={item.listingImageURL}
+                    productPrice={item.listingPrice}
+                    productName={item.listingName}
+                    productSeller={sellerProfile?.username}
+                    tags={firstTag}
+                    toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg, sellerName: sellerProfile?.username })}
+                />
+            );
+        });
     };
 
-    const fetchSellerListings = async () => {
-      const sellerListingQuery = query(collection(database, 'listings'), where('sellerID', '==', sellerID));
-      const sellerListingQuerySnapshot = await getDocs(sellerListingQuery);
-      const listings = sellerListingQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      const biddings = listings.filter(listing => listing.bidding === true);
-      const nonBiddings = listings.filter(listing => listing.bidding === false);
-
-      setUserListings(nonBiddings);
-      setUserBiddings(biddings);
+    const styles = {
+        empty: {
+            paddingVertical: 10,
+            fontSize: 15,
+            color: 'gray'
+        }
     };
 
-    fetchSellerProfile();
-    fetchSellerListings();
-  }, [route.params]);
+    return (
+        <Box w="100%" h="100%">
+            <VStack>
+                <HStack p="$3" w="100%" mt={25} alignItems="center">
+                    <Pressable onPress={navigation.goBack}>
+                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
+                    </Pressable>
+                </HStack>
+            </VStack>
 
-  const renderListings = (listings) => {
-    return listings.map((item) => {
-      const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
+            <Box height="45%" w="100%" bg={colors.primary} position='absolute' zIndex={-100} borderBottomLeftRadius={50} borderBottomRightRadius={50} />
 
-      return (
-        <ItemCard
-          key={item.id}
-          productImage={item.listingImageURL}
-          productPrice={item.listingPrice}
-          productName={item.listingName}
-          productSeller={sellerProfile?.username}
-          tags={firstTag}
-          toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg, sellerName: sellerProfile?.username })}
-        />
-      );
-    });
-  };
+            <VStack>
+                <Box w="100%" flex={1} zIndex={1} position='absolute'>
+                    {sellerProfile && (
+                        <ViewProfileCard
+                            userProfileImg={sellerProfile.userProfileImg}
+                            username={sellerProfile.username}
+                            profileName={sellerProfile.userProfile || sellerProfile.username}
+                            bio={sellerProfile.userBio || "I have no interesting info."}
+                            userID={sellerProfile.userID}
+                        />
+                    )}
+                </Box>
 
-  return (
-    <Box w="100%" h="100%">
-      <VStack>
-        <HStack p="$3" w="100%" mt={25} alignItems="center">
-          <Pressable onPress={navigation.goBack}>
-            <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-          </Pressable>
-        </HStack>
-      </VStack>
+                <Box p="$3" w="100%" height="100%">
+                    <ScrollView mt={400} mb={60}>
+                        <Box p="$2" h="100%">
+                            <VStack>
+                                {/* User Listings */}
+                                <HStack p={5} alignItems="center" borderRadius={30}>
+                                    <MaterialCommunityIcons
+                                        name="view-grid"
+                                        color={colors.secondary}
+                                        size={25}
+                                    />
+                                    <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
+                                        {sellerProfile?.username}'s Listings
+                                    </Text>
+                                </HStack>
+                                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userListings.length > 0 ? "space-between" : "center"}>
+                                    {userListings.length > 0 ? renderListings(userListings) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active listings</Text>}
+                                </HStack>
 
-      <Box height="45%" w="100%" bg={colors.primary} position='absolute' zIndex={-100} borderBottomLeftRadius={50} borderBottomRightRadius={50} />
-
-      <VStack>
-        <Box w="100%" flex={1} zIndex={1} position='absolute'>
-          {sellerProfile && (
-            <ViewProfileCard
-              userProfileImg={sellerProfile.userProfileImg}
-              username={sellerProfile.username}
-              profileName={sellerProfile.userProfile || sellerProfile.username}
-              bio={sellerProfile.userBio || "I have no interesting info."}
-              userID={sellerProfile.userID}
-            />
-          )}
-        </Box>
-
-        <Box p="$3" w="100%" height="100%">
-          <ScrollView mt={330}>
-            {/* User Listings */}
-            <Text lineHeight={40} pl={20} fontSize={20} color={colors.secondary} mt={6} fontFamily={fonts.semibold}>
-              {`${sellerProfile?.username}'s Listings`}
-            </Text>
-            <HStack space="xs" flexWrap="wrap" justifyContent="center">
-              {renderListings(userListings)}
-            </HStack>
-
-            {/* User Biddings */}
-            <Text lineHeight={40} pl={20} fontSize={20} color={colors.secondary} mt={6} fontFamily={fonts.semibold}>
-              {`${sellerProfile?.username}'s Biddings`}
-            </Text>
-            <HStack space="xs" flexWrap="wrap" justifyContent="center">
-              {renderListings(userBiddings)}
-            </HStack>
-          </ScrollView>
-        </Box>
-      </VStack>
-    </Box>
-  );
+                                {/* User Biddings */}
+                                <HStack p={5} alignItems="center" borderRadius={30}>
+                                    <MaterialCommunityIcons
+                                        name="view-grid"
+                                        color={colors.secondary}
+                                        size={25}
+                                    />
+                                    <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
+                                        {sellerProfile?.username}'s Biddings
+                                    </Text>
+                                </HStack>
+                                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userBiddings.length > 0 ? "space-between" : "center"}>
+                                    {userBiddings.length > 0 ? renderListings(userBiddings) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active biddings</Text>}
+                                </HStack>
+                            </VStack>
+                        </Box>
+                    </ScrollView>
+                </Box>
+            </VStack >
+        </Box >
+    );
 }
