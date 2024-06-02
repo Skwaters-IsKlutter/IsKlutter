@@ -76,15 +76,16 @@ export default function CommunityCommentBox({ posterUserId, selectedPost }) {
                             placeholder="Write a comment..." 
                             value={commentText}
                             onChangeText={(text) => setCommentText(text)} 
+                            fontFamily={fonts.regular}
                             />
                     </Input>
                 </HStack>
 
                 <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={50} onPress={handleComment} mt={30} w="30%" alignSelf="flex-end">
                     {isLoading ? (
-                        <ButtonText color={colors.white} fontSize="$sm">Loading</ButtonText>
+                        <ButtonText color={colors.white} fontSize="$sm" fontFamily={fonts.bold}>Loading</ButtonText>
                     ) : (
-                        <ButtonText color={colors.white} fontSize="$sm">Comment</ButtonText>
+                        <ButtonText color={colors.white} fontSize="$sm" fontFamily={fonts.bold}>Comment</ButtonText>
                     )}
                 </Button>
             </Box>

@@ -1,35 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Image, useWindowDimensions } from 'react-native';
+import { View, Button, Image, useWindowDimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import {
     VStack,
     Heading,
     Box,
+    Text,
     ScrollView,
     HStack,
     Pressable
 } from '@gluestack-ui/themed';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-
-import colors from '../config/colors';
-import IndividualPostCard from '../components/IndividualPostCard.js';
 import { getFirestore, collection, getDoc, query, where, onSnapshot, doc, } from 'firebase/firestore'; // Import onSnapshot
+
+import IndividualPostCard from '../components/IndividualPostCard.js';
 import CommunityReplyBox from '../components/CommunityReplyBox';
+import CommunityCommentBox from '../components/CommunityCommentBox';
+import BackHeader from '../components/BackHeader.js';
 
 import fonts from '../config/fonts.js';
-import { FIREBASE_APP } from '../../config/firebase';
-import CommunityCommentBox from '../components/CommunityCommentBox';
-import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import colors from '../config/colors.js';
 
 export default function IndividualPostPage() {
-
-    const [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-        Poppins_600SemiBold,
-        Poppins_700Bold
-    })
     const { width: screenWidth } = useWindowDimensions();
     const navigation = useNavigation();
     const route = useRoute();
@@ -127,15 +119,7 @@ export default function IndividualPostPage() {
 
     return (
         <Box w="100%" h="100%">
-           <Box w="100%" maxHeight={150} bg={colors.primary}>
-           <VStack>
-                <HStack p="$3" w="100%" mt={25} alignItems="center">
-                    <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-                    </Pressable>
-                </HStack>
-            </VStack>
-        </Box>
+           <BackHeader />
             <Box p="$3" w="100%" flex={1} h="100%">
                 <VStack>
                     <ScrollView h="85%">
@@ -145,10 +129,8 @@ export default function IndividualPostPage() {
 
                         {/* Render comments */}
                         <VStack mt={10}>
-                            <Text fontFamily="Poppins_600SemiBold">
-                                <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
-                            </Text>
-                                {renderComments()}
+                            <Text fontFamily={fonts.bold} color={colors.primary} fontSize="$xl">Comments</Text>
+                            {renderComments()}
                         </VStack>
                     </ScrollView>
                 </VStack>
