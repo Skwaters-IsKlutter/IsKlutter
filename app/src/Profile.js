@@ -106,7 +106,7 @@ export default function ProfilePage() {
 
             <Box p="$3" w="100%"  height="100%"  >
               <ScrollView mt={400}>
-                  <Box  p="$3" m={5} h="100%">
+                  <Box p="$2" h="100%">
                       <VStack>
                           <HStack p={5} alignItems="center" borderRadius={30}>
                               <MaterialCommunityIcons 
@@ -118,7 +118,7 @@ export default function ProfilePage() {
                                     My Listings
                                 </Text>
                           </HStack>
-                          <HStack space="xs" flexWrap="wrap">
+                          <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="space-between">
                               {userListings.myListings.map(item => (
                                   <ItemCard
                                       key={item.id}
@@ -143,7 +143,7 @@ export default function ProfilePage() {
                                     My Biddings
                                 </Text>
                           </HStack>
-                          <HStack space="xs" flexWrap="wrap">
+                          <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="space-between">
                               {userListings.myBiddings.map(item => (
                                   <ItemCard
                                       key={item.id}
