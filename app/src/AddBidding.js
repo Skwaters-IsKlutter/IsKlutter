@@ -28,7 +28,7 @@ import {
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { collection, doc, query, where, getDocs, setDoc } from 'firebase/firestore';
 import { storage, storageRef, uploadBytes, database, auth } from '../../config/firebase';
@@ -48,7 +48,6 @@ export default function AddListingPage() {
         listingDescription: '',
         listingTags: [],
         bidding: true,
-
     });
     const [username, setUsername] = useState('');
     const [isFirestoreOnline, setIsFirestoreOnline] = useState(true);
@@ -92,8 +91,6 @@ export default function AddListingPage() {
         console.log("Selected days:", value); // Add this line to log the selected value
     };
 
-
-
     const handlePostNow = async () => {
         try {
             setLoading(true);
@@ -112,6 +109,12 @@ export default function AddListingPage() {
             if (isNaN(listingPrice)) {
                 Alert.alert("Error", "Listing price must be a number.");
                 throw new Error('Listing price must be a valid number.');
+            }
+
+            const parsedBidIncrement = parseFloat(bidIncrement);
+            if (isNaN(parsedBidIncrement)) {
+                Alert.alert("Error", "Bidding increment must be a number.");
+                throw new Error('Bidding increment must be a valid number.');
             }
 
             const user = auth.currentUser;
@@ -140,7 +143,7 @@ export default function AddListingPage() {
                 listingImage: storagePath,
                 listingImageURL: downloadURL,
                 endTime: adjustedTimestamp,
-                bidIncrement: bidIncrement,
+                bidIncrement: parsedBidIncrement,
             };
 
             await setDoc(docRef, listingDataFirestore);
@@ -151,8 +154,8 @@ export default function AddListingPage() {
                 listingDescription: '',
                 listingTags: [],
                 bidding: true,
-
             });
+            setBidIncrement(''); // Reset bid increment
             navigation.goBack();
         } catch (error) {
             console.error('Error adding document: ', error);
@@ -160,7 +163,6 @@ export default function AddListingPage() {
             setLoading(false);
         }
     };
-
 
     const handleCancel = () => {
         navigation.goBack();
@@ -170,14 +172,15 @@ export default function AddListingPage() {
         <Box w="100%" h="100%">
             {/* Header */}
             <Box backgroundColor={colors.primary}>
-                <HStack p="$2" w="100%" mt={25} alignItems="center" >
+                <HStack p="$2" w="100%" mt={25} alignItems="center">
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Heading lineHeight={50} fontSize={25} color={colors.white} m={10} >Add item to bid</Heading>
+                    <Heading lineHeight={50} fontSize={25} color={colors.white} m={10}>
+                        Add item to bid
+                    </Heading>
                 </HStack>
             </Box>
-
 
             <Box w="100%" maxWidth="$96" flex={1}>
                 <ScrollView>
@@ -216,7 +219,7 @@ export default function AddListingPage() {
                     </Box>
 
                     <Box p={10} top={-30}>
-                        <FormControl >
+                        <FormControl>
                             <FormControlLabel mb="$1">
                                 <FormControlLabelText color={colors.secondary} fontWeight={600}>Bidding Increment</FormControlLabelText>
                             </FormControlLabel>
@@ -229,7 +232,6 @@ export default function AddListingPage() {
                                 />
                             </Input>
                         </FormControl>
-
                     </Box>
 
                     <HStack p="$2" justifyContent="center" mb={10}>
