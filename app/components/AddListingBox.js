@@ -20,7 +20,7 @@ export default function AddListingBox({ listingName, listingPrice, listingDescri
                     listingFormValue={listingName}
                     listingFormBoxHeight="$10"
                     listingFormMultiline={false}
-                    listingFormMaxLength={24}
+                    listingFormMaxLength={20}
                     onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingName: value }))}
                 />
 

@@ -96,7 +96,7 @@ export default function AllListingsPage() {
 
         return (
             <>
-                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="space-between" >
+                <HStack flexWrap='wrap' justifyContent='space-between'>
                     {filteredListings.map((item) => (
                         <ItemCard
                             key={item.id}
@@ -136,7 +136,7 @@ export default function AllListingsPage() {
                 onSearchChange={handleSearchChange}
             />
 
-            <Box p="$5" w="100%" flex={1} >
+            <Box p="$5" w="100%" flex={1}>
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
                         <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
@@ -153,7 +153,7 @@ export default function AllListingsPage() {
                 </VStack>
 
                 <ScrollView>
-                    <HStack flexWrap="wrap" justifyContent="center" >
+                    <HStack>
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>
