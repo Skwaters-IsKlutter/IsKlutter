@@ -49,7 +49,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     backgroundColor={colors.white}
                     borderRadius={10}
                     width={380}
-                    maxHeight={300}
+                    maxHeight={320}
                     m={5}
                     pb={3}
                     overflow="hidden"

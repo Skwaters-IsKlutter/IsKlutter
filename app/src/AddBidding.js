@@ -192,9 +192,9 @@ export default function AddListingPage() {
                     <Box p="$3" top={-50}>
                         <Box p="$3" >
                             <Text color={colors.secondary} fontWeight={600} fontFamily={fonts.bold} >Select Bid Time</Text>
-                            <Select onValueChange={(value) => { handleBiddingTimeChange(value); }}>
-                                <SelectTrigger bg={colors.white} >
-                                    <SelectInput  placeholder="Select Time" />
+                            <Select onValueChange={(value) => { handleBiddingTimeChange(value);}}>
+                                <SelectTrigger bg={colors.white}  >
+                                    <SelectInput fontFamily={fonts.regular}   placeholder="Select Time" />
                                 </SelectTrigger>
                                 <SelectPortal>
                                     <SelectBackdrop />
@@ -202,7 +202,7 @@ export default function AddListingPage() {
                                         <SelectDragIndicatorWrapper>
                                             <SelectDragIndicator />
                                         </SelectDragIndicatorWrapper>
-                                        <SelectItem label="1 day" value={1} />
+                                        <SelectItem label="1 day" value={1}  />
                                         <SelectItem label="2 days" value={2} />
                                         <SelectItem label="3 days" value={3} />
                                         <SelectItem label="4 days" value={4} />
@@ -223,6 +223,7 @@ export default function AddListingPage() {
                                         onChangeText={(text) => setBidIncrement(text)}
                                         keyboardType="numeric"
                                         placeholder="Enter bidding increment"
+                                        fontFamily={fonts.regular} 
                                     />
                                 </Input>
                             </FormControl>
