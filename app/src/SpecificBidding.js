@@ -11,11 +11,9 @@ import {
     ScrollView, 
     Input, 
     InputField, 
-    Button, 
-    Pressable
+    Button
 } from '@gluestack-ui/themed';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AllBidderListCard from '../components/AllBidderListCard.js';
 import SpecificBidCard from '../components/SpecificBidCard.js';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
@@ -36,14 +34,11 @@ export default function SpecificBiddingPage() {
     const [listing, setListing] = useState({});
     const [biddingData, setBiddingData] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
-    const [comments, setComments] = useState({});
-    const [biddingprice, setBiddingPrice] = useState({})
-    const [biddingAmount, setBiddingAmount] = useState({})
+    const [biddingAmount, setBiddingAmount] = useState('');
     const [highestBidder, setHighestBidder] = useState({});
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
-    const [highestBidderName, sethighestBidderName] = useState('');
+    const [highestBidderName, setHighestBidderName] = useState('');
     const [listingImage, setListingImage] = useState(null);
-    const [forceRender, setForceRender] = useState(false);  // State to force re-render
 
 
     useEffect(() => {
@@ -95,7 +90,6 @@ export default function SpecificBiddingPage() {
     
         fetchListingImage();
     }, [listingId]);
-    
 
     const updateHighestBidder = (bidder, price) => {
         console.log("Updating highest bidder to:", bidder, "with price:", price);
@@ -117,8 +111,8 @@ export default function SpecificBiddingPage() {
                 return;
             }
 
-            if (biddingBet < highestBiddingPrice + 10) {
-                Alert.alert('Invalid Bid', 'Your bid must be 10 higher than the current highest bid.');
+            if (biddingBet < highestBiddingPrice + 1) {
+                Alert.alert('Invalid Bid', 'Your bid must be higher than the current highest bid.');
                 return;
             }
 
@@ -149,7 +143,7 @@ export default function SpecificBiddingPage() {
             });
 
             setHighestBiddingPrice(newHighestBiddingPrice);
-            sethighestBidderName(highestBidderName);
+            setHighestBidderName(highestBidderName);
 
             setListing(prevListing => ({
                 ...prevListing,
@@ -159,6 +153,8 @@ export default function SpecificBiddingPage() {
 
             console.log("Bid successful. New highest bidder:", highestBidderName, "with price:", newHighestBiddingPrice);
             Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
+
+            setBiddingAmount(''); // Reset bidding amount after successful bid
 
         } catch (error) {
             console.error('Error placing bid:', error);
@@ -184,7 +180,7 @@ export default function SpecificBiddingPage() {
                 });
 
                 setHighestBiddingPrice(maxBiddingPrice);
-                sethighestBidderName(userWithMaxBiddingPrice);
+                setHighestBidderName(userWithMaxBiddingPrice);
 
                 // Update listing state
                 setListing(prevListing => ({
@@ -211,7 +207,6 @@ export default function SpecificBiddingPage() {
                     const listingData = querySnapshot.docs[0].data();
                     const { listingName, listingPrice } = listingData;
                     setListing({ listingName, listingPrice });
-                    console.log("Listing data fetched:", { listingName, listingPrice });
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
