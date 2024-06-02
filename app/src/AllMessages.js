@@ -34,6 +34,7 @@ export default function AllMessagesPage({ user }) {
     const [messages, setMessages] = useState([]);
     const [sender, setSender] = useState([]);
     const [userProfileImgs, setUserProfileImgs] = useState([]);
+    const [searchInput, setSearchInput] = useState([]);
 
 
     useEffect(() => {
@@ -181,40 +182,54 @@ export default function AllMessagesPage({ user }) {
 
     const handleSearchChange = (text) => {
         setSearchInput(text.toLowerCase());
+        // Clear the userProfileImgs state
     };
+    
 
     const renderUsernames = () => {
-        return usernames.map((username, index) => (
-            <TouchableOpacity key={index} onPress={() => handleUsernameClick(username, userProfileImgs[index])}>
-                <ScrollView>
-                    <VStack width={380} backgroundColor={colors.white} m={5}>
-                        <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 5 }}>
-                            <HStack>
-                                {userProfileImgs[index] && typeof userProfileImgs[index] === 'string' ? (
-                                    <Image
-                                        source={{ uri: userProfileImgs[index] }}
-                                        h={50}
-                                        w={50}
-                                        alt="icon"
-                                        borderRadius={100}
-                                    />
-                                ) : (
-                                    <UserAvatar /> // Render a placeholder or default avatar component
-                                )}
-                                <Text p={10} fontFamily={fonts.semibold} lineHeight={30}>{username}</Text>
-                            </HStack>
-                        </View>
-                    </VStack>
-                </ScrollView>
-            </TouchableOpacity>
-        ));
+        // Filter usernames based on search input
+        const filteredUsernames = usernames.filter(username =>
+            username.toLowerCase().includes(searchInput)
+        );
+    
+        return filteredUsernames.map((username) => {
+            const userIndex = usernames.indexOf(username);
+            const userProfileImg = userProfileImgs[userIndex];
+    
+            return (
+                <TouchableOpacity key={username} onPress={() => handleUsernameClick(username, userProfileImg)}>
+                    <ScrollView>
+                        <VStack width={380} backgroundColor={colors.white} m={5}>
+                            <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 5 }}>
+                                <HStack>
+                                    {userProfileImg && typeof userProfileImg === 'string' ? (
+                                        <Image
+                                            source={{ uri: userProfileImg }}
+                                            h={50}
+                                            w={50}
+                                            alt="icon"
+                                            borderRadius={100}
+                                        />
+                                    ) : (
+                                        <UserAvatar /> // Render a placeholder or default avatar component
+                                    )}
+                                    <Text p={10} fontFamily={fonts.semibold} lineHeight={30}>{username}</Text>
+                                </HStack>
+                            </View>
+                        </VStack>
+                    </ScrollView>
+                </TouchableOpacity>
+            );
+        });
     };
+    
+    
 
     return (
         <Box w="100%" h="100%">
             <SearchHeaderBack
                 userIcon={require('../../assets/img/usericon.jpg')}
-                placeholder="Search in listings"
+                placeholder="Search in messages"
                 onSearchChange={handleSearchChange}
             />
             <VStack space="xs" alignItems="left" p="$3" width="100%">
