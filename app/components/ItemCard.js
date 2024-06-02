@@ -9,7 +9,11 @@ export default function ItemCard({ productImage, productPrice, productName, prod
     const isImageUrl = typeof productImage === 'string';
     const { width } = useWindowDimensions(); // Get screen width
     const cardWidth = (width - 60) / 2;
-
+    
+    const truncateProductName = (name, maxLength) => {
+        return name.length > maxLength ? name.substring(0, maxLength - 3) + '...' : name;
+    };
+    
     return (
         <Pressable onPress={toListing}>
             <Box bg={colors.white} borderRadius={10} height={270} width={cardWidth} m={3} mb={5}>
@@ -32,7 +36,9 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                     </Text>
 
                     <VStack space="xs" p={3}>
-                        <Text fontSize="$md"  fontFamily={fonts.bold} color={colors.secondary}>{productName}</Text>
+                        <Text fontSize="$md"  fontFamily={fonts.bold} color={colors.secondary}>
+                            {truncateProductName(productName, 20)}
+                        </Text>
                         <HStack alignItems='center'>
                             <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary}   />      
                             <Text fontSize="$sm" color={colors.gray} fontFamily={fonts.regular} pl="$2">{productSeller}
