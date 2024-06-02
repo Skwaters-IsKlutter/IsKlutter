@@ -22,6 +22,7 @@ import { auth } from '../../config/firebase';
 import { FIREBASE_APP } from '../../config/firebase';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import Routes from '../components/constants/Routes.js';
 
 const db = getFirestore(FIREBASE_APP);
@@ -101,9 +102,11 @@ export default function SignupScreen() {
                 borderBottomEndRadius={100}
                 borderBottomLeftRadius={100}
             >
-                <VStack space="xs" mt="30%" alignItems="center">
-                    <Heading lineHeight={60} fontSize="$5xl" color={colors.white}>New here?</Heading>
-                    <Heading lineHeight={30} fontSize="$2xl" color={colors.white} >Sign up to start decluttering.</Heading>
+                <VStack space="xs" mt="35%" alignItems="center">
+                    <Text fontFamily={fonts.bold}>
+                        <Heading lineHeight={60} fontSize="$4xl" color={colors.white} >New here?</Heading>
+                    </Text>
+                    <Text lineHeight={25} fontSize="$xl" color={colors.white} fontFamily={fonts.regular}>Sign up to start decluttering.</Text>
                 </VStack>
             </Box>
 
@@ -112,7 +115,7 @@ export default function SignupScreen() {
                     <VStack space="xl" py="$3" p="$2" pt="$5">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
-                                <FormControlLabelText color={colors.secondary}>Email</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold} >Email</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%">
                                 <InputField
@@ -120,6 +123,8 @@ export default function SignupScreen() {
                                     placeholder="example@up.edu.ph"
                                     value={email}
                                     onChangeText={(text) => setEmail(text)}
+                                    fontFamily={fonts.regular} 
+                                    fontSize={14}
                                 />
                             </Input>
                         </FormControl>
@@ -128,7 +133,7 @@ export default function SignupScreen() {
                     <VStack space="xl" py="$3" p="$2">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
-                                <FormControlLabelText color={colors.secondary}>Username</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold} >Username</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%">
                                 <InputField
@@ -137,6 +142,8 @@ export default function SignupScreen() {
                                     placeholder="Enter username"
                                     value={username}
                                     onChangeText={(text) => setUsername(text)}
+                                    fontFamily={fonts.regular}
+                                    fontSize={14}
                                 />
                             </Input>
                         </FormControl>
@@ -145,7 +152,7 @@ export default function SignupScreen() {
                     <VStack space="xl" py="$2" p="$2">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
-                                <FormControlLabelText color={colors.secondary}>Password</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold} >Password</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%">
                                 <InputField
@@ -153,6 +160,8 @@ export default function SignupScreen() {
                                     placeholder="Enter password"
                                     value={password}
                                     onChangeText={(text) => setPassword(text)}
+                                    fontFamily={fonts.regular}
+                                    fontSize={14}
                                 />
                             </Input>
                         </FormControl>
@@ -161,7 +170,7 @@ export default function SignupScreen() {
                     <VStack space="xl" py="$2" p="$2">
                         <FormControl size="md">
                             <FormControlLabel mb="$2">
-                                <FormControlLabelText color={colors.secondary}>Re-enter Password</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold}>Re-enter Password</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%">
                                 <InputField
@@ -169,6 +178,8 @@ export default function SignupScreen() {
                                     placeholder="Re-enter password"
                                     value={retypePassword}
                                     onChangeText={(text) => setRetypePassword(text)}
+                                    fontFamily={fonts.regular}
+                                    fontSize={14}
                                 />
                             </Input>
                         </FormControl>
@@ -180,13 +191,13 @@ export default function SignupScreen() {
                                 onPress={handleSignup} 
                                 disabled={loading}
                                 borderRadius={10}>
-                            <ButtonText>{loading ? 'Signing Up' : 'Sign Up'}</ButtonText>
+                            <ButtonText fontFamily={fonts.bold} >{loading ? 'Signing Up' : 'Sign Up'}</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
 
                 <Box w="100%" mt="$5" alignItems="center">
-                    <Text fontSize="$md">Already have an account? <Text color={colors.secondary} fontWeight="$black" fontSize="$md" onPress={() => navigation.navigate(Routes.LOGIN)}>Sign in</Text></Text>
+                    <Text fontSize="$md" fontFamily={fonts.regular} >Already have an account? <Text color={colors.secondary} fontFamily={fonts.bold} fontSize="$md" onPress={() => navigation.navigate(Routes.LOGIN)}>Sign in</Text></Text>
                 </Box>
                 
             </Box>

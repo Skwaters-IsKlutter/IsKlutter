@@ -40,6 +40,7 @@ export default function AddBiddingBox({ listingName, listingPrice, listingDescri
                     biddingFormValue={listingDescription}
                     listingFormMultiline={true}
                     biddingFormBoxHeight={100}
+                    multiline={true}
                     onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingDescription: value }))} 
                 />
 

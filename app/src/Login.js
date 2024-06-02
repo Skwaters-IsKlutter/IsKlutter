@@ -69,20 +69,20 @@ export default function LoginPage() {
     return (
         <Box w="100%" h="100%" alignItems="center">
             <Box p="$6" w="100%" height={400} backgroundColor={colors.primary} borderBottomEndRadius={100} borderBottomLeftRadius={100}>
-                <VStack space="xs" mt={90} alignItems='center'>
+                <VStack space="2xl" alignItems='center' mt="30%">
                     <Text fontFamily={fonts.bold}>
-                    <Heading lineHeight={60} fontSize="$4xl" color={colors.white} >Welcome back!</Heading>
+                        <Heading lineHeight={50} fontSize="$4xl" color={colors.white} >Welcome back!</Heading>
                     </Text>
-                    <Text lineHeight={25} fontSize="$xl" color={colors.white} fontFamily="Poppins_400Regular">Log in to IsKlutter now.</Text>
+                    <Text lineHeight={25} fontSize="$xl" color={colors.white} fontFamily={fonts.regular}>Log in to IsKlutter now.</Text>
                 </VStack>
             </Box>
 
-            <Box p="$6" w="100%" maxWidth="$96" top={-180}>
+            <Box p="$6" w="100%" maxWidth="$120" top={-180}>
                 <Box backgroundColor={colors.white} p="$2" borderRadius={10}>
-                    <VStack space="xl">
-                        <FormControl size="md" p="$2" pt="$5">
+                    <VStack space="2xl">
+                        <FormControl size="2xl" p="$2" pt="$5">
                             <FormControlLabel mb="$2">
-                                <FormControlLabelText color={colors.secondary} fontFamily="Poppins_600SemiBold" >Email</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold} >Email</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%" borderRadius={10}>
                                 <InputField
@@ -90,6 +90,8 @@ export default function LoginPage() {
                                     placeholder="example@up.edu.ph"
                                     value={email}
                                     onChangeText={(text) => setEmail(text)}
+                                    fontFamily={fonts.regular}
+                                    fontSize={14}
                                 />
                             </Input>
                         </FormControl>
@@ -98,7 +100,7 @@ export default function LoginPage() {
                     <VStack space="xl" p="$2">
                         <FormControl size="md" py="$2">
                             <FormControlLabel mb="$2">
-                                <FormControlLabelText color={colors.secondary} fontFamily="Poppins_600SemiBold">Password</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold} >Password</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%" borderRadius={10}>
                                 <InputField
@@ -106,6 +108,8 @@ export default function LoginPage() {
                                     placeholder="Enter password"
                                     value={password}
                                     onChangeText={(text) => setPassword(text)}
+                                    fontFamily={fonts.regular}
+                                    fontSize={14}
                                 />
                             </Input>
                         </FormControl>
@@ -113,13 +117,13 @@ export default function LoginPage() {
 
                     <VStack space="lg" pt="$2" pb="$2" width="100">
                         <Button size="sm" backgroundColor={colors.primary} onPress={handleLogin} borderRadius={10}>
-                            <ButtonText fontFamily="Poppins_600SemiBold">{loading ? 'Logging In' : 'Log In' }</ButtonText>
+                            <ButtonText fontFamily={fonts.bold} >{loading ? 'Logging In' : 'Log In' }</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
                 
                 <Box w="100%" mt="$5" alignItems="center">
-                    <Text fontSize="$md" fontFamily="Poppins_600SemiBold">Don't have an account yet? <Text color={colors.secondary} fontWeight="$black" fontSize="$md" onPress={() => navigation.navigate(Routes.SIGNUP)}>Sign up</Text></Text>
+                    <Text fontSize="$md" fontFamily={fonts.regular}>Don't have an account yet? <Text color={colors.secondary} fontFamily={fonts.bold} onPress={() => navigation.navigate(Routes.SIGNUP)}>Sign up</Text></Text>
                 </Box>
 
             </Box>
