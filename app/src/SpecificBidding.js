@@ -11,7 +11,8 @@ import {
     Input,
     InputField,
     Button,
-    ButtonIcon
+    ButtonIcon,
+    ButtonText
 } from '@gluestack-ui/themed';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -297,21 +298,13 @@ export default function SpecificBiddingPage() {
                 <VStack space="xs">
                     {renderSpecificBidding()}
                 </VStack>
-                <Box h="20%" m="$3">
-                    <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
-                    <ScrollView>
-                        {renderAllBidderList()}
-                    </ScrollView>
-                </Box>
-            </Box>
 
-            <Box m={10} p={15} borderRadius={10} top={-60}>
-                <HStack alignItems="center" justifyContent='space-around'>
+                <HStack alignItems="center" justifyContent='space-around' m={10}>
                     <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
                         <InputField
-                            multiline={true}
                             size="md"
                             value={biddingAmount}
+                            keyboardType='numeric'
                             placeholder="Place your bet amount in PHP..."
                             onChangeText={(text) => setBiddingAmount(text)}
                             fontFamily={fonts.regular}
@@ -325,9 +318,16 @@ export default function SpecificBiddingPage() {
                         ml={3}
                         onPress={() => handleBid(listingId, biddingAmount)}
                     >
-                        <Text fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</Text>
+                        <ButtonText fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</ButtonText>
                     </Button>
                 </HStack>
+
+                <Box maxHeight="33%" m="$3">
+                    <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
+                    <ScrollView>
+                        {renderAllBidderList()}
+                    </ScrollView>
+                </Box>
             </Box>
         </Box>
     );
