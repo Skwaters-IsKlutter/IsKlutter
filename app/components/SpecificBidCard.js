@@ -31,17 +31,14 @@ export default function SpecificBidCard({ listingName, listingPrice, highestBidd
                 <VStack space="md" p="$2">
                     <HStack w="100%" justifyContent="space-between">
                         <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.primary}>{listingName}</Text>
+                        <Text fontFamily={fonts.bold} fontSize="$lg" color={colors.secondary}>{`PHP ${listingPrice}`}</Text>
                     </HStack>
-                    <Text fontFamily={fonts.bold} fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${listingPrice}`}</Text>
                 </VStack>
-                
-                <VStack space="md" p="$2">
-                <Text fontFamily={fonts.semibold} color={colors.black} size="md">Remaining Time: {remainingTime}</Text>
-                    <Text fontFamily={fonts.semibold} color={colors.black}>Highest Bidder: {highestBidderName}</Text>
-                    <Text fontFamily={fonts.semibold} color={colors.black}>Highest Bid: PHP {highestBiddingPrice}</Text>
-                    <Text color={colors.black} fontFamily={fonts.semibold}>Bidding increment {bidIncrement}</Text>
-
-                </VStack>
+            
+                <Text fontFamily={fonts.semibold} color={colors.black} pl="$2">Remaining Time: {remainingTime}</Text>
+                <Text fontFamily={fonts.semibold} color={colors.black} pl="$2">Highest Bidder: {highestBidderName}</Text>
+                <Text fontFamily={fonts.semibold} color={colors.black} pl="$2">Highest Bid: PHP {highestBiddingPrice}</Text>
+                <Text color={colors.black} fontFamily={fonts.semibold} pl="$2" pb="$2">Bidding Increment: {bidIncrement}</Text>
             </Box>    
         </Box>
     )

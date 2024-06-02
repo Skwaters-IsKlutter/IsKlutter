@@ -206,7 +206,7 @@ export default function AllBiddingsPage() {
                             <ButtonIcon>
                                 <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
                             </ButtonIcon>
-                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} alignItems='center'>Post</ButtonText>
+                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} color={colors.white} alignItems='center'>Post</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>
