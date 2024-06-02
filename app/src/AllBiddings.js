@@ -31,6 +31,7 @@ export default function AllBiddingsPage() {
     const [listings, setListings] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [highestBidders, setHighestBidders] = useState({});
+    const [biddingData, setBiddingData] = useState({});
     const [forceRender, setForceRender] = useState(false); // State to trigger re-renders
 
     const fetchListings = async () => {
@@ -93,6 +94,7 @@ export default function AllBiddingsPage() {
             console.log(`Deleted listing with id: ${listingId}`);
         } catch (error) {
             console.error("Error deleting listing:", error);
+            throw(error);
         }
     };
 

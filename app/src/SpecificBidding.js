@@ -44,6 +44,7 @@ export default function SpecificBiddingPage() {
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
     const [remainingTime, setRemainingTime] = useState('');
+    const [endTime, setEndTimeDate] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -64,7 +65,7 @@ export default function SpecificBiddingPage() {
                 return null;
             }
         } catch (error) {
-            return null;
+            throw(error);
         }
     };
 
@@ -81,6 +82,8 @@ export default function SpecificBiddingPage() {
                 }
             } catch (error) {
                 // Handle error
+                console.log("Failed to fetch listing image.")
+                throw(error);
             }
         };
 
@@ -117,7 +120,7 @@ export default function SpecificBiddingPage() {
                 listingPrice: listingPrice
             });
 
-            updateHighestBidder(username, biddingBet);
+            // updateHighestBidder(username, biddingBet);
 
             const querySnapshot = await getDocs(query(biddingCollection, where('listingName', '==', listingName)));
             let newHighestBiddingPrice = 0;
@@ -143,7 +146,7 @@ export default function SpecificBiddingPage() {
             Alert.alert('Bid Successful', `Your bid of PHP ${biddingBet} has been placed successfully.`);
 
         } catch (error) {
-            Alert.alert('Error', 'Failed to place bid. Please try again later.');
+            throw(error);
         }
     };
 
@@ -189,11 +192,10 @@ export default function SpecificBiddingPage() {
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
                     const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID, remainingTime });
-                    setBidIncrement(bidIncrement || 10);
-
-                    // Calculate remaining time
-                    const endTimeDate = new Date(endTime.seconds * 1000); // Convert Firestore timestamp to Date
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, remainingTime, endTime });
+      
+                    const endTimeDate = setEndTimeDate(new Date(endTime.seconds * 1000));
+                    
                     const now = new Date();
                     const timeDifference = endTimeDate - now;
 
@@ -202,7 +204,7 @@ export default function SpecificBiddingPage() {
                         const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                         setRemainingTime(`${days} days ${hours} hours`);
                     } else {
-                        setRemainingTime('Bidding has ended');
+                        setRemainingTime('Bidding has ended.');
                     }
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
@@ -255,7 +257,6 @@ export default function SpecificBiddingPage() {
     };
 
     const renderSpecificBidding = () => {
-        console.log("Remaining time for this bidding:", remainingTime);
         return listing && (
             <SpecificBidCard
                 listingName={listing.listingName}
@@ -308,8 +309,8 @@ export default function SpecificBiddingPage() {
                     {renderSpecificBidding()}
                 </VStack>
 
-                <HStack alignItems="center" justifyContent='space-around'>
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
+                <HStack alignItems="center" justifyContent='space-around' p="$2">
+                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%">
                         <InputField
                             size="md"
                             value={biddingAmount}
