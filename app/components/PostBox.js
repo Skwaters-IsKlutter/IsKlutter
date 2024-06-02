@@ -7,13 +7,15 @@ import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from 'fire
 import { getAuth } from 'firebase/auth';
 import { useUser } from '../components/UserIcon.js';
 import PostBoxImagePicker from './PostBoxImagePicker';
+import { useNavigation } from '@react-navigation/native';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
 export default function PostBox() {
+    const navigation = useNavigation();
     const [postDescription, setPostDescription] = useState('');
-    const [listingData, setListingData] = useState({ listingImage: null, hasImage: false }); // Ensure hasImage is initialized to false
+    const [listingData, setListingData] = useState({ listingImages: [], hasImage: false });
     const { userProfileImg } = useUser();
 
     const postForum = async () => {
@@ -31,32 +33,35 @@ export default function PostBox() {
                 return;
             }
 
-            if (postDescription) {
-                const imageName = `image_${Date.now()}`;
-                const storagePath = `communityImage/${imageName}.jpeg`;
-                const file = listingData.listingImage;
-                const imageRef = storageRef(storage, storagePath);
-                const metadata = { contentType: 'image/jpeg' };
-                await uploadBytes(imageRef, file, metadata);
-                const downloadURL = await getDownloadURL(imageRef);
+            if (postDescription || listingData.hasImage) {
+                const imageUrls = await Promise.all(
+                    listingData.listingImages.map(async (imageBlob, index) => {
+                        const imageName = `image_${Date.now()}_${index}`;
+                        const storagePath = `communityImage/${imageName}.jpeg`;
+                        const imageRef = storageRef(storage, storagePath);
+                        const metadata = { contentType: 'image/jpeg' };
+                        await uploadBytes(imageRef, imageBlob, metadata);
+                        return getDownloadURL(imageRef);
+                    })
+                );
 
                 const docRef = await addDoc(collection(db, 'forum'), {
                     userID: userID,
                     description: postDescription,
                     timestamp: new Date(),
                     key: '',
-                    image: storagePath,
-                    imageURL: downloadURL,
-                    hasImage: listingData.hasImage // Ensure hasImage is included in the document
+                    images: imageUrls,
+                    hasImage: listingData.hasImage
                 });
 
                 setPostDescription('');
-                setListingData({ listingImage: null, hasImage: false }); // Reset hasImage after posting
+                setListingData({ listingImages: [], hasImage: false });
                 await updateDoc(docRef, { key: docRef.id });
                 alert('Success', 'Post added successfully');
                 console.log("Post added successfully");
+                navigation.goBack();
             } else {
-                console.error('Post description is empty');
+                console.error('Post description and images are empty');
             }
         } catch (error) {
             console.error('Error adding document: ', error);
