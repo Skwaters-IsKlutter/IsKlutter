@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { HStack, VStack, Box, ScrollView, Button, ButtonIcon, ButtonText, Text } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot, query, where, doc, updateDoc, toLowerCase } from 'firebase/firestore';
 import { database } from '../../config/firebase';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';

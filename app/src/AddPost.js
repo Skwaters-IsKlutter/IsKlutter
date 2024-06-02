@@ -8,7 +8,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import colors from '../config/colors.js';
-import fonts from '../config/fonts';
+import fonts from '../config/fonts.js';
 import PostBox from '../components/PostBox';
 
 export default function AddPostPage() {
@@ -32,7 +32,7 @@ export default function AddPostPage() {
 
       
             <Box w="100%" p="$2" flex={1}>
-                 <PostBox></PostBox>
+                 <PostBox />
             </Box>
         </Box>
     );

@@ -1,6 +1,7 @@
 import React, { useState} from 'react';
-import { Box, Text, VStack, Button, Input, InputField, Image } from '@gluestack-ui/themed';
+import { Box, Text, VStack, Button, Input, InputField, Image, HStack } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import { getFirestore, addDoc, collection, updateDoc, query, where, getDocs } from 'firebase/firestore';
 import { FIREBASE_APP, storage} from '../../config/firebase';
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
@@ -12,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
-export default function PostBox() {
+export default function PostBox( { poster }) {
     const navigation = useNavigation();
     const [postDescription, setPostDescription] = useState('');
     const [listingData, setListingData] = useState({ listingImages: [], hasImage: false });
@@ -71,13 +72,16 @@ export default function PostBox() {
     return (
         <Box>
             <VStack space="sm" justifyContent="space-evenly" alignItems="center" p="$3">
-                {userProfileImg && (
-                    <Image
-                        source={{ uri: userProfileImg }}
-                        style={{ width: 50, height: 50, borderRadius: 25 }}
-                        alt="user profile"
-                    />
-                )}
+                <HStack justifyContent='center' alignItems='center'>
+                    {userProfileImg && (
+                        <Image
+                            source={{ uri: userProfileImg }}
+                            style={{ width: 50, height: 50, borderRadius: 25 }}
+                            alt="user profile"
+                        />
+                    )}
+                <Text fontFamily={fonts.regular} pl={5}>Say something to the IsKlutter community</Text>
+                </HStack>
                 <PostBoxImagePicker setListingData={setListingData} />
                 <Input bg={colors.white} borderColor={colors.secondary} h="30%" w="100%" zIndex={0}>
                     <InputField
