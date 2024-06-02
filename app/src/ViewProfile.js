@@ -74,7 +74,7 @@ export default function ViewProfile() {
         fetchSellerListings();
     }, [route.params]);
 
-    const renderListings = (listings) => {
+    const renderListings = (listings, isBidding) => {
         return listings.map((item) => {
             const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
 
@@ -86,7 +86,13 @@ export default function ViewProfile() {
                     productName={item.listingName}
                     productSeller={sellerProfile?.username}
                     tags={firstTag}
-                    toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg, sellerName: sellerProfile?.username })}
+                    toListing={() => {
+                        if (isBidding) {
+                            navigation.navigate(Routes.SPECIFICBIDDING, { listingId: item.id });
+                        } else {
+                            navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg, sellerName: sellerProfile?.username });
+                        }
+                    }}
                 />
             );
         });
@@ -148,7 +154,7 @@ export default function ViewProfile() {
                                 </Text>
                             </HStack>
                             <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userListings.length > 0 ? "space-between" : "center"}>
-                                {userListings.length > 0 ? renderListings(userListings) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active listings</Text>}
+                                {userListings.length > 0 ? renderListings(userListings, false) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active listings</Text>}
                             </HStack>
 
                             {/* User Biddings */}
@@ -163,7 +169,7 @@ export default function ViewProfile() {
                                 </Text>
                             </HStack>
                             <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userBiddings.length > 0 ? "space-between" : "center"}>
-                                {userBiddings.length > 0 ? renderListings(userBiddings) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active biddings</Text>}
+                                {userBiddings.length > 0 ? renderListings(userBiddings, true) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active biddings</Text>}
                             </HStack>
                         </VStack>
                     </Box>
