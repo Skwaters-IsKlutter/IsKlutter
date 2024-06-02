@@ -40,13 +40,13 @@ export default function AddPostPage() {
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
                     <Text fontFamily={fonts.semibold}>
-                        <Heading fontSize={24} color={colors.white} lineHeight={50}>Post</Heading>
+                        <Heading fontSize={24} color={colors.white} lineHeight={50}> Create Post</Heading>
                     </Text>
                 </HStack>
             </Box>
 
       
-            <Box w="100%"  flex={1}>
+            <Box w="100%" p="$2" flex={1}>
                  <PostBox></PostBox>
             </Box>
         </Box>

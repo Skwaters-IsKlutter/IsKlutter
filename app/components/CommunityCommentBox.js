@@ -16,6 +16,7 @@ import { getFirestore, collection, addDoc, serverTimestamp, doc } from 'firebase
 import { getAuth } from 'firebase/auth';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 // Define the CommunityCommentBox component
 export default function CommunityCommentBox({ posterUserId, selectedPost }) {

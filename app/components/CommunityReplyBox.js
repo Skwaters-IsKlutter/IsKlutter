@@ -8,6 +8,7 @@ import {
     Image,
 } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -49,14 +50,14 @@ export default function CommunityReplyBox({ replyUserID, replyComment, timestamp
                         style={{ width: 50, height: 50, borderRadius: 25 }}
                         alt="User Avatar"
                     />
-                    <Heading color={colors.secondary} size="sm" bold={true}>
+                    <Text color={colors.secondary} size="md" fontFamily={fonts.semibold}>
                         {username}
-                    </Heading>
-                    <Text color={colors.gray} size="xs" bold={true}>
+                    </Text>
+                    <Text color={colors.black} size="xs" fontFamily={fonts.regular}>
                     {timestamp}
                     </Text>
                 </HStack>
-                <Text color="black" pb="$3" size="md" mt="$3" >
+                <Text color="black" pb="$3" size="md" mt="$3" fontFamily={fonts.regular}  >
                     {replyComment}
                 </Text>
             </VStack>

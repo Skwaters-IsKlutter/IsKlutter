@@ -11,7 +11,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import fonts from '../config/fonts.js';
 import UserAvatar from './Avatar.js';
 import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
@@ -37,13 +37,14 @@ export default function SearchHeader({ search, placeholder, username, userIcon, 
     return (
         <Box w="100%" maxHeight={150} bg={colors.primary}>
           <VStack>
-            <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center" >
-              <Input w="75%" bg={colors.white}  size="sm" borderRadius={15} left={-5} h={40}>
+            <HStack p="$3" w="100%" mt={50} justifyContent="space-evenly" alignItems="center"  >
+              <Input w="75%" bg={colors.white}  size="sm" borderRadius={15} left={-5} h={40} >
                 <InputField
                   placeholder={placeholder}
                   value={search}
                   onChangeText={onSearchChange}
                   onSubmitEditing={onSubmit}
+                  fontFamily={fonts.regular}
                 />
                 <InputSlot>
                   <InputIcon>

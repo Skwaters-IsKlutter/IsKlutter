@@ -85,7 +85,7 @@ export default function CommunityPage() {
         );
 
         if (filteredPosts.length === 0) {
-            return <Text style={styles.endOfResults}>No Results Found</Text>;
+            return <Text style={styles.endOfResults} fontFamily={fonts.semibold}>No Results Found</Text>;
         }
 
         return (
@@ -100,7 +100,7 @@ export default function CommunityPage() {
                         toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
                     />
                 ))}
-                <Text style={styles.endOfResults}>End of Results</Text>
+                <Text style={styles.endOfResults} fontFamily={fonts.semibold}>End of Results</Text>
             </>
         );
     }

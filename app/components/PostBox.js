@@ -50,16 +50,16 @@ export default function PostBox() {
 
     return (
         <Box>
-            <HStack space="sm" justifyContent="space-evenly" alignItems="center">
-                {/* {userProfileImg && (
+            <VStack space="sm" justifyContent="space-evenly" alignItems="center" p="$3">
+                {userProfileImg && (
                     <Image
                         source={{ uri: userProfileImg }}
                         style={{ width: 50, height: 50, borderRadius: 25 }}
                         alt="user profile"
                     />
-                )} */}
+                )}
 
-                <Input bg={colors.white} borderColor={colors.secondary} h={75} w="80%" zIndex={0}>
+                <Input bg={colors.white} borderColor={colors.secondary} h="70%" w="100%" zIndex={0}>
                     <InputField
                         multiline={true}
                         size="md"
@@ -69,12 +69,19 @@ export default function PostBox() {
                     />
                 </Input>
 
-                <Button variant="solid" size="sm" bg={colors.secondary} borderRadius={30} onPress={postForum} ml={3}>
+                
+            </VStack>
+            <VStack p="$3">
+            <Button variant="solid" 
+                    size="sm" 
+                    bg={colors.secondary} 
+                    borderRadius={30} 
+                    onPress={postForum} ml={3}>
                     <Text color={colors.white} fontSize="$sm">
                         Post
                     </Text>
                 </Button>
-            </HStack>
+            </VStack>
         </Box>
     );
 }
