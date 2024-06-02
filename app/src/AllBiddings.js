@@ -122,33 +122,47 @@ export default function AllBiddingsPage() {
     }, [listings]);
 
     const renderAllBiddings = () => {
-        return listings.map(listing => (
-            <BidItemCard
-                key={listing.id}
-                listingImage={listing.listingImageURL}
-                listingName={listing.listingName}
-                listingPrice={listing.listingPrice}
-                remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} day(s)`}
-                toBidding={() => handleBiddingClick(listing.id)}
-                highestBidder={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
-                    `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
-                highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
-                    `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
-                buttonCondition={listing.daysRemaining > 0 && (
-                    <HStack justifyContent="space-between" alignItems="center">
-                        <Button
-                            variant="solid"
-                            size="$sm"
-                            bg={colors.primary}
-                            borderRadius={8}
-                            onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
-                        >
-                            <Text color={colors.white} fontSize="$md" bold="true">Bid Now</Text>
-                        </Button>
-                    </HStack>
-                )}
-            />
-        ));
+        return <>
+            <VStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
+                {listings.map(listing => (
+                    <BidItemCard
+                        key={listing.id}
+                        listingImage={listing.listingImageURL}
+                        listingName={listing.listingName}
+                        listingPrice={listing.listingPrice}
+                        remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} day(s)`}
+                        toBidding={() => handleBiddingClick(listing.id)}
+                        highestBidder={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
+                            `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
+                        highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
+                            `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
+                        buttonCondition={listing.daysRemaining > 0 && (
+                            <HStack justifyContent="space-between" alignItems="center">
+                                <Button
+                                    variant="solid"
+                                    size="$sm"
+                                    bg={colors.primary}
+                                    borderRadius={8}
+                                    onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
+                                >
+                                    <Text color={colors.white} fontSize="$md" bold="true">Bid Now</Text>
+                                </Button>
+                            </HStack>
+                        )}
+                    />
+                ))}
+            </VStack>
+            <Text style={styles.endOfResults}>End of Results</Text>
+        </>
+    };
+
+    const styles = {
+        endOfResults: {
+            textAlign: 'center',
+            paddingVertical: 20,
+            fontSize: 18,
+            color: 'gray'
+        }
     };
 
     return (

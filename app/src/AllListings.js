@@ -73,7 +73,7 @@ export default function AllListingsPage() {
 
     const filteredListings = allListingsData.filter((item) => {
         if (item.sold) {
-            return false; 
+            return false;
         }
         const listingName = item.listingName.toLowerCase();
         const username = item.username.toLowerCase();
@@ -95,21 +95,23 @@ export default function AllListingsPage() {
 
         return (
             <>
-                {filteredListings.map((item) => (
-                    <ItemCard
-                        key={item.id}
-                        productImage={item.listingImageURL}
-                        productPrice={item.listingPrice}
-                        productName={item.listingName}
-                        productSeller={item.username}
-                        sellerID={item.sellerID}
-                        tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-                        toListing={() => navigation.navigate(Routes.LISTINGS, {
-                            selectedItem: item,
-                            sellerImageURL: item.sellerImageURL
-                        })}
-                    />
-                ))}
+                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
+                    {filteredListings.map((item) => (
+                        <ItemCard
+                            key={item.id}
+                            productImage={item.listingImageURL}
+                            productPrice={item.listingPrice}
+                            productName={item.listingName}
+                            productSeller={item.username}
+                            sellerID={item.sellerID}
+                            tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+                            toListing={() => navigation.navigate(Routes.LISTINGS, {
+                                selectedItem: item,
+                                sellerImageURL: item.sellerImageURL
+                            })}
+                        />
+                    ))}
+                </HStack>
                 <Text style={styles.endOfResults}>End of Results</Text>
             </>
         );
@@ -123,7 +125,7 @@ export default function AllListingsPage() {
             color: 'gray'
         }
     };
-    
+
     return (
         <Box w="100%" h="100%">
             <SearchHeader
@@ -150,7 +152,7 @@ export default function AllListingsPage() {
                 </VStack>
 
                 <ScrollView>
-                    <HStack space="xs" w="100%"flexWrap="wrap" justifyContent="center" >
+                    <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>
