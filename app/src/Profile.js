@@ -87,7 +87,7 @@ export default function ProfilePage() {
     };
 
     return (
-        <Box w="100%" h="100%" bgColor={colors.white}>
+        <Box w="100%" h="100%">
 
             <VStack>
                 <HStack p="$3" w="100%" mt={25} alignItems="center">
