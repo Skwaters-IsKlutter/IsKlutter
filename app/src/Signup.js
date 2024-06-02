@@ -66,6 +66,7 @@ export default function SignupScreen() {
 
                 if (!uniqueUsername) {
                     setError('Username is already taken. Please choose a different one.');
+                    Alert.alert("Signup Failed", "Username is already taken. Please choose a different one."); // Alert the user to use a different username
                 } else {
                     const response = await createUserWithEmailAndPassword(auth, email, password);
                     const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterdb.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=c026e2ce-062b-4952-a5a3-8232cb3b85d5";
