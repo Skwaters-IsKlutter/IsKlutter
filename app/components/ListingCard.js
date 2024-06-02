@@ -16,7 +16,6 @@ import { auth, database } from '../../config/firebase';
 import { Alert } from 'react-native';
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
-import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import fonts from '../config/fonts.js';
 
 const getCurrentUserID = () => {
@@ -30,13 +29,6 @@ const getCurrentUserID = () => {
 };
 
 export default function ListingCard({ productID, productName, productImage, productPrice, productDesc, sellerName, sellerID, sellerImageURL, tags, timestamp }) {
-    const [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-        Poppins_600SemiBold,
-        Poppins_700Bold
-    })
-    
-    
     
     const navigation = useNavigation();
     const currentUserId = getCurrentUserID();
@@ -117,7 +109,7 @@ export default function ListingCard({ productID, productName, productImage, prod
 
             <VStack space="sm" p="$2">
                 <HStack w="100%" justifyContent="space-between">
-                    <Text fontSize="$3xl" color={colors.primary} lineHeight={40} fontFamily="Poppins_600SemiBold">{productName}</Text>   
+                    <Text fontSize="$3xl" color={colors.primary} lineHeight={40} fontFamily={fonts.semibold}>{productName}</Text>   
                 </HStack>
                 <HStack justifyContent='space-between'>
                     <Text fontSize="$xl" color={colors.secondary}  fontFamily={fonts.bold}>{`₱ ${productPrice}`}</Text>
@@ -129,12 +121,12 @@ export default function ListingCard({ productID, productName, productImage, prod
             
 
             <VStack pt="$5" pl ="$2">
-                <Text fontSize="$lg"  color='$black' fontFamily="Poppins_600SemiBold">Description</Text>
+                <Text fontSize="$lg"  color='$black' fontFamily={fonts.semibold}>Description</Text>
             </VStack>
             
             <HStack justifyContent="space-between" flexDirection="row">
                 <VStack space="sm" p="$2">
-                    <Text fontSize="$md" fontFamily="Poppins_400Regular">{productDesc}</Text>
+                    <Text fontSize="$md" fontFamily={fonts.regular}>{productDesc}</Text>
                 </VStack>
             </HStack>
 
