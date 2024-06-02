@@ -43,7 +43,6 @@ export default function SpecificBiddingPage() {
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
-    const [forceRender, setForceRender] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
 
     useEffect(() => {
@@ -87,10 +86,6 @@ export default function SpecificBiddingPage() {
 
         fetchListingImage();
     }, [listingId]);
-
-    const updateHighestBidder = (bidder, price) => {
-        setForceRender(prev => !prev);  // Force re-render
-    };
 
     const handleBid = async (listingId, biddingAmount) => {
         try {
@@ -184,7 +179,7 @@ export default function SpecificBiddingPage() {
         };
 
         fetchBiddingData();
-    }, [listingId, listing, highestBidderName, highestBiddingPrice, forceRender]);
+    }, [listingId, listing, highestBidderName, highestBiddingPrice]);
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -230,7 +225,7 @@ export default function SpecificBiddingPage() {
 
         fetchListing();
         fetchBiddingData();
-    }, [listingId, forceRender]);
+    }, [listingId]);
 
     const handleDelete = async () => {
         Alert.alert(
