@@ -10,9 +10,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
     const { width } = useWindowDimensions(); // Get screen width
     const cardWidth = (width - 60) / 2;
     
-    const truncateProductName = (name, maxLength) => {
-        return name.length > maxLength ? name.substring(0, maxLength - 3) + '...' : name;
-    };
+    const truncatedproductName = productName.length > 20 ? productName.substring(0, 17) + '...' : productName;
     
     return (
         <Pressable onPress={toListing}>
@@ -37,7 +35,7 @@ export default function ItemCard({ productImage, productPrice, productName, prod
 
                     <VStack space="xs" p={3}>
                         <Text fontSize="$md"  fontFamily={fonts.bold} color={colors.secondary}>
-                            {truncateProductName(productName, 20)}
+                            {truncatedproductName}
                         </Text>
                         <HStack alignItems='center'>
                             <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary}   />      
