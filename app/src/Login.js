@@ -13,7 +13,7 @@ import {
     Text } from '@gluestack-ui/themed';
 
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { Alert, LogBox } from 'react-native';
 
 import { auth } from "../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -26,7 +26,7 @@ import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular, Pop
 import AppLoading from 'expo-app-loading';
 
 export default function LoginPage() {
-
+    LogBox.ignoreAllLogs();
     const [fontsLoaded] = useFonts({
         Poppins_100Thin,
         Poppins_400Regular,
