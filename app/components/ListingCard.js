@@ -8,6 +8,7 @@ import {
     Image,
     Button,
     ButtonIcon,
+    Pressable
 } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
@@ -139,6 +140,12 @@ export default function ListingCard({ productID, productName, productImage, prod
                     <HStack space="md" p="$2" alignItems="center">   
                         <Image source={sellerImageURL} h={45} w={45} alt="icon" borderRadius={100} /> 
                         <Text color={colors.black} fontSize={15} onPress={handleSellerProfilePress} fontFamily={fonts.regular}>{sellerName}</Text>
+                        <HStack bgColor={colors.primary} alignItems='center' p="$1" borderRadius={10} ml={15}>
+                            <Pressable onPress={() => navigation.navigate(Routes.MESSAGES)} pl={5} mt={5} pr={5} >
+                                <MaterialCommunityIcons name="chat" color={colors.white} size={25} />
+                            </Pressable>
+                            <Text color={colors.white} pr={5}  fontFamily={fonts.semibold} pt={2}>Chat</Text>
+                        </HStack>
                     </HStack>
                 </HStack>
             </HStack>
