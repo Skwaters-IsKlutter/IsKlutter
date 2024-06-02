@@ -37,7 +37,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
     const renderCheckbox = () => {
         if (mainTags === 'Food') {
             return (
-                <Box>
+                <Box >
                     <CheckBox
                         checkBoxLabel="Gluten-free"
                         onValueChange={(value) => handleSecondaryTagChange(value, 'Gluten Free')}
@@ -97,7 +97,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
 
     return (
         <Box p={10}>
-            <VStack top={-25}>
+            <VStack top={-25} >
                 <FormControlLabel mb="$2">
                     <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold}>
                         {listingFormLabel}
@@ -109,6 +109,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
                 data={Tags}
                 placeholder={listingFormPlaceholder}
                 defaultOption={{ key: 'Food', value: 'Food' }}
+                fontFamily={fonts.regular}
             />
 
             {renderCheckbox()}
