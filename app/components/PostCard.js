@@ -72,7 +72,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     </HStack>
 
                     <VStack size="md">
-                        <Text color="black" pb="$3" size="lg" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7} fontFamily={fonts.semibold}>
+                        <Text color="black" pb="$3" size="lg" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7} fontFamily={fonts.thin}>
                             {description}
                         </Text>
                     </VStack>
