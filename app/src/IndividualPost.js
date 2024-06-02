@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Image, useWindowDimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import {
     VStack,
@@ -15,7 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import colors from '../config/colors';
 import IndividualPostCard from '../components/IndividualPostCard.js';
-import { getFirestore, collection, getDocs, query, where, onSnapshot } from 'firebase/firestore'; // Import onSnapshot
+import { getFirestore, collection, getDoc, query, where, onSnapshot, doc, } from 'firebase/firestore'; // Import onSnapshot
 import CommunityReplyBox from '../components/CommunityReplyBox';
 
 import fonts from '../config/fonts.js';
@@ -30,47 +30,86 @@ export default function IndividualPostPage() {
         Poppins_600SemiBold,
         Poppins_700Bold
     })
-
+    const { width: screenWidth } = useWindowDimensions();
     const navigation = useNavigation();
     const route = useRoute();
     const { selectedPost } = route.params || {};
     const [comments, setComments] = useState([]);
+    const [imageUrls, setImageUrls] = useState([]);
 
     useEffect(() => {
-        console.log('Selected Post:', selectedPost);
         const fetchComments = async () => {
             try {
-                const db = getFirestore(FIREBASE_APP); 
+                const db = getFirestore();
                 const commentsRef = collection(db, 'CommunityComment');
                 const postCommentsQuery = query(commentsRef, where('postKey', '==', selectedPost.key));
                 const unsubscribe = onSnapshot(postCommentsQuery, (snapshot) => {
                     const commentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    console.log('Comments:', commentsData); 
                     setComments(commentsData);
                 });
-                // Return the unsubscribe function to clean up the listener when component unmounts
                 return unsubscribe;
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
         };
-    
+
+        const fetchImageUrls = async () => {
+            try {
+                const db = getFirestore();
+                const postDoc = doc(db, 'forum', selectedPost.key);
+                const postSnap = await getDoc(postDoc);
+                if (postSnap.exists()) {
+                    const post = postSnap.data();
+                    console.log('Post:', post);
+                    setImageUrls(post.images);
+                    console.log('Image URLs:', imageUrls);
+                } else {
+                    console.error('Post not found');
+                }
+            } catch (error) {
+                console.error('Error fetching image URLs:', error);
+            }
+        };
+
         if (selectedPost && selectedPost.key) {
             fetchComments();
+            fetchImageUrls();
         }
     }, [selectedPost]);
 
     // Render Specific Post
     const renderCommunityPosts = () => {
-        return (
-            <IndividualPostCard
-                postKey={selectedPost.key}
-                description={selectedPost.description}
-                userId={selectedPost.userID}
-                timestamp={selectedPost.timeposted?selectedPost.timeposted.toDate().toLocaleString():"N/A"}
-            />
-        );
+        if (imageUrls.length > 0) {
+            return (
+                
+                <><IndividualPostCard
+                    postKey={selectedPost.key}
+                    description={selectedPost.description}
+                    userId={selectedPost.userID}
+                    timestamp={selectedPost.timeposted ? selectedPost.timeposted.toDate().toLocaleString() : "N/A"} /><ScrollView horizontal>
+                        {/* Map through imageUrls array and render each image with its caption */}
+                        {imageUrls.map((imageUrl, index) => (
+                            <View key={index} style={{ alignItems: 'center', marginRight: 20 }}>
+                                <Image
+                                    source={{ uri: imageUrl }}
+                                    style={{ width: screenWidth - 40, height: 200, marginBottom: 10 }} // Adjust dimensions as needed
+                                />
+                            </View>
+                        ))}
+                    </ScrollView></>
+            );
+        } else {
+            return (
+                <IndividualPostCard
+                    postKey={selectedPost.key}
+                    description={selectedPost.description}
+                    userId={selectedPost.userID}
+                    timestamp={selectedPost.timeposted ? selectedPost.timeposted.toDate().toLocaleString() : "N/A"}
+                />
+            );
+        }
     };
+    
 
     // Render Comments
     const renderComments = () => {
