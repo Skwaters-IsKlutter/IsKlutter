@@ -112,7 +112,7 @@ export default function ProfilePage() {
                               <MaterialCommunityIcons 
                                   name="view-grid" 
                                   color={colors.secondary} 
-                                  size={25}s
+                                  size={25}
                               />
                                 <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
                                     My Listings

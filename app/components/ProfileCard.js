@@ -58,7 +58,7 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
         ) : (
           <>
             <HStack justifyContent="space-between" alignItems="center" >
-                <Text fontSize={18} color={colors.white} mt={0} mb={0} fontFamily={fonts.semibold}>
+                <Text fontSize={13} color={colors.white} mt={0} mb={0} fontFamily={fonts.regular}>
                 {`@${username}`}
                 </Text>
             </HStack>
