@@ -39,7 +39,7 @@ export default function AddPostPage() {
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Text fontSize={24} color={colors.white} lineHeight={50} fontFamily={fonts.semibold} m={10}> Create Post</Text>
+                    <Text fontSize={24} color={colors.white} lineHeight={50} fontFamily={fonts.semibold} m={10}>Create Post</Text>
                 </HStack>
             </Box>
 

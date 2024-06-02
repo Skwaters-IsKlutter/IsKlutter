@@ -14,11 +14,9 @@ import fonts from '../config/fonts.js';
 export default function HelloCard({username}) {
 
     return (
-        <Box p="$2" w="100%" alignItems='center' >
-            <Text fontFamily ={fonts.semibold} pt="$4">
-            <Heading fontSize={40} lineHeight={40} color={colors.white}>
+        <Box w="100%" alignItems='center' >
+            <Text fontSize={35} lineHeight={40} color={colors.white} fontFamily={fonts.bold}>
                 {username ? `Hello, ${username}!` : 'Loading...'}
-            </Heading>
             </Text>
         </Box>
     );

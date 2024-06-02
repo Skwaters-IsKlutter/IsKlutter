@@ -47,9 +47,9 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
         )}
       </Avatar>
 
-      <VStack space="xs" pb="$2" py="$5" alignItems='center'>
+      <VStack space="xs" pb="$2" mt={1} alignItems='center'>
         <HStack justifyContent="space-between" alignItems="center">
-          <Text pt="$5"  fontSize={35} color={colors.white} fontFamily={fonts.semibold}>{profileName}</Text>
+          <Text pt="$5" fontSize={20} color={colors.white} fontFamily={fonts.bold}>{profileName}</Text>
           
         </HStack>
 
@@ -58,14 +58,12 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
         ) : (
           <>
             <HStack justifyContent="space-between" alignItems="center" >
-            <Text fontSize={20} color={colors.white} mt={0} mb={0} fontFamily={fonts.regular}>
-              {`@${username}`}
-            </Text>
-            
+                <Text fontSize={18} color={colors.white} mt={0} mb={0} fontFamily={fonts.semibold}>
+                {`@${username}`}
+                </Text>
             </HStack>
             
-
-            <Text px="$10" fontSize={15} color={colors.white} fontFamily={fonts.regular}pt="0" pb={5}>
+            <Text fontSize={15} color={colors.white} fontFamily={fonts.regular}>
               {bio}
             </Text>
             <HStack alignItems="center">
@@ -84,7 +82,7 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
               variant="solid" 
               size="xs" backgroundColor={colors.gray} borderRadius={20} mt={10} ml={10}onPress={handleLogout}>
               <ButtonText color={colors.white} fontSize="$sm" fontFamily={fonts.bold}>
-                Logout
+                Log Out
               </ButtonText>
             </Button>
             </HStack>
