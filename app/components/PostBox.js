@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Text, VStack, HStack, Button, Input, InputField, Image } from '@gluestack-ui/themed';
+import React, { useState} from 'react';
+import { Box, Text, VStack, Button, Input, InputField, Image } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
 import { getFirestore, addDoc, collection, updateDoc, query, where, getDocs } from 'firebase/firestore';
-import { FIREBASE_APP } from '../../config/firebase';
+import { FIREBASE_APP, storage} from '../../config/firebase';
+import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { useUser } from '../components/UserIcon.js';
+import PostBoxImagePicker from './PostBoxImagePicker';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
 
 export default function PostBox() {
-    const [listingDescription, setListingDescription] = useState('');
+    const [postDescription, setPostDescription] = useState('');
+    const [listingData, setListingData] = useState({ listingImage: null, hasImage: false }); // Ensure hasImage is initialized to false
     const { userProfileImg } = useUser();
 
     const postForum = async () => {
@@ -28,20 +31,32 @@ export default function PostBox() {
                 return;
             }
 
-            if (listingDescription) {
+            if (postDescription) {
+                const imageName = `image_${Date.now()}`;
+                const storagePath = `communityImage/${imageName}.jpeg`;
+                const file = listingData.listingImage;
+                const imageRef = storageRef(storage, storagePath);
+                const metadata = { contentType: 'image/jpeg' };
+                await uploadBytes(imageRef, file, metadata);
+                const downloadURL = await getDownloadURL(imageRef);
+
                 const docRef = await addDoc(collection(db, 'forum'), {
                     userID: userID,
-                    description: listingDescription,
+                    description: postDescription,
                     timestamp: new Date(),
                     key: '',
+                    image: storagePath,
+                    imageURL: downloadURL,
+                    hasImage: listingData.hasImage // Ensure hasImage is included in the document
                 });
 
-                setListingDescription('');
+                setPostDescription('');
+                setListingData({ listingImage: null, hasImage: false }); // Reset hasImage after posting
                 await updateDoc(docRef, { key: docRef.id });
                 alert('Success', 'Post added successfully');
                 console.log("Post added successfully");
             } else {
-                console.error('Listing description is empty');
+                console.error('Post description is empty');
             }
         } catch (error) {
             console.error('Error adding document: ', error);
@@ -58,16 +73,17 @@ export default function PostBox() {
                         alt="user profile"
                     />
                 )}
-
-                <Input bg={colors.white} borderColor={colors.secondary} h="70%" w="100%" zIndex={0}>
+                <PostBoxImagePicker setListingData={setListingData} />
+                <Input bg={colors.white} borderColor={colors.secondary} h="30%" w="100%" zIndex={0}>
                     <InputField
                         multiline={true}
                         size="md"
                         placeholder="Write a post..."
-                        value={listingDescription}
-                        onChangeText={(text) => setListingDescription(text)}
+                        value={postDescription}
+                        onChangeText={(text) => setPostDescription(text)}
                     />
                 </Input>
+                
 
                 
             </VStack>
