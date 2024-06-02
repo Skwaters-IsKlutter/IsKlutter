@@ -3,24 +3,23 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import {
-    HStack, 
+    HStack,
     VStack,
-    Text, 
+    Text,
     Heading,
     Box,
-    ScrollView, 
-    Input, 
-    InputField, 
-    Button, 
-    Pressable
+    ScrollView,
+    Input,
+    InputField,
+    Button,
 } from '@gluestack-ui/themed';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AllBidderListCard from '../components/AllBidderListCard.js';
 import SpecificBidCard from '../components/SpecificBidCard.js';
-import BackHeader from '../components/BackHeader.js';
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
-import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where, doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
@@ -36,19 +35,15 @@ export default function SpecificBiddingPage() {
     const [listing, setListing] = useState({});
     const [biddingData, setBiddingData] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
-    const [comments, setComments] = useState({});
     const [biddingAmount, setBiddingAmount] = useState('');
-    const [highestBidder, setHighestBidder] = useState({});
-    const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [highestBidderName, setHighestBidderName] = useState('');
+    const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10); 
     const [forceRender, setForceRender] = useState(false);  
 
     useEffect(() => {
-        console.log("Component mounted or updated.");
         const unsubscribe = onAuthStateChanged(auth, user => {
-            console.log("Auth state changed:", user);
             setCurrentUser(user);
         });
         return unsubscribe;
@@ -56,20 +51,16 @@ export default function SpecificBiddingPage() {
 
     const fetchUsername = async (userId) => {
         try {
-            console.log("Fetching username for userId:", userId);
             const userCollectionRef = collection(db, 'users');
             const querySnapshot = await getDocs(query(userCollectionRef, where('userID', '==', userId)));
 
             if (!querySnapshot.empty) {
                 const userData = querySnapshot.docs[0].data();
-                console.log("Username fetched:", userData.username);
                 return userData.username;
             } else {
-                console.error('User not found');
                 return null;
             }
         } catch (error) {
-            console.error('Error fetching username:', error);
             return null;
         }
     };
@@ -77,33 +68,28 @@ export default function SpecificBiddingPage() {
     useEffect(() => {
         const fetchListingImage = async () => {
             try {
-                console.log("Fetching listing image for listingId:", listingId);
                 const docRef = doc(db, 'listings', listingId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const listingData = docSnap.data();
                     if (listingData && listingData.listingImageURL) {
-                        console.log("Listing image fetched:", listingData.listingImageURL);
                         setListingImage(listingData.listingImageURL);
                     }
                 }
             } catch (error) {
-                console.error('Error fetching listing image:', error);
+                // Handle error
             }
         };
     
         fetchListingImage();
     }, [listingId]);
-    
+
     const updateHighestBidder = (bidder, price) => {
-        console.log("Updating highest bidder to:", bidder, "with price:", price);
-        setHighestBidder({ bidder, price });
         setForceRender(prev => !prev);  // Force re-render
     };
 
     const handleBid = async (listingId, biddingAmount) => {
         try {
-            console.log("Handling bid for listingId:", listingId, "with amount:", biddingAmount);
             const biddingBet = parseFloat(biddingAmount);
             if (isNaN(biddingBet)) {
                 Alert.alert('Invalid Bid', 'Please enter a valid number for bidding.');
@@ -155,11 +141,9 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice: newHighestBiddingPrice
             }));
 
-            console.log("Bid successful. New highest bidder:", highestBidderName, "with price:", newHighestBiddingPrice);
             Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
 
         } catch (error) {
-            console.error('Error placing bid:', error);
             Alert.alert('Error', 'Failed to place bid. Please try again later.');
         }
     };
@@ -167,7 +151,6 @@ export default function SpecificBiddingPage() {
     useEffect(() => {
         const fetchBiddingData = async () => {
             try {
-                console.log("Fetching bidding data for listingId:", listingId);
                 const biddingCollection = collection(db, 'bidding');
                 const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
                 let maxBiddingPrice = 0;
@@ -184,15 +167,13 @@ export default function SpecificBiddingPage() {
                 setHighestBiddingPrice(maxBiddingPrice);
                 setHighestBidderName(userWithMaxBiddingPrice);
 
-                // Update listing state
                 setListing(prevListing => ({
                     ...prevListing,
                     highestBidderName: userWithMaxBiddingPrice,
                     highestBiddingPrice: maxBiddingPrice
                 }));
-                console.log("Bidding data fetched. Highest price:", maxBiddingPrice, "by user:", userWithMaxBiddingPrice);
             } catch (error) {
-                console.error('Error fetching bidding data:', error);
+                // Handle error
             }
         };
 
@@ -202,34 +183,28 @@ export default function SpecificBiddingPage() {
     useEffect(() => {
         const fetchListing = async () => {
             try {
-                console.log("Fetching listing for listingId:", listingId);
                 const listingsCollection = collection(db, 'listings');
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice, bidIncrement } = listingData; // Fetch bidIncrement
-                    setListing({ listingName, listingPrice, bidIncrement }); // Set bidIncrement in listing
-                    setBidIncrement(bidIncrement || 10); // Set bidIncrement state, default to 10 if not found
-                    console.log("Listing data fetched:", { listingName, listingPrice, bidIncrement });
+                    const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID });
+                    setBidIncrement(bidIncrement || 10);
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
             } catch (error) {
-                console.error('Error fetching listing data:', error);
                 Alert.alert('Error', 'Failed to fetch listing data.');
             }
         };
 
         const fetchBiddingData = async () => {
             try {
-                console.log("Fetching all bidding data for listingId:", listingId);
                 const biddingCollection = collection(db, 'bidding');
                 const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
                 const data = querySnapshot.docs.map(doc => doc.data());
                 setBiddingData(data);
-                console.log("All bidding data fetched:", data);
             } catch (error) {
-                console.error('Error fetching bidding data:', error);
                 Alert.alert('Error', 'Failed to fetch bidding data.');
             }
         };
@@ -237,6 +212,33 @@ export default function SpecificBiddingPage() {
         fetchListing();
         fetchBiddingData();
     }, [listingId, forceRender]);
+
+    const handleDelete = async () => {
+        Alert.alert(
+            'Delete Listing',
+            'Are you sure you want to delete this listing?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel'
+                },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            const listingRef = doc(db, 'listings', listingId);
+                            await deleteDoc(listingRef);
+                            Alert.alert('Deleted', 'The listing has been deleted.');
+                            navigation.goBack();
+                        } catch (error) {
+                            Alert.alert('Error', 'Failed to delete the listing. Please try again later.');
+                        }
+                    }
+                }
+            ]
+        );
+    };
 
     const renderSpecificBidding = () => {
         return listing && (
@@ -246,6 +248,7 @@ export default function SpecificBiddingPage() {
                 highestBidderName={highestBidderName}
                 highestBiddingPrice={highestBiddingPrice}
                 listingImage={listingImage}
+                bidIncrement={bidIncrement}
             />
         )
     };
@@ -265,11 +268,9 @@ export default function SpecificBiddingPage() {
     };
 
     return (
-        // Parent box
         <Box w="100%" h="100%">
-            <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Bid Details" />
+            <SearchHeaderBack userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
 
-            {/* Specific Bid Card */}
             <Box>
                 <VStack space="xs">
                     {renderSpecificBidding()}
@@ -282,7 +283,17 @@ export default function SpecificBiddingPage() {
                 </Box>
             </Box>
 
-            {/* Bet Input*/}
+            {currentUser && currentUser.uid === listing.sellerID && (
+                <Button
+                    position="absolute"
+                    top={10}
+                    left={10}
+                    onPress={handleDelete}
+                >
+                    <MaterialCommunityIcons name="delete" size={20} color={colors.black} />
+                </Button>
+            )}
+
             <Box m={10} p={15} borderRadius={10} top={-60}>
                 <HStack alignItems="center" justifyContent='space-around'>
                     <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
@@ -294,7 +305,7 @@ export default function SpecificBiddingPage() {
                             onChangeText={(text) => setBiddingAmount(text)}
                         />
                     </Input>
-                    <Button 
+                    <Button
                         variant="solid"
                         size="md"
                         bg={colors.primary}
@@ -302,7 +313,7 @@ export default function SpecificBiddingPage() {
                         ml={3}
                         onPress={() => handleBid(listingId, biddingAmount)}
                     >
-                        <Text color={colors.white} fontSize="$md" bold='true'>Bid</Text>
+                        <Text color={colors.black} fontSize="$md" bold='true'>Bid</Text>
                     </Button>
                 </HStack>
             </Box>
