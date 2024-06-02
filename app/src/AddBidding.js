@@ -183,7 +183,7 @@ export default function AddListingPage() {
                 </HStack>
             </Box>
 
-            <Box w="100%" maxWidth="$96" flex={1}>
+            <Box w="100%" flex={1} p="$3">
                 <ScrollView>
                     <Box>
                         <VStack space="xs">
@@ -198,10 +198,10 @@ export default function AddListingPage() {
                         </VStack>
                     </Box>
                     <Box p={10} top={-30}>
-                        <Text color={colors.secondary} fontWeight={600}>Select Bid Time</Text>
+                        <Text color={colors.secondary} fontWeight={600} fontFamily={fonts.bold}>Select Bid Time</Text>
                         <Select onValueChange={(value) => { handleBiddingTimeChange(value); }}>
-                            <SelectTrigger bg={colors.white}>
-                                <SelectInput placeholder="Select Time" />
+                            <SelectTrigger bg={colors.white} >
+                                <SelectInput  placeholder="Select Time" />
                             </SelectTrigger>
                             <SelectPortal>
                                 <SelectBackdrop />
@@ -222,7 +222,7 @@ export default function AddListingPage() {
                     <Box p={10} top={-30}>
                         <FormControl>
                             <FormControlLabel mb="$1">
-                                <FormControlLabelText color={colors.secondary} fontWeight={600}>Bidding Increment</FormControlLabelText>
+                                <FormControlLabelText color={colors.secondary} fontWeight={600}  fontFamily={fonts.bold}>Bidding Increment</FormControlLabelText>
                             </FormControlLabel>
                             <Input w="100%" bg={colors.white} h='$10' borderRadius={10}>
                                 <InputField
@@ -244,7 +244,7 @@ export default function AddListingPage() {
                             onPress={handlePostNow}
                             disabled={loading}
                         >
-                            <ButtonText color={colors.white} fontSize="$md">
+                            <ButtonText color={colors.white}  fontFamily={fonts.semibold}fontSize="$md">
                                 {loading ? 'Posting' : 'Post Now'}
                             </ButtonText>
                         </Button>
@@ -256,7 +256,7 @@ export default function AddListingPage() {
                             borderRadius={10}
                             ml={10}
                             onPress={handleCancel}>
-                            <ButtonText color={colors.white} fontSize="$md">
+                            <ButtonText color={colors.white} fontSize="$md"  fontFamily={fonts.semibold}>
                                 Cancel
                             </ButtonText>
                         </Button>

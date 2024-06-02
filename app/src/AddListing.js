@@ -169,7 +169,7 @@ export default function AddListingPage() {
                                 onPress={handlePostNow}
                                 disabled={loading}
                             >
-                                <ButtonText color={colors.white} fontSize="$md">
+                                <ButtonText color={colors.white} fontSize="$md"  fontFamily={fonts.semibold}>
                                     {loading ? 'Posting' : 'Post Now'}
                                 </ButtonText>
                             </Button>
@@ -181,7 +181,7 @@ export default function AddListingPage() {
                                 borderRadius={10}
                                 ml={10}
                                 onPress={handleCancel}>
-                                <ButtonText color={colors.white} fontSize="$md">
+                                <ButtonText color={colors.white} fontSize="$md"  fontFamily={fonts.semibold}>
                                     Cancel
                                 </ButtonText>
                             </Button>

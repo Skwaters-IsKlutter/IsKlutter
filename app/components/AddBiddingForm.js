@@ -9,6 +9,7 @@ import {
     InputField,
 } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 export default function AddBiddingForm( { 
     biddingFormLabel, 
@@ -31,7 +32,7 @@ export default function AddBiddingForm( {
             <VStack top={-20}>
                 <FormControl >
                     <FormControlLabel mb="$1">
-                        <FormControlLabelText color={colors.secondary} fontWeight={600}>{biddingFormLabel}</FormControlLabelText>
+                        <FormControlLabelText color={colors.secondary} fontWeight={600} fontFamily={fonts.bold}>{biddingFormLabel}</FormControlLabelText>
                     </FormControlLabel>
 
                     <Input w="100%" bg={colors.white} h={biddingFormBoxHeight} borderRadius={10}>
