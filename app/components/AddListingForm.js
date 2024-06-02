@@ -44,6 +44,8 @@ export default function AddListingForm( {
                             maxLength={listingFormMaxLength}
                             numberOfLines={listingFormLineum}
                             onChangeText={handleInputChange}
+                            fontFamily={fonts.regular}
+                            
                         />
                     </Input>
                 </FormControl>

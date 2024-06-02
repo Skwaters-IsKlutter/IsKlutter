@@ -19,6 +19,7 @@ import { storage, storageRef, uploadBytes,  database, auth } from '../../config/
 import { getDownloadURL } from 'firebase/storage';
 
 import AddListingBox from '../components/AddListingBox.js';
+import BackHeader from '../components/BackHeader';
 
 import colors from '../config/colors.js';
 import fonts from '../config/fonts';
@@ -135,14 +136,7 @@ export default function AddListingPage() {
     return (
         <Box w="100%" h="100%">
            {/* Header */}
-            <Box backgroundColor={colors.primary}>
-                <HStack p="$2" w="100%" mt={25} alignItems='center' >
-                    <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-                    </Pressable>
-                    <Text fontSize={24} color={colors.white} lineHeight={50} fontFamily={fonts.semibold} m={10}>Post</Text>
-                </HStack>
-            </Box>
+           <BackHeader headerText="Post Listing" />
 
       
             <Box w="100%"  flex={1}>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/themed';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
+
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
-
-// import usePoppinsFonts from '../config/fonts.js/index.js';
 
 const db = getFirestore();
 
@@ -48,13 +49,13 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     backgroundColor={colors.white}
                     borderRadius={10}
                     width={380}
-                    maxHeight={300}
+                    maxHeight={320}
                     m={5}
                     pb={3}
                     overflow="hidden"
 
                 >
-                    <HStack space="sm" alignItems="center" p="$3" m={5}>
+                    <HStack space="sm" alignItems="center" p="$3" m={5}> 
                         <Image
                             source={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/profile-holder.jpg')}
                             style={{ width: 60, height: 60, borderRadius: 30 }}
@@ -76,11 +77,16 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                             {description}
                         </Text>
                     </VStack>
+
                     {hasImage && (
-                        <Text style={styles.tapToSeePhotos} fontFamily={fonts.semibold} pl={10}>
-                            [tap post to see photos]
-                        </Text>
-                    )}
+                            // <Text style={styles.tapToSeePhotos} fontFamily={fonts.semibold} pl={10}>
+                            //     [tap post to see photos]
+                            // </Text>
+                            <HStack alignItems="center" alignSelf='flex-end' pr="$12" pb="$2">
+                                <MaterialCommunityIcons name="image-multiple" size={20} color={colors.primary} />
+                                <Text fontFamily={fonts.regular} fontSize={12} color={colors.gray}>Tap post to view images</Text>
+                            </HStack>
+                        )}
                 </Box>
             </VStack>
         </Pressable>
