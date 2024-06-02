@@ -58,6 +58,12 @@ export default function SignupScreen() {
                     return;
                 }
 
+                if (password.length < 6) {
+                    setError('Error creating user. Password must be at least 6 characters long.');
+                    Alert.alert("Signup Failed", "Invalid password. Please use a password with 6 or more characters.");
+                    return;
+                }
+
                 if (!uniqueUsername) {
                     setError('Username is already taken. Please choose a different one.');
                 } else {
