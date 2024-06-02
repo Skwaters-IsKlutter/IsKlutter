@@ -6,17 +6,25 @@ import {
     Text,
     Box,
     Image,
+    Button
 } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
-import { useNavigation } from '@react-navigation/native';
-import Routes from '../components/constants/Routes.js';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
+import { Alert } from 'react-native';
 
 const db = getFirestore(FIREBASE_APP);
 
-export default function BidItemCard({ listingPrice, listingImage, listingName, remainingTime, toBidding, buttonCondition }) {
-    const navigation = useNavigation();
+export default function BidItemCard({ 
+    listingPrice, 
+    listingImage, 
+    listingName, 
+    remainingTime, 
+    toBidding, 
+    buttonCondition, 
+    showDeleteButton, 
+    handleDelete 
+}) {
     const [highestBid, setHighestBid] = useState(null);
     const [highestBidder, setHighestBidder] = useState(null);
     const [isImageUrl, setIsImageUrl] = useState(typeof listingImage === 'string');
@@ -50,13 +58,43 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
         fetchHighestBid();
     }, [listingName]);
 
+    const confirmDelete = () => {
+        Alert.alert(
+            "Delete Listing",
+            "Are you sure you want to delete this?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                { 
+                    text: "Delete", 
+                    onPress: handleDelete,
+                    style: "destructive"
+                }
+            ],
+            { cancelable: true }
+        );
+    };
+
     return (
         <Box p="$2" flex={1}>
             <VStack bg={colors.white} borderRadius={10} width="100%" height="auto">
-                
+                {/* {showDeleteButton && (
+                    <Button 
+                        variant="solid" 
+                        size="$sm" 
+                        bg="red.500" 
+                        onPress={confirmDelete} 
+                        backgroundColor='red'
+                        alignSelf="flex-end" 
+                        marginRight={2} 
+                        marginTop={2}
+                    >
+                        <Text color="black" fontSize="$md" bold>Delete</Text>
+                    </Button>
+                )} */}
                 <HStack width="100%">
-                    {/* Update to listing image */}
-                    
                     {isImageUrl ? (
                         <Image
                             source={{ uri: listingImage }}
@@ -76,7 +114,7 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
                                     Highest Bid: PHP {highestBid}
                                 </Heading>
                                 <Heading fontSize="$sm" color={colors.black}>
-                                    Highest Bidder:{highestBidder}
+                                    Highest Bidder: {highestBidder}
                                 </Heading>
                             </>
                         ) : (
@@ -87,7 +125,6 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
                         
                         <Heading fontSize="$md" color={colors.black}>{remainingTime}</Heading>
                         {buttonCondition}
-                        
                     </VStack>
                 </HStack>
             </VStack>
