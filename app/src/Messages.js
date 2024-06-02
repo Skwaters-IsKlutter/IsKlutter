@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import Routes from '../components/constants/Routes.js';
 
 export default function MessagesPage({ user }) {
@@ -25,7 +26,6 @@ export default function MessagesPage({ user }) {
     const messages = [
     { id: 1, sender: 'John Doe', text: 'Hey, how are you?' },
     { id: 2, sender: 'Jane Smith', text: 'Can you send me the report?' },
-    // Add more messages as needed
   ];
 
   // Function to handle message click
@@ -35,16 +35,16 @@ export default function MessagesPage({ user }) {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Box flex={1} justifyContent="center" alignItems="center">
       {messages.map((message) => (
         <TouchableOpacity key={message.id} onPress={() => handleMessageClick(message.id)}>
-          <View style={{ padding: 10, marginBottom: 10, backgroundColor: '#e0e0e0', borderRadius: 8 }}>
-            <Text style={{ fontWeight: 'bold' }}>{message.sender}</Text>
+          <Box>
+            <Text style={{ fontFamily: fonts.semibold}}>{message.sender}</Text>
             <Text>{message.text}</Text>
-          </View>
+          </Box>
         </TouchableOpacity>
       ))}
-    </View>
+    </Box>
   );
 };
 

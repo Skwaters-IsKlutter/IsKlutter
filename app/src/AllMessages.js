@@ -11,13 +11,18 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native';
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
-import colors from '../config/colors.js';
-import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import Routes from '../components/constants/Routes.js';
+
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+
+import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import UserAvatar from '../components/Avatar.js';
+
+import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+import Routes from '../components/constants/Routes.js';
+
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -136,20 +141,20 @@ export default function AllMessagesPage({ user }) {
         <TouchableOpacity key={index} onPress={() => handleUsernameClick(username, userProfileImgs[index])}>
             <ScrollView>
                 <VStack width={380} backgroundColor={colors.white} m={5}>
-                    <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 10 }}>
+                    <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 5 }}>
                         <HStack>
                             {userProfileImgs[index] && typeof userProfileImgs[index] === 'string' ? (
                                 <Image
                                     source={{ uri: userProfileImgs[index] }}
-                                    h={45}
-                                    w={45}
+                                    h={50}
+                                    w={50}
                                     alt="icon"
                                     borderRadius={100}
                                 />
                             ) : (
                                 <UserAvatar /> // Render a placeholder or default avatar component
                             )}
-                            <Text p={10}>{username}</Text>
+                            <Text p={10} fontFamily={fonts.semibold} lineHeight={30}>{username}</Text>
                         </HStack>
                     </View>
                 </VStack>
@@ -158,15 +163,13 @@ export default function AllMessagesPage({ user }) {
     ));
 };
 
-
-
   return (
       <Box w="100%" h="100%">
           <SearchHeaderBack />
           <VStack space="xs" alignItems="left" p="$3" width="100%">
-              <Heading lineHeight={40} fontSize="$3xl" fontWeight="$extrabold" color={colors.secondary} m={2}>
-                  Messages
-              </Heading>
+            <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
+                Messages
+            </Text>
           </VStack>
           <Box p="$2" maxWidth="100%" flex={0}>
               <ScrollView>

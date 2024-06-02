@@ -90,7 +90,7 @@ export default function AllListingsPage() {
         console.log("Rendering listings...");
 
         if (filteredListings.length === 0) {
-            return <Text style={styles.endOfResults}>No Results Found</Text>;
+            return <Text style={styles.endOfResults} fontFamily={fonts.semibold}>No Results Found</Text>;
         }
 
         return (
