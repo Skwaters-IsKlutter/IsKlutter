@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Box, ScrollView, Heading, Text, HStack } from '@gluestack-ui/themed';
+import { Box, ScrollView, Heading, Text, HStack, VStack,Pressable} from '@gluestack-ui/themed';
 
 import SearchHeader from '../components/SearchHeader.js';
 import ViewProfileCard from '../components/ViewProfileCard.js';
@@ -10,6 +10,9 @@ import colors from '../config/colors.js';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { database } from '../../config/firebase';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
+import fonts from '../config/fonts.js';
+import BackHeader from '../components/BackHeader.js';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ViewProfile() {
   const navigation = useNavigation();
@@ -76,9 +79,26 @@ export default function ViewProfile() {
 
   return (
     <Box w="100%" h="100%">
-      <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
-      <ScrollView>
-        <Box p="$2" w="100%">
+      <VStack>
+          <HStack p="$3" w="100%" mt={25} alignItems="center">
+              <Pressable onPress={navigation.goBack}>
+                  <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
+              </Pressable>
+          </HStack>
+      </VStack>
+    
+      <Box height= "45%" w="100%" 
+            bg={colors.primary} 
+            position= 'absolute'  
+            zIndex={-100} 
+            borderBottomLeftRadius={50}
+            borderBottomRightRadius={50} >
+
+      </Box>
+
+
+      <VStack>
+        <Box w="100%" flex={1} zIndex= {1} position= 'absolute'>
           {sellerProfile && (
             <ViewProfileCard
               userProfileImg={sellerProfile.userProfileImg}
@@ -91,21 +111,23 @@ export default function ViewProfile() {
         </Box>
 
         {/* User Listings */}
-          
-        <Heading lineHeight={40}  pl={20} fontSize={20} color={colors.secondary} mt={6}>
+        <Box p="$3" w="100%"  height="100%"  >
+          <ScrollView mt={330}>
+
+          <Text lineHeight={40}  pl={20} fontSize={20} color={colors.secondary} mt={6} fontFamily={fonts.semibold}>
             {`${sellerProfile?.username}'s Listings`}
-        </Heading>
+          </Text>
         
-          <Box  p="$5" w="100%" maxWidth="$96" >
-              <HStack space="xs" flexWrap="wrap" justifyContent="center" >
-                    {renderUserListings()}
-              </HStack>   
-          </Box>
+    
+          <HStack space="xs" flexWrap="wrap" justifyContent="center" >
+              {renderUserListings()}
+          </HStack>   
+
           
         {/* User Biddings */}
-        <Heading lineHeight={40}  pl={20} fontSize={20} color={colors.secondary} mt={6}>
+        <Text lineHeight={40}  pl={20} fontSize={20} color={colors.secondary} mt={6} fontFamily={fonts.semibold}>
             {`${sellerProfile?.username}'s Biddings`}
-        </Heading>
+        </Text>
 
         <Box  p="$5" w="100%" maxWidth="$96" >
             <HStack space="xs" flexWrap="wrap" justifyContent="center" >
@@ -113,7 +135,17 @@ export default function ViewProfile() {
             </HStack>
               
         </Box>
-      </ScrollView>
+
+
+
+          </ScrollView>
+
+
+        </Box>
+        </VStack>
+          
+        
+    
     </Box>
   );
 }

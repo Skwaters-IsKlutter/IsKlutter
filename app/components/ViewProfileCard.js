@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 
 import { VStack, HStack, Heading, Box, Button, ButtonText, Avatar, AvatarFallbackText, AvatarImage, Text, Image } from '@gluestack-ui/themed';
 
-
+import fonts from '../config/fonts.js';
 import colors from '../config/colors.js';
 import profileImgPlaceHolder from '../../assets/img/profile-holder.jpg';
 import { auth } from '../../config/firebase';
@@ -18,7 +18,7 @@ export default function ViewProfileCard({ userProfileImg, username, profileName,
   };
 
   return (
-    <Box bgColor="white" p={15} borderRadius={5}>
+    <Box  p={15} borderRadius={5}>
       {/* Avatar */}
       <Avatar borderRadius="$full" alignSelf="center" size="2xl">
         {userProfileImg && (
@@ -30,11 +30,11 @@ export default function ViewProfileCard({ userProfileImg, username, profileName,
         )}
       </Avatar>
 
-      <VStack space="xs" pb="$2" py="$3">
+      <VStack space="xs" pb="$2" py="$3" alignItems="center">
         <HStack justifyContent="space-between" alignItems="center">
-          <Heading pt="$1.5" pl="$1" fontSize={25} color={colors.primary}>
+          <Text pt="$4" fontSize={20} color={colors.white} fontFamily={fonts.semibold}>
             {profileName}
-          </Heading>
+          </Text>
           {/* <Button variant="solid" size="sm" backgroundColor={colors.primary} borderRadius={20} onPress={handleChatPress}>
             <ButtonText color={colors.white} fontSize="$sm">
               Chat
@@ -43,12 +43,12 @@ export default function ViewProfileCard({ userProfileImg, username, profileName,
         </HStack>
 
         <HStack justifyContent="space-between" alignItems="center">
-          <Heading px="$5" pl="$1" fontSize={20} color={colors.black} pt="0" pb="0">
+          <Text px="$5"fontSize={13} color={colors.white} pt="$1" pb="0" fontFamily={fonts.semibold}>
             {`@${username}`}
-          </Heading>
+          </Text>
         </HStack>
 
-        <Text px="$10" pl="$1" fontSize={15} color={colors.gray} pt="0" pb="0">
+        <Text px="$10" fontSize={15} color={colors.white} pt="0" pb="0" fontFamily={fonts.regular}>
           {bio}
         </Text>
       </VStack>

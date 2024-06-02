@@ -81,7 +81,7 @@ export default function ProfilePage() {
                 </VStack>
          
           
-        <Box height= "60%" w="100%" 
+        <Box height= "55%" w="100%" 
             bg={colors.secondary} 
             position= 'absolute'  
             zIndex={-100} 

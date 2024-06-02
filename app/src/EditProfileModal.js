@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Alert, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import {
     VStack,
-    Heading,
     Box,
     Button,
     ButtonText,
     FormControl,
     FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
     FormControlLabelText,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlErrorIcon,
     Input,
     InputField,
-    Pressable,
     HStack
 } from '@gluestack-ui/themed';
 
 import * as ImagePicker from 'expo-image-picker';
 import { useUser } from '../components/UserIcon.js'; // useUser hook
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, where, getDocs, query, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, where, getDocs, query, updateDoc, deleteDoc } from 'firebase/firestore';
 import { database, auth } from '../../config/firebase';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import BackHeader from '../components/BackHeader.js';
 
@@ -34,12 +28,12 @@ import fonts from '../config/fonts.js';
 export default function EditProfileScreen({ route, navigation }) {
     const [loadingSave, setLoadingSave] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState(false);
-    const { username, profileName, bio, userID, } = route.params;
+    const { username, profileName, bio, userID, userProfileImg } = route.params;
     const [newProfileName, setNewProfileName] = useState(profileName);
     const [newUsername, setNewUsername] = useState(username);
     const [newBio, setNewBio] = useState(bio);
-    const [newProfileImage, setNewProfileImage] = useState(null);
-    const { userProfileImg, updateProfileImg } = useUser();
+    const [newProfileImage, setNewProfileImage] = useState(userProfileImg); // Show current image initially
+    const { updateProfileImg } = useUser();
 
     const handleChooseImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -86,7 +80,7 @@ export default function EditProfileScreen({ route, navigation }) {
             };
 
             let imageUrl = '';
-            if (newProfileImage) {
+            if (newProfileImage !== userProfileImg) { // Check if a new image has been chosen
                 console.log('Attempting to upload image to Firebase Storage...');
                 const storage = getStorage(); // Get the storage instance
                 const imageRef = storageRef(storage, `profileImages/${userID}`); // Use storageRef with the storage instance
@@ -120,7 +114,7 @@ export default function EditProfileScreen({ route, navigation }) {
                 route.params.setBio(newBio);
 
                 // Call the updateProfileImg function from UserIcon
-                updateProfileImg(newProfileImage ? imageUrl : userProfileImg);
+                updateProfileImg(newProfileImage !== userProfileImg ? imageUrl : userProfileImg);
 
                 // Show a success message
                 Alert.alert('Success', 'Profile updated successfully.');
@@ -142,7 +136,6 @@ export default function EditProfileScreen({ route, navigation }) {
             setLoadingSave(false);
         }
     };
-
 
     const handleCancel = () => {
         // Go back to the previous screen (listings page)
@@ -211,7 +204,6 @@ export default function EditProfileScreen({ route, navigation }) {
         );
     };
 
-
     return (
         //Parent box
         <Box bgColor='$white'>
@@ -219,14 +211,20 @@ export default function EditProfileScreen({ route, navigation }) {
             <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Edit Profile" />
             <Box p="$6" w="100%" maxWidth="$96">
 
-
                 {/* Choose Image */}
                 <VStack space="xl" m={1} alignItems="center">
                     <TouchableOpacity onPress={handleChooseImage}>
-                        {newProfileImage && <Image source={{ uri: newProfileImage }} style={styles.image}
-                        />}
-                        <Text style={styles.text}>Upload New Image</Text>
-
+                        <View style={styles.imageContainer}>
+                            {newProfileImage ? (
+                                <Image source={{ uri: newProfileImage }} style={styles.image} />
+                            ) : (
+                                <Text style={styles.text}>Upload New Image</Text>
+                            )}
+                            
+                        </View>
+                        <View style={styles.iconContainer}>
+                                <MaterialCommunityIcons name="camera-plus" size={24} color={colors.primary} />
+                            </View>
                     </TouchableOpacity>
                 </VStack>
 
@@ -310,24 +308,35 @@ export default function EditProfileScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+    imageContainer: {
+        width: 170,
+        height: 170,
+        borderWidth: 2,
+        borderColor: colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 85,
+        overflow: 'hidden',
+    },
+    iconContainer: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        backgroundColor: colors.white,
+        borderRadius: 15,
+        padding: 5,
+    },
     text: {
         color: colors.white,
         fontSize: 15,
-        alignItems: "center",
+        textAlign: 'center',
         backgroundColor: colors.primary,
         padding: 10,
-        marginTop: 5,
-        marginHorizontal: 70,
         borderRadius: 50,
-        fontFamily: fonts.regular
+        fontFamily: fonts.regular,
     },
     image: {
-        height: 170,
-        width: 170,
-        borderRadius: 85,
-        borderWidth: 2,
-        borderColor: colors.primary,
-        marginLeft: 50,
-        marginBottom: 10
-    }
+        width: '100%',
+        height: '100%',
+    },
 });
