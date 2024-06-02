@@ -4,6 +4,8 @@ import {
     HStack,
     VStack,
     Heading,
+    ButtonIcon,
+    ButtonText,
     Text,
     Box,
     ScrollView,
@@ -164,8 +166,10 @@ export default function AllBiddingsPage() {
                         </Text>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
-                            <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
-                            <Text pl={10} lineHeight={35} color={colors.white}>Post</Text>
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+                            </ButtonIcon>
+                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} alignItems='center'>Post</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>
