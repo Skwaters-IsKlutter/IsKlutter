@@ -12,15 +12,8 @@ import ItemCard from '../components/ItemCard.js';
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
-import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 export default function AllListingsPage() {
-    const [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-        Poppins_600SemiBold,
-        Poppins_700Bold
-    })
-
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
     const [searchInput, setSearchInput] = useState('');
