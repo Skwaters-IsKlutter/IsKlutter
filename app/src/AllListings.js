@@ -153,7 +153,7 @@ export default function AllListingsPage() {
                 </VStack>
 
                 <ScrollView>
-                    <HStack>
+                    <HStack flexWrap='wrap' justifyContent='center'>
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>
