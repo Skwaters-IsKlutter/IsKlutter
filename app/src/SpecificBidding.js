@@ -44,6 +44,7 @@ export default function SpecificBiddingPage() {
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
     const [forceRender, setForceRender] = useState(false);
+    const [remainingTime, setRemainingTime] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -193,13 +194,26 @@ export default function SpecificBiddingPage() {
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
                     const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID });
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, remainingTime });
                     setBidIncrement(bidIncrement || 10);
+
+                    // Calculate remaining time
+                    const endTimeDate = new Date(endTime.seconds * 1000); // Convert Firestore timestamp to Date
+                    const now = new Date();
+                    const timeDifference = endTimeDate - now;
+
+                    if (timeDifference > 0) {
+                        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        setRemainingTime(`${days} days ${hours} hours`);
+                    } else {
+                        setRemainingTime('Bidding has ended');
+                    }
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
             } catch (error) {
-                Alert.alert('Error', 'Failed to fetch listing data.');
+                throw(error);
             }
         };
 
@@ -246,12 +260,12 @@ export default function SpecificBiddingPage() {
     };
 
     const renderSpecificBidding = () => {
-        console.log("Remaining time for this bidding:", listing.remainingTime);
+        console.log("Remaining time for this bidding:", remainingTime);
         return listing && (
             <SpecificBidCard
                 listingName={listing.listingName}
                 listingPrice={listing.listingPrice}
-                remainingTime={listing.remainingTime}
+                remainingTime={remainingTime}
                 highestBidderName={highestBidderName}
                 highestBiddingPrice={highestBiddingPrice}
                 listingImage={listingImage}
@@ -299,7 +313,7 @@ export default function SpecificBiddingPage() {
                     {renderSpecificBidding()}
                 </VStack>
 
-                <HStack alignItems="center" justifyContent='space-around' m={10}>
+                <HStack alignItems="center" justifyContent='space-around'>
                     <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
                         <InputField
                             size="md"
