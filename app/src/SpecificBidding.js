@@ -6,12 +6,12 @@ import {
     HStack,
     VStack,
     Text,
-    Heading,
     Box,
     ScrollView,
     Input,
     InputField,
     Button,
+    ButtonIcon
 } from '@gluestack-ui/themed';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,6 +24,8 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+import BackHeader from '../components/BackHeader.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -39,8 +41,8 @@ export default function SpecificBiddingPage() {
     const [highestBidderName, setHighestBidderName] = useState('');
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [listingImage, setListingImage] = useState(null);
-    const [bidIncrement, setBidIncrement] = useState(10); 
-    const [forceRender, setForceRender] = useState(false);  
+    const [bidIncrement, setBidIncrement] = useState(10);
+    const [forceRender, setForceRender] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -80,7 +82,7 @@ export default function SpecificBiddingPage() {
                 // Handle error
             }
         };
-    
+
         fetchListingImage();
     }, [listingId]);
 
@@ -269,54 +271,61 @@ export default function SpecificBiddingPage() {
 
     return (
         <Box w="100%" h="100%">
-            <SearchHeaderBack userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
-
-            <Box>
-                <VStack space="xs">
-                    {renderSpecificBidding()}
-                </VStack> 
-                <Box h="20%" m="$3">
-                    <Heading fontSize="$xl" color={colors.secondary}>Bids</Heading>
-                    <ScrollView>
-                        {renderAllBidderList()}
-                    </ScrollView>
+            <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Bid Details" />
+            <ScrollView>
+                <Box>
+                    {currentUser && currentUser.uid === listing.sellerID && (
+                        <Button
+                            variant="solid"
+                            size="sm"
+                            backgroundColor="$red600"
+                            borderRadius={8}
+                            position="absolute"
+                            top={25}
+                            right={25}
+                            zIndex={1}
+                            onPress={handleDelete}
+                        >
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="delete" size={15} color={colors.white} />
+                            </ButtonIcon>
+                        </Button>
+                    )}
+                    <VStack space="xs">
+                        {renderSpecificBidding()}
+                    </VStack>
+                    <Box h="20%" m="$3">
+                        <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
+                        <ScrollView>
+                            {renderAllBidderList()}
+                        </ScrollView>
+                    </Box>
                 </Box>
-            </Box>
 
-            {currentUser && currentUser.uid === listing.sellerID && (
-                <Button
-                    position="absolute"
-                    top={10}
-                    left={10}
-                    onPress={handleDelete}
-                >
-                    <MaterialCommunityIcons name="delete" size={20} color={colors.black} />
-                </Button>
-            )}
-
-            <Box m={10} p={15} borderRadius={10} top={-60}>
-                <HStack alignItems="center" justifyContent='space-around'>
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
-                        <InputField
-                            multiline={true}
+                <Box m={10} p={15} borderRadius={10} top={-60}>
+                    <HStack alignItems="center" justifyContent='space-around'>
+                        <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
+                            <InputField
+                                multiline={true}
+                                size="md"
+                                value={biddingAmount}
+                                placeholder="Place your bet amount in PHP"
+                                onChangeText={(text) => setBiddingAmount(text)}
+                            />
+                        </Input>
+                        <Button
+                            variant="solid"
                             size="md"
-                            value={biddingAmount}
-                            placeholder="Place your bet amount in PHP"
-                            onChangeText={(text) => setBiddingAmount(text)}
-                        />
-                    </Input>
-                    <Button
-                        variant="solid"
-                        size="md"
-                        bg={colors.primary}
-                        borderRadius={5}
-                        ml={3}
-                        onPress={() => handleBid(listingId, biddingAmount)}
-                    >
-                        <Text color={colors.black} fontSize="$md" bold='true'>Bid</Text>
-                    </Button>
-                </HStack>
-            </Box>
+                            bg={colors.primary}
+                            borderRadius={5}
+                            ml={3}
+                            onPress={() => handleBid(listingId, biddingAmount)}
+                        >
+                            <Text color={colors.black} fontSize="$md" bold='true'>Bid</Text>
+                        </Button>
+                    </HStack>
+                </Box>
+            </ScrollView>
         </Box>
     );
 }
