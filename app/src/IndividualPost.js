@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, Image, useWindowDimensions } from 'react-native';
+import { View, Image, useWindowDimensions, TouchableOpacity, Modal } from 'react-native'; // Import Modal from react-native
 import { useRoute, useNavigation } from '@react-navigation/native';
 import {
     VStack,
-    Heading,
     Box,
     Text,
     ScrollView,
-    HStack,
-    Pressable
+    Button,
+    ButtonText
 } from '@gluestack-ui/themed';
 
-import { getFirestore, collection, getDoc, query, where, onSnapshot, doc, } from 'firebase/firestore'; // Import onSnapshot
+import { getFirestore, collection, getDoc, query, where, onSnapshot, doc } from 'firebase/firestore'; // Import onSnapshot
 
 import IndividualPostCard from '../components/IndividualPostCard.js';
 import CommunityReplyBox from '../components/CommunityReplyBox';
@@ -20,14 +19,17 @@ import BackHeader from '../components/BackHeader.js';
 
 import fonts from '../config/fonts.js';
 import colors from '../config/colors.js';
+import Routes from '../components/constants/Routes.js';
 
 export default function IndividualPostPage() {
-    const { width: screenWidth } = useWindowDimensions();
+    const { width: screenWidth, height: screenHeight } = useWindowDimensions();
     const navigation = useNavigation();
     const route = useRoute();
     const { selectedPost } = route.params || {};
     const [comments, setComments] = useState([]);
     const [imageUrls, setImageUrls] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -52,9 +54,7 @@ export default function IndividualPostPage() {
                 const postSnap = await getDoc(postDoc);
                 if (postSnap.exists()) {
                     const post = postSnap.data();
-                    console.log('Post:', post);
-                    setImageUrls(post.images);
-                    console.log('Image URLs:', imageUrls);
+                    setImageUrls(post.images || []);
                 } else {
                     console.error('Post not found');
                 }
@@ -69,26 +69,40 @@ export default function IndividualPostPage() {
         }
     }, [selectedPost]);
 
+    const openModal = (imageUrl) => {
+        setSelectedImage(imageUrl);
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+        setSelectedImage(null);
+    };
+
     // Render Specific Post
     const renderCommunityPosts = () => {
         if (imageUrls.length > 0) {
             return (
-                
-                <><IndividualPostCard
-                    postKey={selectedPost.key}
-                    description={selectedPost.description}
-                    userId={selectedPost.userID}
-                    timestamp={selectedPost.timeposted ? selectedPost.timeposted.toDate().toLocaleString() : "N/A"} /><ScrollView horizontal>
-                        {/* Map through imageUrls array and render each image with its caption */}
+                <>
+                    <IndividualPostCard
+                        postKey={selectedPost.key}
+                        description={selectedPost.description}
+                        userId={selectedPost.userID}
+                        timestamp={selectedPost.timeposted ? selectedPost.timeposted.toDate().toLocaleString() : "N/A"}
+                    />
+                    <Box flex={1}>
                         {imageUrls.map((imageUrl, index) => (
-                            <View key={index} style={{ alignItems: 'center', marginRight: 20 }}>
-                                <Image
-                                    source={{ uri: imageUrl }}
-                                    style={{ width: screenWidth - 40, height: 200, marginBottom: 10 }} // Adjust dimensions as needed
-                                />
-                            </View>
+                            <TouchableOpacity key={index} onPress={() => openModal(imageUrl)}>
+                                <View style={{ alignItems: 'center', marginRight: 20 }}>
+                                    <Image
+                                        source={{ uri: imageUrl }}
+                                        style={{ width: screenWidth - 40, height: screenWidth / 2, marginBottom: 5 }}
+                                    />
+                                </View>
+                            </TouchableOpacity>
                         ))}
-                    </ScrollView></>
+                    </Box>
+                </>
             );
         } else {
             return (
@@ -101,7 +115,6 @@ export default function IndividualPostPage() {
             );
         }
     };
-    
 
     // Render Comments
     const renderComments = () => {
@@ -116,10 +129,9 @@ export default function IndividualPostPage() {
         ));
     };
 
-
     return (
         <Box w="100%" h="100%">
-           <BackHeader />
+            <BackHeader />
             <Box p="$3" w="100%" flex={1} h="100%">
                 <VStack>
                     <ScrollView h="85%">
@@ -134,15 +146,34 @@ export default function IndividualPostPage() {
                         </VStack>
                     </ScrollView>
                 </VStack>
-            
             </Box>
+
             {/* Comment Box */}
             <VStack size="md" top={-100} p="$3">
                 <CommunityCommentBox 
                     posterUserId={selectedPost.userID}
                     selectedPost={selectedPost} 
                 />  
-                </VStack>
+            </VStack>
+
+            {/* Image Modal */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={closeModal}
+            >
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.9)' }}>
+                    <Image
+                        source={{ uri: selectedImage }}
+                        style={{ width: screenWidth, height: screenHeight / 2 }}
+                        resizeMode="contain"
+                    />
+                    <Button onPress={closeModal} m={5} bg={colors.primary}>
+                        <ButtonText fontFamily={fonts.semibold}>Back</ButtonText>
+                    </Button>
+                </View>
+            </Modal>
         </Box> 
     );
 }
