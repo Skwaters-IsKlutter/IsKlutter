@@ -12,4 +12,5 @@ export default Object.freeze({
     INDIVIDUALPOST: "IndividualPost",
     SPECIFICBIDDING: "SpecificBidding",
     ADDBIDDING: "AddBidding",
+    ADDPOST: "AddPost"
  });
