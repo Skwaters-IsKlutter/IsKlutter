@@ -18,6 +18,8 @@ export default function AddListingForm( {
     listingFormValue, 
     listingFormBoxHeight, 
     listingFormMultiline, 
+    listingFormMaxLength,
+    listingFormLineum,
     onValueChange, 
 } ) {
     const handleInputChange = (value) => {
@@ -39,6 +41,8 @@ export default function AddListingForm( {
                             placeholder={listingFormPlaceholder}
                             value={listingFormValue}
                             multiline={listingFormMultiline}
+                            maxLength={listingFormMaxLength}
+                            numberOfLines={listingFormLineum}
                             onChangeText={handleInputChange}
                         />
                     </Input>
