@@ -147,15 +147,16 @@ export default function IndividualPostPage() {
                         </VStack>
                     </ScrollView>
                 </VStack>
-            </Box>
-
-            {/* Comment Box */}
-            <VStack size="md" top={-100} p="$3">
+                {/* Comment Box */}
+            <VStack size="md"  p="$2">
                 <CommunityCommentBox 
                     posterUserId={selectedPost.userID}
                     selectedPost={selectedPost} 
                 />  
             </VStack>
+            </Box>
+
+            
 
             {/* Image Modal */}
             <Modal

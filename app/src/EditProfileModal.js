@@ -112,6 +112,24 @@ export default function EditProfileScreen({ route, navigation }) {
 
                 await updateDoc(userDocRef, updatedProfileData);
 
+                const messagesCollection = collection(database, 'Messages');
+
+                // Update sender username in messages where the current user is the sender
+                const senderMessagesQuery = query(messagesCollection, where('sender', '==', username));
+                const senderMessagesSnapshot = await getDocs(senderMessagesQuery);
+                senderMessagesSnapshot.forEach(async (doc) => {
+                    const messageDocRef = doc.ref;
+                    await updateDoc(messageDocRef, { sender: newUsername });
+                });
+
+                // Update recipient username in messages where the current user is the recipient
+                const recipientMessagesQuery = query(messagesCollection, where('recipient', '==', username));
+                const recipientMessagesSnapshot = await getDocs(recipientMessagesQuery);
+                recipientMessagesSnapshot.forEach(async (doc) => {
+                    const messageDocRef = doc.ref;
+                    await updateDoc(messageDocRef, { recipient: newUsername });
+                });
+
                 // Update the state with the new values
                 route.params.setUsername(newUsername);
                 route.params.setProfileName(newProfileName);
@@ -262,6 +280,7 @@ export default function EditProfileScreen({ route, navigation }) {
                                 onChangeText={(text) => setNewUsername(text)}
                                 value={newUsername}
                                 fontFamily={fonts.regular}
+                                maxLength={16}
                             />
                         </Input>
                     </FormControl>

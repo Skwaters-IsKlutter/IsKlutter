@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, addDoc, collection, query, where, getDocs, errorCode } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, query, where, getDocs, toLowerCase } from 'firebase/firestore';
 import { auth } from '../../config/firebase';
 import { FIREBASE_APP } from '../../config/firebase';
 
@@ -38,7 +38,8 @@ export default function SignupScreen() {
     const [loading, setLoading] = useState(false);
 
     const isUsernameUnique = async (username) => {
-        const q = query(collection(db, 'users'), where('username', '==', username));
+        const varUsername = username.toLowerCase();
+        const q = query(collection(db, 'users'), where('username', '==', varUsername));
         const usernameSnapshot = await getDocs(q);
         return usernameSnapshot.empty;
     };
@@ -54,8 +55,10 @@ export default function SignupScreen() {
             setLoading(true);
             setError(null);
 
+            const varUsername = username.toLowerCase();
+
             if (email && password && username && password === retypePassword) {
-                const uniqueUsername = await isUsernameUnique(username);
+                const uniqueUsername = await isUsernameUnique(varUsername);
                 const uniqueEmail = await isEmailUnique(email);
 
                 if (!email.includes('@up.edu.ph')) {
@@ -77,12 +80,12 @@ export default function SignupScreen() {
                     return;
                 }
 
-                if (username.length < 3) {
-                    setError('Error creating user. Username must be at least 3 characters long.');
+                if (username.length < 3 && username.length > 16) {
+                    setError('Error creating user. Username must be at least 3 characters long and 16 characters max.');
                     Alert.alert("Signup Failed", "Invalid username. Please use a username with 3 or more characters.");
                     return;
                 }
-                
+
                 if (username.includes(' ')) {
                     setError('Error creating user. Username must not contain spaces.');
                     Alert.alert("Signup Failed", "Invalid username. Username must not contain spaces.");
