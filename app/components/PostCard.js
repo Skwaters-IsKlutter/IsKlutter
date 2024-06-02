@@ -9,7 +9,7 @@ import fonts from '../config/fonts.js';
 
 const db = getFirestore();
 
-export default function PostCard({ userId, description, toIndividualPost, timestamp }) {
+export default function PostCard({ userId, description, toIndividualPost, timestamp, hasImage }) {
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
@@ -76,8 +76,21 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                             {description}
                         </Text>
                     </VStack>
+                    {hasImage && (
+                        <Text style={styles.tapToSeePhotos} fontFamily={fonts.semibold} pl={10}>
+                            [tap post to see photos]
+                        </Text>
+                    )}
                 </Box>
             </VStack>
         </Pressable>
     );
 }
+
+const styles = {
+    tapToSeePhotos: {
+        paddingVertical: 5,
+        fontSize: 14,
+        color: colors.primary,
+    }
+};

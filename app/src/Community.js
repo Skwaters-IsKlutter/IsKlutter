@@ -61,6 +61,7 @@ export default function CommunityPage() {
                     userID: data.userID,
                     username: username,
                     timeposted: data.timestamp,
+                    hasImage: data.hasImage,
                     userProfileImg: data.userProfileImg
                 };
                 userData.push(userDataObj);
@@ -97,6 +98,7 @@ export default function CommunityPage() {
                         posterIcon={userData.userProfileImg}
                         description={userData.description}
                         timestamp={userData.timeposted ? userData.timeposted.toDate().toLocaleString() : "N/A"}
+                        hasImage={userData.hasImage}
                         toIndividualPost={() => navigation.navigate(Routes.INDIVIDUALPOST, { selectedPost: userData })}
                     />
                 ))}
