@@ -7,14 +7,15 @@ import { useWindowDimensions } from 'react-native';
 
 export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags, sold }) {
     const isImageUrl = typeof productImage === 'string';
-    const { width } = useWindowDimensions(); // Get screen width
+    const { width, height } = useWindowDimensions(); // Get screen width
     const cardWidth = (width - 60) / 2;
+    const cardHeight = height > 720 ? height / 2.9 : height / 2.5;
     
     const truncatedproductName = productName.length > 20 ? productName.substring(0, 17) + '...' : productName;
     
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} height={270} width={cardWidth} m={3} mb={5}>
+            <Box bg={colors.white} borderRadius={10} height={cardHeight} width={cardWidth} m={3} mb={5}>
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image
