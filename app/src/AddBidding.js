@@ -34,11 +34,11 @@ import { collection, doc, query, where, getDocs, setDoc } from 'firebase/firesto
 import { storage, storageRef, uploadBytes, database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
 
-import AddListingBox from '../components/AddListingBox.js';
+import AddBiddingBox from '../components/AddBiddingBox.js';
+import BackHeader from '../components/BackHeader.js';
 
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
-import AddBiddingBox from '../components/AddBiddingBox';
 
 export default function AddListingPage() {
     const navigation = useNavigation();
@@ -172,16 +172,7 @@ export default function AddListingPage() {
     return (
         <Box w="100%" h="100%">
             {/* Header */}
-            <Box backgroundColor={colors.primary}>
-                <HStack p="$2" w="100%" mt={25} alignItems="center">
-                    <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-                    </Pressable>
-                    <Text lineHeight={50} fontSize={25} color={colors.white} m={10} fontFamily={fonts.semibold}>
-                        Bid
-                    </Text>
-                </HStack>
-            </Box>
+            <BackHeader headerText="Post Bid" />
 
             <Box w="100%" flex={1} p="$3">
                 <ScrollView>
