@@ -188,11 +188,15 @@ export default function SpecificBiddingPage() {
             const biddingCollection = collection(db, 'bidding');
             const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
             const data = querySnapshot.docs.map(doc => doc.data());
+    
+            // Sort the data by biddingPrice in descending order
+            data.sort((a, b) => b.biddingPrice - a.biddingPrice);
+    
             setBiddingData(data);
         } catch (error) {
             Alert.alert('Error', 'Failed to fetch bidding data.');
         }
-    };
+    };    
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -298,7 +302,7 @@ export default function SpecificBiddingPage() {
             ))
         ) : (
             <Text p="$3" fontFamily={fonts.regular}>No bids yet</Text>
-        )
+        );
     };
 
     return (
