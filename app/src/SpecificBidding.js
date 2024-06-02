@@ -43,6 +43,7 @@ export default function SpecificBiddingPage() {
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
     const [forceRender, setForceRender] = useState(false);
+    const [remainingTime, setRemainingTime] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -99,12 +100,12 @@ export default function SpecificBiddingPage() {
             }
 
             if (biddingBet < listing.listingPrice + bidIncrement) {
-                Alert.alert('Invalid Bid', `Your bid must be PHP ${bidIncrement} higher than the starting bid.`);
+                Alert.alert('Invalid Bid', `Your bid must be ${bidIncrement} higher than the starting bid.`);
                 return;
             }
 
             if (biddingBet < highestBiddingPrice + bidIncrement) {  // Use dynamic bidIncrement
-                Alert.alert('Invalid Bid', `Your bid must be PHP ${bidIncrement} higher than the current highest bid.`);
+                Alert.alert('Invalid Bid', `Your bid must be ${bidIncrement} higher than the current highest bid.`);
                 return;
             }
 
@@ -143,7 +144,7 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice: newHighestBiddingPrice
             }));
 
-            Alert.alert('Bid Successful', `Your bid of PHP ${biddingBet} has been placed successfully.`);
+            Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
 
         } catch (error) {
             Alert.alert('Error', 'Failed to place bid. Please try again later.');
@@ -176,8 +177,6 @@ export default function SpecificBiddingPage() {
                 }));
             } catch (error) {
                 // Handle error
-                Alert.alert("Error", "Failed to fetch bidding data.");
-                throw (error);
             }
         };
 
@@ -191,9 +190,22 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID });
+                    const { listingName, listingPrice, bidIncrement, sellerID, endTime } = listingData;
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, endTime });
                     setBidIncrement(bidIncrement || 10);
+
+                    // Calculate remaining time
+                    const endTimeDate = new Date(endTime.seconds * 1000); // Convert Firestore timestamp to Date
+                    const now = new Date();
+                    const timeDifference = endTimeDate - now;
+
+                    if (timeDifference > 0) {
+                        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        setRemainingTime(`${days} days ${hours} hours`);
+                    } else {
+                        setRemainingTime('Bidding has ended');
+                    }
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
@@ -245,16 +257,15 @@ export default function SpecificBiddingPage() {
     };
 
     const renderSpecificBidding = () => {
-        console.log("Remaining time for this bidding:", listing.remainingTime);
         return listing && (
             <SpecificBidCard
                 listingName={listing.listingName}
                 listingPrice={listing.listingPrice}
-                remainingTime={listing.remainingTime}
                 highestBidderName={highestBidderName}
                 highestBiddingPrice={highestBiddingPrice}
                 listingImage={listingImage}
                 bidIncrement={bidIncrement}
+                remainingTime={remainingTime} // Pass remaining time to the component
             />
         )
     };
@@ -269,66 +280,67 @@ export default function SpecificBiddingPage() {
                 />
             ))
         ) : (
-            <Text p="$3" fontFamily={fonts.regular}>No bids yet</Text>
+            <Text p="$3">No bids yet</Text>
         )
     };
 
     return (
         <Box w="100%" h="100%">
             <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Bid Details" />
-            <Box>
-                {currentUser && currentUser.uid === listing.sellerID && (
-                    <Button
-                        variant="solid"
-                        size="sm"
-                        backgroundColor="$red600"
-                        borderRadius={8}
-                        position="absolute"
-                        top={25}
-                        right={25}
-                        zIndex={1}
-                        onPress={handleDelete}
-                    >
-                        <ButtonIcon>
-                            <MaterialCommunityIcons name="delete" size={15} color={colors.white} />
-                        </ButtonIcon>
-                    </Button>
-                )}
-                <VStack space="xs">
-                    {renderSpecificBidding()}
-                </VStack>
-                <Box h="20%" m="$3">
-                    <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
-                    <ScrollView>
-                        {renderAllBidderList()}
-                    </ScrollView>
+            <ScrollView>
+                <Box>
+                    {currentUser && currentUser.uid === listing.sellerID && (
+                        <Button
+                            variant="solid"
+                            size="sm"
+                            backgroundColor="$red600"
+                            borderRadius={8}
+                            position="absolute"
+                            top={25}
+                            right={25}
+                            zIndex={1}
+                            onPress={handleDelete}
+                        >
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="delete" size={15} color={colors.white} />
+                            </ButtonIcon>
+                        </Button>
+                    )}
+                    <VStack space="xs">
+                        {renderSpecificBidding()}
+                    </VStack>
+                    <Box h="20%" m="$3">
+                        <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
+                        <ScrollView>
+                            {renderAllBidderList()}
+                        </ScrollView>
+                    </Box>
                 </Box>
-            </Box>
 
-            <Box m={10} p={15} borderRadius={10} top={-60}>
-                <HStack alignItems="center" justifyContent='space-around'>
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
-                        <InputField
-                            multiline={true}
+                <Box m={10} p={15} borderRadius={10} top={-60}>
+                    <HStack alignItems="center" justifyContent='space-around'>
+                        <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
+                            <InputField
+                                multiline={true}
+                                size="md"
+                                value={biddingAmount}
+                                placeholder="Place your bet amount in PHP"
+                                onChangeText={(text) => setBiddingAmount(text)}
+                            />
+                        </Input>
+                        <Button
+                            variant="solid"
                             size="md"
-                            value={biddingAmount}
-                            placeholder="Place your bet amount in PHP..."
-                            onChangeText={(text) => setBiddingAmount(text)}
-                            fontFamily={fonts.regular}
-                        />
-                    </Input>
-                    <Button
-                        variant="solid"
-                        size="md"
-                        bg={colors.primary}
-                        borderRadius={5}
-                        ml={3}
-                        onPress={() => handleBid(listingId, biddingAmount)}
-                    >
-                        <Text fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</Text>
-                    </Button>
-                </HStack>
-            </Box>
+                            bg={colors.primary}
+                            borderRadius={5}
+                            ml={3}
+                            onPress={() => handleBid(listingId, biddingAmount)}
+                        >
+                            <Text color={colors.black} fontSize="$md" bold='true'>Bid</Text>
+                        </Button>
+                    </HStack>
+                </Box>
+            </ScrollView>
         </Box>
     );
 }
