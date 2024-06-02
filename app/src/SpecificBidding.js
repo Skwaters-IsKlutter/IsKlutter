@@ -97,8 +97,8 @@ export default function SpecificBiddingPage() {
                 return;
             }
 
-            if (biddingBet < listing.listingPrice + bidIncrement) {
-                Alert.alert('Invalid Bid', `Your bid must be PHP ${bidIncrement} higher than the starting bid.`);
+            if (biddingBet < listing.listingPrice) {
+                Alert.alert('Invalid Bid', `Your bid must be higher than PHP ${listing.listingPrice}`);
                 return;
             }
 
@@ -140,7 +140,10 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice: newHighestBiddingPrice
             }));
 
+            fetchBiddingData();
             Alert.alert('Bid Successful', `Your bid of PHP ${biddingBet} has been placed successfully.`);
+
+            setBiddingAmount('');
 
         } catch (error) {
             throw(error);
@@ -180,6 +183,17 @@ export default function SpecificBiddingPage() {
         fetchBiddingData();
     }, [listingId, listing, highestBidderName, highestBiddingPrice]);
 
+    const fetchBiddingData = async () => {
+        try {
+            const biddingCollection = collection(db, 'bidding');
+            const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
+            const data = querySnapshot.docs.map(doc => doc.data());
+            setBiddingData(data);
+        } catch (error) {
+            Alert.alert('Error', 'Failed to fetch bidding data.');
+        }
+    };
+
     useEffect(() => {
         const fetchListing = async () => {
             try {
@@ -200,16 +214,6 @@ export default function SpecificBiddingPage() {
             }
         };
 
-        const fetchBiddingData = async () => {
-            try {
-                const biddingCollection = collection(db, 'bidding');
-                const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
-                const data = querySnapshot.docs.map(doc => doc.data());
-                setBiddingData(data);
-            } catch (error) {
-                Alert.alert('Error', 'Failed to fetch bidding data.');
-            }
-        };
 
         fetchListing();
         fetchBiddingData();
