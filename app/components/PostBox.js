@@ -1,4 +1,5 @@
 import React, { useState} from 'react';
+import { Alert } from 'react-native';
 import { Box, Text, VStack, Button, Input, InputField, Image, HStack } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
@@ -58,7 +59,7 @@ export default function PostBox( { poster }) {
                 setPostDescription('');
                 setListingData({ listingImages: [], hasImage: false });
                 await updateDoc(docRef, { key: docRef.id });
-                alert('Success', 'Post added successfully');
+                Alert.alert('Success', 'Post added successfully.');
                 console.log("Post added successfully");
                 navigation.goBack();
             } else {
