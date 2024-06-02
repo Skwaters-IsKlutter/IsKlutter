@@ -44,7 +44,7 @@ export default function SpecificBiddingPage() {
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
     const [remainingTime, setRemainingTime] = useState('');
-    const [endTime, setEndTimeDate] = useState('');
+    const [endTime, setEndTimeDate] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -81,7 +81,6 @@ export default function SpecificBiddingPage() {
                     }
                 }
             } catch (error) {
-                // Handle error
                 console.log("Failed to fetch listing image.")
                 throw(error);
             }
@@ -103,7 +102,7 @@ export default function SpecificBiddingPage() {
                 return;
             }
 
-            if (biddingBet < highestBiddingPrice + bidIncrement) {  // Use dynamic bidIncrement
+            if (biddingBet < highestBiddingPrice + bidIncrement) {
                 Alert.alert('Invalid Bid', `Your bid must be PHP ${bidIncrement} higher than the current highest bid.`);
                 return;
             }
@@ -119,8 +118,6 @@ export default function SpecificBiddingPage() {
                 listingName: listingName,
                 listingPrice: listingPrice
             });
-
-            // updateHighestBidder(username, biddingBet);
 
             const querySnapshot = await getDocs(query(biddingCollection, where('listingName', '==', listingName)));
             let newHighestBiddingPrice = 0;
@@ -175,7 +172,6 @@ export default function SpecificBiddingPage() {
                     highestBiddingPrice: maxBiddingPrice
                 }));
             } catch (error) {
-                // Handle error
                 Alert.alert("Error", "Failed to fetch bidding data.");
                 throw (error);
             }
@@ -191,21 +187,11 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID, remainingTime, endTime });
-      
-                    const endTimeDate = setEndTimeDate(new Date(endTime.seconds * 1000));
-                    
-                    const now = new Date();
-                    const timeDifference = endTimeDate - now;
+                    const { listingName, listingPrice, bidIncrement, sellerID, endTime } = listingData;
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, endTime });
 
-                    if (timeDifference > 0) {
-                        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        setRemainingTime(`${days} days ${hours} hours`);
-                    } else {
-                        setRemainingTime('Bidding has ended.');
-                    }
+                    const endTimeDate = new Date(endTime.seconds * 1000);
+                    setEndTimeDate(endTimeDate);
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
@@ -228,6 +214,32 @@ export default function SpecificBiddingPage() {
         fetchListing();
         fetchBiddingData();
     }, [listingId]);
+
+    useEffect(() => {
+        const updateRemainingTime = () => {
+            if (!endTime) return;
+
+            const now = new Date();
+            const timeDifference = endTime - now;
+
+            if (timeDifference > 0) {
+                const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                if (days > 0) {
+                    setRemainingTime(`${days}d ${hours}h remaining`);
+                } else {
+                    setRemainingTime(`${hours}h remaining`);
+                }
+            } else {
+                setRemainingTime('Bidding has ended.');
+            }
+        };
+
+        updateRemainingTime();
+        const intervalId = setInterval(updateRemainingTime, 1000 * 60); // Update every minute
+
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, [endTime]);
 
     const handleDelete = async () => {
         Alert.alert(
