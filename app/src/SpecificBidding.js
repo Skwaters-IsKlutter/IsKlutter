@@ -11,9 +11,11 @@ import {
     ScrollView, 
     Input, 
     InputField, 
-    Button
+    Button, 
+    Pressable
 } from '@gluestack-ui/themed';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AllBidderListCard from '../components/AllBidderListCard.js';
 import SpecificBidCard from '../components/SpecificBidCard.js';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
@@ -34,12 +36,14 @@ export default function SpecificBiddingPage() {
     const [listing, setListing] = useState({});
     const [biddingData, setBiddingData] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const [comments, setComments] = useState({});
     const [biddingAmount, setBiddingAmount] = useState('');
     const [highestBidder, setHighestBidder] = useState({});
     const [highestBiddingPrice, setHighestBiddingPrice] = useState(0);
     const [highestBidderName, setHighestBidderName] = useState('');
     const [listingImage, setListingImage] = useState(null);
-
+    const [bidIncrement, setBidIncrement] = useState(10); 
+    const [forceRender, setForceRender] = useState(false);  
 
     useEffect(() => {
         console.log("Component mounted or updated.");
@@ -90,7 +94,7 @@ export default function SpecificBiddingPage() {
     
         fetchListingImage();
     }, [listingId]);
-
+    
     const updateHighestBidder = (bidder, price) => {
         console.log("Updating highest bidder to:", bidder, "with price:", price);
         setHighestBidder({ bidder, price });
@@ -111,8 +115,8 @@ export default function SpecificBiddingPage() {
                 return;
             }
 
-            if (biddingBet < highestBiddingPrice + 1) {
-                Alert.alert('Invalid Bid', 'Your bid must be higher than the current highest bid.');
+            if (biddingBet < highestBiddingPrice + bidIncrement) {  // Use dynamic bidIncrement
+                Alert.alert('Invalid Bid', `Your bid must be ${bidIncrement} higher than the current highest bid.`);
                 return;
             }
 
@@ -153,8 +157,6 @@ export default function SpecificBiddingPage() {
 
             console.log("Bid successful. New highest bidder:", highestBidderName, "with price:", newHighestBiddingPrice);
             Alert.alert('Bid Successful', `Your bid of ${biddingBet} has been placed successfully.`);
-
-            setBiddingAmount(''); // Reset bidding amount after successful bid
 
         } catch (error) {
             console.error('Error placing bid:', error);
@@ -205,8 +207,10 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice } = listingData;
-                    setListing({ listingName, listingPrice });
+                    const { listingName, listingPrice, bidIncrement } = listingData; // Fetch bidIncrement
+                    setListing({ listingName, listingPrice, bidIncrement }); // Set bidIncrement in listing
+                    setBidIncrement(bidIncrement || 10); // Set bidIncrement state, default to 10 if not found
+                    console.log("Listing data fetched:", { listingName, listingPrice, bidIncrement });
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
