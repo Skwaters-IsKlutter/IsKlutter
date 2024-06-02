@@ -19,6 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import UserAvatar from './Avatar.js';
 import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import Routes from '../components/constants/Routes.js';
 
 export default function SearchHeaderBack({ search, username, userIcon, userProfile, back, placeholder, onSearchChange, onSubmit}) {

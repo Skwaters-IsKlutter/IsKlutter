@@ -152,7 +152,7 @@ export default function AllListingsPage() {
                 </VStack>
 
                 <ScrollView>
-                    <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
+                    <HStack flexWrap="wrap" justifyContent="center" >
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>
