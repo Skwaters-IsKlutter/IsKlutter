@@ -1,14 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { HStack, VStack, Heading, Box, ScrollView, Button, ButtonIcon, ButtonText, Text } from '@gluestack-ui/themed';
+import { HStack, VStack, Box, ScrollView, Button, ButtonIcon, ButtonText, Text } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
 import { database } from '../../config/firebase';
-
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
-
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
@@ -71,6 +68,17 @@ export default function AllListingsPage() {
         const listingName = item.listingName.toLowerCase();
         const username = item.username.toLowerCase();
         const tags = item.listingTags.map(tag => tag.toLowerCase());
+        
+        const searchPriceMatch = searchInput.match(/^(\d+)-(\d+)$|^(\d+)$/);
+        if (searchPriceMatch) {
+            const minPrice = searchPriceMatch[1] ? parseInt(searchPriceMatch[1], 10) : parseInt(searchPriceMatch[3], 10);
+            const maxPrice = searchPriceMatch[2] ? parseInt(searchPriceMatch[2], 10) : minPrice + 99;
+            const listingPrice = parseInt(item.listingPrice, 10);
+
+            if (listingPrice >= minPrice && listingPrice <= maxPrice) {
+                return true;
+            }
+        }
 
         return (
             listingName.includes(searchInput) ||
