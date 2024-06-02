@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect, useNavigation, } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Box, ScrollView, Heading, HStack, VStack, Pressable, Text } from '@gluestack-ui/themed';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
@@ -11,6 +11,7 @@ import colors from '../config/colors.js';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { auth, database } from '../../config/firebase';
 import fonts from '../config/fonts.js';
+import { useWindowDimensions } from 'react-native';
 
 export default function ProfilePage() {
     const navigation = useNavigation();
@@ -21,6 +22,15 @@ export default function ProfilePage() {
     const [loadingProfile, setLoadingProfile] = React.useState(true);
     const [bio, setBio] = React.useState('');
     const [userListings, setUserListings] = React.useState({ myListings: [], myBiddings: [] });
+    const { height } = useWindowDimensions();
+    const [profileCardHeight, setProfileCardHeight] = useState(0);
+
+    const handleProfileCardLayout = useCallback((event) => {
+        const { height } = event.nativeEvent.layout;
+        setProfileCardHeight(height);
+    }, []);
+
+    const boxHeight = profileCardHeight + 75;
 
     useFocusEffect(
         React.useCallback(() => {
@@ -88,7 +98,7 @@ export default function ProfilePage() {
             </VStack>
 
 
-            <Box height="55%" w="100%"
+            <Box height={boxHeight}w="100%"
                 bg={colors.secondary}
                 position='absolute'
                 zIndex={-100}
@@ -96,7 +106,7 @@ export default function ProfilePage() {
                 borderBottomRightRadius={50} ></Box>
             <VStack>
 
-                <Box w="100%" flex={1} zIndex={1} position='absolute'  >
+                <Box w="100%" flex={1} zIndex={1} position='absolute'onLayout={handleProfileCardLayout} >
                     <HelloCard username={currentUser?.username} />
                     <ProfileCard
                         userProfileImg={profileImg}
@@ -112,7 +122,7 @@ export default function ProfilePage() {
                 </Box>
 
                 <Box p="$3" w="100%" height="100%"  >
-                    <ScrollView mt={400} mb={60}>
+                    <ScrollView mt={profileCardHeight} mb={60}>
                         <Box p="$2" h="100%">
                             <VStack>
                                 <HStack p={5} alignItems="center" borderRadius={30}>

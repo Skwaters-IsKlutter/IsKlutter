@@ -48,7 +48,7 @@ export default function ViewProfileCard({ userProfileImg, username, profileName,
           </Text>
         </HStack>
 
-        <Text px="$10" fontSize={15} color={colors.white} pt="0" pb="0" fontFamily={fonts.regular}>
+        <Text px="$10" fontSize={15} color={colors.white} pt="0" pb="$2"fontFamily={fonts.regular}>
           {bio}
         </Text>
       </VStack>
