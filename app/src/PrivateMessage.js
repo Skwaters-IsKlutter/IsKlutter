@@ -5,6 +5,7 @@ import {
     Text,
     Box,
     Button,
+    ButtonText,
     View,
     FormControl,
     Input,
@@ -14,16 +15,20 @@ import {
 } from '@gluestack-ui/themed';
 import { Alert, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import UserAvatar from '../components/Avatar.js';
 import SenderBox from '../components/SenderBox.js';
-import { serverTimestamp } from 'firebase/firestore';
-import colors from '../config/colors.js';
-import Routes from '../components/constants/Routes.js';
+
 import { getFirestore, addDoc, collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { serverTimestamp } from 'firebase/firestore';
+
+import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+import Routes from '../components/constants/Routes.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -187,10 +192,10 @@ export default function PrivateMessagePage() {
                                         padding: 10,
                                         marginVertical: 5,
                                         flexShrink: 1,
-                                        borderRadius: 20,
+                                        borderRadius: 15,
                                     }}
                                 >
-                                    <Text color={messageData.currentUserSent ? 'white' : 'black'}>
+                                    <Text color={messageData.currentUserSent ? 'white' : 'black'} fontFamily={fonts.regular}>
                                         {messageData.message.trim()}
                                     </Text>
                                 </View>
@@ -224,14 +229,15 @@ export default function PrivateMessagePage() {
                     </HStack>
                 </ScrollView>
             </Box>
-            <HStack m={20} alignContent='center'>
-                <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" zIndex={0} borderRadius={15}>
+            <HStack m={20} alignContent='center' justifyContent='space-between'>
+                <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" borderRadius={15}>
                     <InputField
                         multiline={true}
-                        size="md"
+                        size="sm"
                         placeholder="Chat here..."
                         value={messageContent}
                         onChangeText={(text) => setMessageContent(text)}
+                        fontFamily={fonts.regular}
                     />
                 </Input>
                 <Button
@@ -242,7 +248,7 @@ export default function PrivateMessagePage() {
                     onPress={sendMessage}
                     m={10}
                 >
-                    <Text color={colors.white} fontSize="$sm">Send</Text>
+                    <ButtonText color={colors.white} fontSize="$sm" fontFamily={fonts.semibold}>Send</ButtonText>
                 </Button>
             </HStack>
         </Box>
