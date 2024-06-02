@@ -11,6 +11,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import CheckBox from './CheckBox.js';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 const Tags = [
     { key: 'Food', value: 'Food' },
@@ -98,7 +99,7 @@ const AddTags = ({ listingFormLabel, listingFormPlaceholder, setListingData }) =
         <Box p={10}>
             <VStack top={-25}>
                 <FormControlLabel mb="$2">
-                    <FormControlLabelText color={colors.secondary} fontWeight={600}>
+                    <FormControlLabelText color={colors.secondary} fontFamily={fonts.bold}>
                         {listingFormLabel}
                     </FormControlLabelText>
                 </FormControlLabel>

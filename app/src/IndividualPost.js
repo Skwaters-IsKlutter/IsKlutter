@@ -6,20 +6,31 @@ import {
     Heading,
     Box,
     ScrollView,
+    HStack,
+    Pressable
 } from '@gluestack-ui/themed';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 import colors from '../config/colors';
-import SearchHeaderBack from '../components/SearchHeaderBack';
 import IndividualPostCard from '../components/IndividualPostCard.js';
 import { getFirestore, collection, getDocs, query, where, onSnapshot } from 'firebase/firestore'; // Import onSnapshot
 import CommunityReplyBox from '../components/CommunityReplyBox';
 
-
+import fonts from '../config/fonts.js';
 import { FIREBASE_APP } from '../../config/firebase';
 import CommunityCommentBox from '../components/CommunityCommentBox';
-// import CommunityReplyBox from '../components/CommunityReplyBox';
+import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 export default function IndividualPostPage() {
+
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_600SemiBold,
+        Poppins_700Bold
+    })
+
     const navigation = useNavigation();
     const route = useRoute();
     const { selectedPost } = route.params || {};
@@ -77,7 +88,15 @@ export default function IndividualPostPage() {
 
     return (
         <Box w="100%" h="100%">
-            <SearchHeaderBack userIcon={require("../../assets/img/usericon.jpg")} back={navigation.goBack} />
+           <Box w="100%" maxHeight={150} bg={colors.primary}>
+           <VStack>
+                <HStack p="$3" w="100%" mt={25} alignItems="center">
+                    <Pressable onPress={navigation.goBack}>
+                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
+                    </Pressable>
+                </HStack>
+            </VStack>
+        </Box>
             <Box p="$3" w="100%" flex={1} h="100%">
                 <VStack>
                     <ScrollView h="85%">
@@ -87,7 +106,9 @@ export default function IndividualPostPage() {
 
                         {/* Render comments */}
                         <VStack mt={10}>
-                            <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
+                            <Text fontFamily="Poppins_600SemiBold">
+                                <Heading  fontSize={20} color={colors.primary}>Comments</Heading>
+                            </Text>
                                 {renderComments()}
                         </VStack>
                     </ScrollView>
@@ -95,7 +116,7 @@ export default function IndividualPostPage() {
             
             </Box>
             {/* Comment Box */}
-            <VStack size="md" top={-90} p="$3">
+            <VStack size="md" top={-100} p="$3">
                 <CommunityCommentBox 
                     posterUserId={selectedPost.userID}
                     selectedPost={selectedPost} 

@@ -8,6 +8,7 @@ import {
     ButtonText,
     Pressable,
     HStack,
+    Text
 } from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +21,7 @@ import { getDownloadURL } from 'firebase/storage';
 import AddListingBox from '../components/AddListingBox.js';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts';
 
 export default function AddListingPage() {
     const navigation = useNavigation();
@@ -134,16 +136,16 @@ export default function AddListingPage() {
         <Box w="100%" h="100%">
            {/* Header */}
             <Box backgroundColor={colors.primary}>
-                <HStack p="$2" w="100%" mt={20} alignItems="center">
+                <HStack p="$2" w="100%" mt={25} alignItems='center' >
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Heading lineHeight={50} fontSize={25} color={colors.white} m={45}>Post</Heading>
+                    <Text fontSize={24} color={colors.white} lineHeight={50} fontFamily={fonts.semibold} m={10}>Post</Text>
                 </HStack>
             </Box>
 
       
-            <Box w="100%" maxWidth="$96" flex={1}>
+            <Box w="100%"  flex={1}>
                  <ScrollView>
                     <Box>
                         <VStack space="xs">

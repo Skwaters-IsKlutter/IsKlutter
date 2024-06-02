@@ -11,8 +11,16 @@ import ItemCard from '../components/ItemCard.js';
 
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 export default function AllListingsPage() {
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_600SemiBold,
+        Poppins_700Bold
+    })
+
     const navigation = useNavigation();
     const [allListingsData, setAllListingsData] = useState([]);
     const [searchInput, setSearchInput] = useState('');
@@ -65,7 +73,7 @@ export default function AllListingsPage() {
 
     const filteredListings = allListingsData.filter((item) => {
         if (item.sold) {
-            return false; 
+            return false;
         }
         const listingName = item.listingName.toLowerCase();
         const username = item.username.toLowerCase();
@@ -87,22 +95,24 @@ export default function AllListingsPage() {
 
         return (
             <>
-                {filteredListings.map((item) => (
-                    <ItemCard
-                        key={item.id}
-                        productImage={item.listingImageURL}
-                        productPrice={item.listingPrice}
-                        productName={item.listingName}
-                        productSeller={item.username}
-                        sellerID={item.sellerID}
-                        tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-                        toListing={() => navigation.navigate(Routes.LISTINGS, {
-                            selectedItem: item,
-                            sellerImageURL: item.sellerImageURL
-                        })}
-                    />
-                ))}
-                <Text style={styles.endOfResults}>End of Results</Text>
+                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="space-between" >
+                    {filteredListings.map((item) => (
+                        <ItemCard
+                            key={item.id}
+                            productImage={item.listingImageURL}
+                            productPrice={item.listingPrice}
+                            productName={item.listingName}
+                            productSeller={item.username}
+                            sellerID={item.sellerID}
+                            tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+                            toListing={() => navigation.navigate(Routes.LISTINGS, {
+                                selectedItem: item,
+                                sellerImageURL: item.sellerImageURL
+                            })}
+                        />
+                    ))}
+                </HStack>
+                <Text style={styles.endOfResults} fontFamily={fonts.semibold}>End of Results</Text>
             </>
         );
     };
@@ -115,7 +125,7 @@ export default function AllListingsPage() {
             color: 'gray'
         }
     };
-    
+
     return (
         <Box w="100%" h="100%">
             <SearchHeader
@@ -128,21 +138,21 @@ export default function AllListingsPage() {
             <Box p="$5" w="100%" flex={1} >
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
                             Listings
-                        </Heading>
+                        </Text>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
                             <ButtonIcon>
                                 <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
                             </ButtonIcon>
-                            <ButtonText pl={10} lineHeight={35}>Post</ButtonText>
+                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} alignItems='center'>Post</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>
 
-                <ScrollView  >
-                    <HStack space="xs"  w="100%"flexWrap="wrap" justifyContent="center" >
+                <ScrollView>
+                    <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
                         {renderAllListings()}
                     </HStack>
                 </ScrollView>

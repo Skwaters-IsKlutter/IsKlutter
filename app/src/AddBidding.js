@@ -37,6 +37,7 @@ import { getDownloadURL } from 'firebase/storage';
 import AddListingBox from '../components/AddListingBox.js';
 
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import AddBiddingBox from '../components/AddBiddingBox';
 
 export default function AddListingPage() {
@@ -176,9 +177,9 @@ export default function AddListingPage() {
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Heading lineHeight={50} fontSize={25} color={colors.white} m={10}>
-                        Add item to bid
-                    </Heading>
+                    <Text lineHeight={50} fontSize={25} color={colors.white} m={10} fontFamily={fonts.semibold}>
+                        Bid
+                    </Text>
                 </HStack>
             </Box>
 

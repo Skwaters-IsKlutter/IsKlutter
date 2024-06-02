@@ -18,7 +18,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AllBidderListCard from '../components/AllBidderListCard.js';
 import SpecificBidCard from '../components/SpecificBidCard.js';
-import SearchHeaderBack from '../components/SearchHeaderBack.js';
+import BackHeader from '../components/BackHeader.js';
 
 import { getFirestore, addDoc, onSnapshot, collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -267,7 +267,7 @@ export default function SpecificBiddingPage() {
     return (
         // Parent box
         <Box w="100%" h="100%">
-            <SearchHeaderBack userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} />
+            <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Bid Details" />
 
             {/* Specific Bid Card */}
             <Box>

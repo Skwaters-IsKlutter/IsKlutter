@@ -2,13 +2,14 @@ import React from 'react';
 import { Box, VStack, HStack, Heading, Text, Image, Pressable } from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 export default function ItemCard({ productImage, productPrice, productName, productSeller, toListing, tags, sold }) {
     const isImageUrl = typeof productImage === 'string';
 
     return (
         <Pressable onPress={toListing}>
-            <Box bg={colors.white} borderRadius={10} width={150} maxHeight={256} m={2} flex={1} overflow="hidden">
+            <Box bg={colors.white} borderRadius={10} width={160} maxHeight={256} m={6} flex={1} overflow="hidden">
                 <Box p="$2">
                     {isImageUrl ? (
                         <Image
@@ -22,21 +23,27 @@ export default function ItemCard({ productImage, productPrice, productName, prod
                     )}
 
                    
+                    <Text fontFamily={fonts.semibold} height={25} mt="$2" >
+                        <Heading fontSize="$2xl" color={colors.primary} >
+                            {`₱ ${productPrice}`}
+                        </Heading>
+                    </Text>
 
-                    <Heading fontSize="$2xl" color={colors.primary} mt={2}>
-                        {`PHP ${productPrice}`}
-                    </Heading>
-
-                    <VStack space="xs" p={0}>
-                        <Text fontSize="$md" fontWeight="bold">{productName}</Text>
-                        <Text fontSize="$sm" color={colors.gray}>
-                            <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary} />
-                            {productSeller}
-                        </Text>
+                    <VStack space="xs" p={3}>
+                        <Text fontSize="$md"  fontFamily={fonts.regular} color={colors.black}>{productName}</Text>
+                        <HStack alignItems='center'>
+                            <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary}   />      
+                            <Text fontSize="$sm" color={colors.black} fontFamily={fonts.regular} pl="$2">{productSeller}
+                            </Text>
+                        </HStack>
                     </VStack>
                     
-                    <HStack space="sm" flexWrap="wrap" mt={2}>
-                        <Text bgColor={colors.secondary} color={colors.white} borderRadius={10} p={7}>{tags}</Text>
+                    <HStack space="sm" flexWrap="wrap" mt={5}>
+                        <Text bgColor={colors.secondary} 
+                            color={colors.white}
+                            borderRadius={10} 
+                            p={7} fontFamily={fonts.regular}
+                            >{tags}</Text>
                         {sold && (
                         <Text
                             bg={colors.red}

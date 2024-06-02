@@ -4,6 +4,8 @@ import {
     HStack,
     VStack,
     Heading,
+    ButtonIcon,
+    ButtonText,
     Text,
     Box,
     ScrollView,
@@ -16,8 +18,10 @@ import { FIREBASE_APP } from '../../config/firebase';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Routes from '../components/constants/Routes.js';
 import BidItemCard from '../components/BidItemCard';
-import colors from '../config/colors.js';
 import SearchHeader from '../components/SearchHeader.js';
+
+import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -141,40 +145,47 @@ export default function AllBiddingsPage() {
     }, [forceRender]);
 
     const renderAllBiddings = () => {
-        console.log("Rendering all biddings...");
-        return listings.map(listing => {
-            const showDeleteButton = currentUser && currentUser.uid === listing.sellerID;
+        return <>
+            <VStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
+                {listings.map(listing => (
+                    <BidItemCard
+                        key={listing.id}
+                        listingImage={listing.listingImageURL}
+                        listingName={listing.listingName}
+                        listingPrice={listing.listingPrice}
+                        remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} day(s)`}
+                        toBidding={() => handleBiddingClick(listing.id)}
+                        highestBidder={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
+                            `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
+                        highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
+                            `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
+                        buttonCondition={listing.daysRemaining > 0 && (
+                            <HStack justifyContent="space-between" alignItems="center">
+                                <Button
+                                    variant="solid"
+                                    size="$sm"
+                                    bg={colors.primary}
+                                    borderRadius={8}
+                                    onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
+                                >
+                                    <Text color={colors.white} fontSize="$md" bold="true">Bid Now</Text>
+                                </Button>
+                            </HStack>
+                        )}
+                    />
+                ))}
+            </VStack>
+            <Text style={styles.endOfResults} fontFamily={fonts.semibold}>End of Results</Text>
+        </>
+    };
 
-            return (
-                <BidItemCard
-                    key={listing.id}
-                    listingImage={listing.listingImageURL}
-                    listingName={listing.listingName}
-                    listingPrice={listing.listingPrice}
-                    remainingTime={listing.daysRemaining <= 0 ? 'Bidding has ended' : `Ends in ${listing.daysRemaining} day(s)`}
-                    toBidding={() => handleBiddingClick(listing.id)}
-                    highestBidder={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
-                        `Highest Bidder: ${highestBidders[listing.id].highestBidderName}` : ''}
-                    highestBid={listing.daysRemaining <= 0 && highestBidders[listing.id] ?
-                        `Bid Amount: ${highestBidders[listing.id].highestBiddingPrice}` : ''}
-                    buttonCondition={listing.daysRemaining > 0 && (
-                        <HStack justifyContent="space-between" alignItems="center">
-                            <Button
-                                variant="solid"
-                                size="$sm"
-                                bg={colors.primary}
-                                borderRadius={8}
-                                onPress={() => handleBiddingClick(listing.id)}
-                            >
-                                <Text color={colors.white} fontSize="$md" bold>Bid Now</Text>
-                            </Button>
-                        </HStack>
-                    )}
-                    showDeleteButton={showDeleteButton}
-                    handleDelete={() => handleDeleteBidding(listing.id)}
-                />
-            );
-        });
+    const styles = {
+        endOfResults: {
+            textAlign: 'center',
+            paddingVertical: 20,
+            fontSize: 18,
+            color: 'gray'
+        }
     };
 
     return (
@@ -187,18 +198,20 @@ export default function AllBiddingsPage() {
             <Box p="$5" w="100%" flex={1}>
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
                             Biddings
-                        </Heading>
+                        </Text>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
-                            <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
-                            <Text pl={10} lineHeight={35}>Post</Text>
+                            <ButtonIcon>
+                                <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
+                            </ButtonIcon>
+                            <ButtonText mt={2} p="$2" line fontSize="$lg" fontFamily={fonts.semibold} alignItems='center'>Post</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>
 
-                <ScrollView>
+                <ScrollView >
                     {renderAllBiddings()}
                 </ScrollView>
 

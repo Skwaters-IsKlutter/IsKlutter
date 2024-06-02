@@ -21,6 +21,8 @@ export default function AddBiddingBox({ listingName, listingPrice, listingDescri
                     biddingFormPlaceholder="Enter bidding name"
                     biddingFormValue={listingName}
                     biddingFormBoxHeight="$10"
+                    listingFormMultiline={false}
+                    biddingFormMaxLength={32}
                     onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingName: value }))} //biddingName
                 />
 
@@ -38,7 +40,8 @@ export default function AddBiddingBox({ listingName, listingPrice, listingDescri
                     biddingFormType="text"
                     biddingFormPlaceholder="Enter description"
                     biddingFormValue={listingDescription}
-                    listingFormMultiline={true}
+                    biddingFormMultiline={true}
+                    biddingFormMaxLength={160}
                     biddingFormBoxHeight={100}
                     onValueChange={(value) => setListingData((prevData) => ({ ...prevData, listingDescription: value }))} 
                 />

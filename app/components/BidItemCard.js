@@ -6,25 +6,19 @@ import {
     Text,
     Box,
     Image,
-    Button
 } from '@gluestack-ui/themed';
-import colors from '../config/colors.js';
+
+import { useNavigation } from '@react-navigation/native';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
-import { Alert } from 'react-native';
+
+import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 const db = getFirestore(FIREBASE_APP);
 
-export default function BidItemCard({ 
-    listingPrice, 
-    listingImage, 
-    listingName, 
-    remainingTime, 
-    toBidding, 
-    buttonCondition, 
-    showDeleteButton, 
-    handleDelete 
-}) {
+export default function BidItemCard({ listingPrice, listingImage, listingName, remainingTime, toBidding, buttonCondition }) {
+    const navigation = useNavigation();
     const [highestBid, setHighestBid] = useState(null);
     const [highestBidder, setHighestBidder] = useState(null);
     const [isImageUrl, setIsImageUrl] = useState(typeof listingImage === 'string');
@@ -57,30 +51,30 @@ export default function BidItemCard({
 
         fetchHighestBid();
     }, [listingName]);
-
+  
     const confirmDelete = () => {
-        Alert.alert(
-            "Delete Listing",
-            "Are you sure you want to delete this?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel"
-                },
-                { 
-                    text: "Delete", 
-                    onPress: handleDelete,
-                    style: "destructive"
-                }
-            ],
-            { cancelable: true }
-        );
-    };
+          Alert.alert(
+              "Delete Listing",
+              "Are you sure you want to delete this?",
+              [
+                  {
+                      text: "Cancel",
+                      style: "cancel"
+                  },
+                  { 
+                      text: "Delete", 
+                      onPress: handleDelete,
+                      style: "destructive"
+                  }
+              ],
+              { cancelable: true }
+          );
+      };
 
     return (
-        <Box p="$2" flex={1}>
-            <VStack bg={colors.white} borderRadius={10} width="100%" height="auto">
-                {/* {showDeleteButton && (
+        <Box p="$2" maxHeight={200} flex={1} >
+            <VStack bg={colors.white} width="100%" height="auto" borderRadius={10} >
+              {/* {showDeleteButton && (
                     <Button 
                         variant="solid" 
                         size="$sm" 
@@ -94,37 +88,41 @@ export default function BidItemCard({
                         <Text color="black" fontSize="$md" bold>Delete</Text>
                     </Button>
                 )} */}
-                <HStack width="100%">
+                
+                <HStack width="100%" >
+                    {/* Update to listing image */}
+                    
                     {isImageUrl ? (
                         <Image
                             source={{ uri: listingImage }}
-                            style={{ height: 200, width: 150, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+                            style={{ height: "auto", width: 150 }}
                             resizeMode="cover"
                             alt="icon"
                         />
                     ) : (
                         <Text>No Image Available</Text>
                     )}
-                    <VStack p="$3" flex={1}>
-                        <Heading fontSize="$2xl" color={colors.primary} letterSpacing={-1}>{listingName}</Heading>
+                    <VStack p="$2" flex={1}>
+                        <Text fontSize="$xl" color={colors.primary} fontFamily={fonts.bold}>{listingName}</Text>
                         
                         {highestBid ? (
                             <>
-                                <Heading fontSize="$md" color={colors.secondary}>
+                                <Text fontSize="$md" color={colors.secondary} fontFamily={fonts.regular}>
                                     Highest Bid: PHP {highestBid}
-                                </Heading>
-                                <Heading fontSize="$sm" color={colors.black}>
+                                </Text>
+                                <Text fontSize="$sm" color={colors.black} fontFamily={fonts.regular}>
                                     Highest Bidder: {highestBidder}
-                                </Heading>
+                                </Text>
                             </>
                         ) : (
-                            <Heading fontSize="$md" color={colors.secondary}>
+                            <Text fontSize="$md" color={colors.secondary} fontFamily={fonts.regular}>
                                 Base Price: PHP {listingPrice}
-                            </Heading>
+                            </Text>
                         )}
                         
-                        <Heading fontSize="$md" color={colors.black}>{remainingTime}</Heading>
+                        <Text fontSize="$md" color={colors.black} fontFamily={fonts.bold}>{remainingTime}</Text>
                         {buttonCondition}
+                        
                     </VStack>
                 </HStack>
             </VStack>

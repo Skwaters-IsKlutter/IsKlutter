@@ -19,12 +19,13 @@ import ViewProfileScreen from './app/components/screens/ViewProfileScreen.js';
 import AllBiddingsScreen from './app/components/screens/AllBiddingsScreen.js';
 import SpecificBiddingScreen from './app/components/screens/SpecificBiddingPageScreen.js';
 import AddBiddingScreen from './app/components/screens/AddBiddingScreen.js';
+import AddPostScreen from './app/components/screens/AddPostScreen.js';
 
 import colors from './app/config/colors.js';
 import { UserProvider } from './app/components/UserIcon.js';
 import SpecificBiddingPage from './app/src/SpecificBidding.js';
 
-
+import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
 
@@ -76,6 +77,7 @@ export default function App() {
 				<Stack.Screen options={{headerShown:false}} name="ViewProfile" component={ViewProfileScreen} />
 				<Stack.Screen options={{headerShown:false}} name="SpecificBidding" component={SpecificBiddingScreen} /> 
 				<Stack.Screen options={{headerShown:false}} name="AddBidding" component={AddBiddingScreen} /> 
+				<Stack.Screen options={{headerShown:false}} name="AddPost" component={AddPostScreen} /> 
 			</Stack.Navigator>
 		</NavigationContainer>
 		</UserProvider>

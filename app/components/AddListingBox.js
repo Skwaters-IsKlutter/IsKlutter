@@ -8,7 +8,7 @@ import AddTags from './AddTags';
 export default function AddListingBox({ listingName, listingPrice, listingDescription, listingTags, setListingData }) {
     return (
         <Box>
-            <Box w="100%" m={5}>
+            <Box w="100%" p="$3">
                 <AddListingImagePicker
                     setListingData={setListingData}
                 />

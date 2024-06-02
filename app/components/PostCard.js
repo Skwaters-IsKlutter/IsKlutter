@@ -3,6 +3,9 @@ import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/theme
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
+
+// import usePoppinsFonts from '../config/fonts.js/index.js';
 
 const db = getFirestore();
 
@@ -10,6 +13,8 @@ export default function PostCard({ userId, description, toIndividualPost, timest
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
+
+    // const { bold } = usePoppinsFonts();
 
     const fetchUserData = useCallback(async () => {
         try {
@@ -41,7 +46,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
             <VStack>
                 <Box
                     backgroundColor={colors.white}
-                    borderRadius={5}
+                    borderRadius={10}
                     width={380}
                     maxHeight={300}
                     m={5}
@@ -52,22 +57,22 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     <HStack space="sm" alignItems="center" p="$3" m={5}>
                         <Image
                             source={userProfileImg ? { uri: userProfileImg } : require('../../assets/img/profile-holder.jpg')}
-                            style={{ width: 50, height: 50, borderRadius: 25 }}
+                            style={{ width: 60, height: 60, borderRadius: 30 }}
                             alt="User Avatar"
                         />
                         <VStack>
-                            <Text color={colors.secondary} size="md" bold={true}>
+                            <Text color={colors.secondary} size="lg" fontFamily={fonts.semibold}>
                                 {username}
                             </Text>
 
-                            <Text color={colors.gray} size="xs" bold={true}>
+                            <Text color={colors.black} size="xs" fontFamily={fonts.regular}>
                                 {timestamp}
                             </Text>
                         </VStack>
                     </HStack>
 
                     <VStack size="md">
-                        <Text color="black" pb="$3" size="sm" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7}>
+                        <Text color="black" pb="$3" size="lg" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7} fontFamily={fonts.thin}>
                             {description}
                         </Text>
                     </VStack>
