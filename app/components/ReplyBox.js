@@ -55,10 +55,10 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
                         </TouchableOpacity>
 
                     <VStack  width="90%"  m="$2"  >
-                        <Text color={colors.secondary} fontSize="$md" fontStyle={fonts.bold}>{userData?.username}</Text>
+                        <Text color={colors.secondary} fontSize="$md"  fontFamily={fonts.semibold}>{userData?.username}</Text>
                         <HStack space="sm">
-                            <Text color={colors.gray} fontSize="$xs" fontStyle={fonts.regular}>{replyDate}</Text>
-                            <Text color={colors.gray} fontSize="$xs" fontStyle={fonts.regular}>{replyTime}</Text>
+                            <Text color={colors.black} fontSize="$xs" fontFamily={fonts.regular}>{replyDate}</Text>
+                            <Text color={colors.black} fontSize="$xs" fontFamily={fonts.regular}>{replyTime}</Text>
                         </HStack>
                         <HStack space="sm" justifyContent="center" alignItems="center">
                             <ScrollView style={{ flex: 1, maxHeight: 100 }}>
@@ -68,7 +68,7 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
                                         value={commentText}
                                         onChangeText={(text) => setCommentText(text)}
                                         style={{ minHeight: 30 }}
-                                        fontStyle={fonts.regular}
+                                        fontFamily={fonts.regular}
                                     />
                                 </Box>
                             </ScrollView>
