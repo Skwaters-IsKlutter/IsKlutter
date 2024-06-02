@@ -95,7 +95,7 @@ export default function AllListingsPage() {
 
         return (
             <>
-                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
+                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent="space-between" >
                     {filteredListings.map((item) => (
                         <ItemCard
                             key={item.id}
