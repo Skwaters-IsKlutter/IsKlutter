@@ -280,6 +280,7 @@ export default function EditProfileScreen({ route, navigation }) {
                                 onChangeText={(text) => setNewUsername(text)}
                                 value={newUsername}
                                 fontFamily={fonts.regular}
+                                maxLength={16}
                             />
                         </Input>
                     </FormControl>

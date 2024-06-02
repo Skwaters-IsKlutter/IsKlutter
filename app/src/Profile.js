@@ -145,7 +145,14 @@ export default function ProfilePage() {
                                                 productName={item.listingName}
                                                 productSeller={currentUser?.username}
                                                 tags={item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null}
-                                                toListing={item.sold ? null : () => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}
+                                                toListing={item.sold ? null : () => navigation.navigate(
+                                                    item.isBidding ? (Routes.SPECIFICBIDDING, { listingId: item.id }) : Routes.LISTINGS, 
+                                                    { 
+                                                        selectedItem: item, 
+                                                        sellerImageURL: profileImg, 
+                                                        sellerName: currentUser?.username 
+                                                    }
+                                                )}
                                                 sold={item.sold}
                                             />
                                         ))
@@ -153,6 +160,7 @@ export default function ProfilePage() {
                                         <Text fontFamily={fonts.bold} style={styles.empty}>This user has no active listings</Text>
                                     )}
                                 </HStack>
+
 
                                 <HStack p={5} alignItems="center" borderRadius={30}>
                                     <MaterialCommunityIcons
@@ -174,7 +182,7 @@ export default function ProfilePage() {
                                                 productName={item.listingName}
                                                 productSeller={currentUser?.username}
                                                 tags={item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null}
-                                                toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: profileImg, sellerName: currentUser?.username })}
+                                                toListing={() => navigation.navigate(Routes.SPECIFICBIDDING, { listingId: item.id })}
                                                 sold={item.sold}
                                             />
                                         ))

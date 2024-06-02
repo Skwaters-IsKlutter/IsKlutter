@@ -80,8 +80,8 @@ export default function SignupScreen() {
                     return;
                 }
 
-                if (username.length < 3) {
-                    setError('Error creating user. Username must be at least 3 characters long.');
+                if (username.length < 3 && username.length > 16) {
+                    setError('Error creating user. Username must be at least 3 characters long and 16 characters max.');
                     Alert.alert("Signup Failed", "Invalid username. Please use a username with 3 or more characters.");
                     return;
                 }
