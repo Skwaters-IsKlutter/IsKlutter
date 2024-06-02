@@ -18,6 +18,7 @@ import { Alert } from 'react-native';
 
 import Routes from '../components/constants/Routes.js';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 // import Routes from '../components/constants/Routes.js';
 
 // const getCurrentUserID = () => {
@@ -55,15 +56,15 @@ export default function SpecificBidCard({ listingName, listingPrice, highestBidd
                 
                 <VStack space="md" p="$2">
                     <HStack w="100%" justifyContent="space-between">
-                        <Heading fontSize="$2xl" color={colors.primary}>{listingName}</Heading>
+                        <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.primary}>{listingName}</Text>
                     </HStack>
-                    <Text fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${listingPrice}`}</Text>
+                    <Text fontFamily={fonts.bold} fontSize="$lg" color={colors.secondary} fontWeight="$bold">{`PHP ${listingPrice}`}</Text>
                 </VStack>
                 
                 <VStack space="md" p="$2">
-                    <Heading color={colors.black} size="md">Remaining Time: {remainingTime}</Heading>
-                    <Text color={colors.black}>Highest Bidder: {highestBidderName}</Text>
-                    <Text color={colors.black}>Highest Bid: PHP {highestBiddingPrice}</Text>
+                    <Text fontFamily={fonts.semibold} color={colors.black} size="md">Remaining Time: {remainingTime}</Text>
+                    <Text fontFamily={fonts.semibold} color={colors.black}>Highest Bidder: {highestBidderName}</Text>
+                    <Text fontFamily={fonts.semibold} color={colors.black}>Highest Bid: PHP {highestBiddingPrice}</Text>
                 </VStack>
             </Box>    
         </Box>
