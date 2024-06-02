@@ -116,7 +116,7 @@ export default function ViewProfile() {
                 </Box>
 
                 <Box p="$3" w="100%" height="100%">
-                    <ScrollView mt={400} mb={60}>
+                    <ScrollView mt={330} mb={60}>
                         <Box p="$2" h="100%">
                             <VStack>
                                 {/* User Listings */}
