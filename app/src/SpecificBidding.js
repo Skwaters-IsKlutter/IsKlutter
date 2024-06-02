@@ -11,7 +11,8 @@ import {
     Input,
     InputField,
     Button,
-    ButtonIcon
+    ButtonIcon,
+    ButtonText
 } from '@gluestack-ui/themed';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -43,6 +44,7 @@ export default function SpecificBiddingPage() {
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
     const [forceRender, setForceRender] = useState(false);
+    const [remainingTime, setRemainingTime] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -192,13 +194,26 @@ export default function SpecificBiddingPage() {
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
                     const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID });
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, remainingTime });
                     setBidIncrement(bidIncrement || 10);
+
+                    // Calculate remaining time
+                    const endTimeDate = new Date(endTime.seconds * 1000); // Convert Firestore timestamp to Date
+                    const now = new Date();
+                    const timeDifference = endTimeDate - now;
+
+                    if (timeDifference > 0) {
+                        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        setRemainingTime(`${days} days ${hours} hours`);
+                    } else {
+                        setRemainingTime('Bidding has ended');
+                    }
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
             } catch (error) {
-                Alert.alert('Error', 'Failed to fetch listing data.');
+                throw(error);
             }
         };
 
@@ -245,12 +260,12 @@ export default function SpecificBiddingPage() {
     };
 
     const renderSpecificBidding = () => {
-        console.log("Remaining time for this bidding:", listing.remainingTime);
+        console.log("Remaining time for this bidding:", remainingTime);
         return listing && (
             <SpecificBidCard
                 listingName={listing.listingName}
                 listingPrice={listing.listingPrice}
-                remainingTime={listing.remainingTime}
+                remainingTime={remainingTime}
                 highestBidderName={highestBidderName}
                 highestBiddingPrice={highestBiddingPrice}
                 listingImage={listingImage}
@@ -297,21 +312,13 @@ export default function SpecificBiddingPage() {
                 <VStack space="xs">
                     {renderSpecificBidding()}
                 </VStack>
-                <Box h="20%" m="$3">
-                    <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
-                    <ScrollView>
-                        {renderAllBidderList()}
-                    </ScrollView>
-                </Box>
-            </Box>
 
-            <Box m={10} p={15} borderRadius={10} top={-60}>
                 <HStack alignItems="center" justifyContent='space-around'>
                     <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%" zIndex={0}>
                         <InputField
-                            multiline={true}
                             size="md"
                             value={biddingAmount}
+                            keyboardType='numeric'
                             placeholder="Place your bet amount in PHP..."
                             onChangeText={(text) => setBiddingAmount(text)}
                             fontFamily={fonts.regular}
@@ -325,9 +332,16 @@ export default function SpecificBiddingPage() {
                         ml={3}
                         onPress={() => handleBid(listingId, biddingAmount)}
                     >
-                        <Text fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</Text>
+                        <ButtonText fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</ButtonText>
                     </Button>
                 </HStack>
+
+                <Box maxHeight="33%" m="$3">
+                    <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
+                    <ScrollView>
+                        {renderAllBidderList()}
+                    </ScrollView>
+                </Box>
             </Box>
         </Box>
     );
