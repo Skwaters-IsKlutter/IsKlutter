@@ -248,7 +248,7 @@ export default function SpecificBiddingPage() {
     const handleDelete = async () => {
         Alert.alert(
             'Delete Listing',
-            'Are you sure you want to delete this listing?',
+            'Are you sure you want to delete this bidding?',
             [
                 {
                     text: 'Cancel',
@@ -261,10 +261,10 @@ export default function SpecificBiddingPage() {
                         try {
                             const listingRef = doc(db, 'listings', listingId);
                             await deleteDoc(listingRef);
-                            Alert.alert('Deleted', 'The listing has been deleted.');
+                            Alert.alert('Deleted', 'The bidding has been deleted.');
                             navigation.goBack();
                         } catch (error) {
-                            Alert.alert('Error', 'Failed to delete the listing. Please try again later.');
+                            Alert.alert('Error', 'Failed to delete the bidding. Please try again later.');
                         }
                     }
                 }
