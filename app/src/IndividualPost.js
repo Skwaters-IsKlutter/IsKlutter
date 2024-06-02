@@ -7,7 +7,8 @@ import {
     Text,
     ScrollView,
     Button,
-    ButtonText
+    ButtonText,
+    Center
 } from '@gluestack-ui/themed';
 
 import { getFirestore, collection, getDoc, query, where, onSnapshot, doc } from 'firebase/firestore'; // Import onSnapshot
@@ -90,18 +91,18 @@ export default function IndividualPostPage() {
                         userId={selectedPost.userID}
                         timestamp={selectedPost.timeposted ? selectedPost.timeposted.toDate().toLocaleString() : "N/A"}
                     />
-                    <Box flex={1}>
+                    <Center>
                         {imageUrls.map((imageUrl, index) => (
                             <TouchableOpacity key={index} onPress={() => openModal(imageUrl)}>
                                 <View style={{ alignItems: 'center', marginRight: 20 }}>
                                     <Image
                                         source={{ uri: imageUrl }}
-                                        style={{ width: screenWidth - 40, height: screenWidth / 2, marginBottom: 5 }}
+                                        style={{ width: screenWidth, height: screenWidth / 1.5, marginBottom: 5 }}
                                     />
                                 </View>
                             </TouchableOpacity>
                         ))}
-                    </Box>
+                    </Center>
                 </>
             );
         } else {
