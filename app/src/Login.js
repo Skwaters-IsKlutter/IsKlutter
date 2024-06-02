@@ -23,6 +23,7 @@ import Routes from '../components/constants/Routes.js';
 
 import fonts from '../config/fonts.js';
 import { useFonts, Poppins_700Bold, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import AppLoading from 'expo-app-loading';
 
 export default function LoginPage() {
 
@@ -31,12 +32,6 @@ export default function LoginPage() {
         Poppins_600SemiBold,
         Poppins_700Bold
     })
-
-
-
-
-
-
 
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
@@ -65,6 +60,10 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
 
     return (
         <Box w="100%" h="100%" alignItems="center">

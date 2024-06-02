@@ -91,7 +91,7 @@ export default function SignupScreen() {
             setLoading(false);
         }
     };
-
+    
     return (
         <Box w="100%" h="100%" justifyContent="center" alignItems="center">
             <Box
