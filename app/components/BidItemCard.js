@@ -51,10 +51,43 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
 
         fetchHighestBid();
     }, [listingName]);
+  
+    const confirmDelete = () => {
+          Alert.alert(
+              "Delete Listing",
+              "Are you sure you want to delete this?",
+              [
+                  {
+                      text: "Cancel",
+                      style: "cancel"
+                  },
+                  { 
+                      text: "Delete", 
+                      onPress: handleDelete,
+                      style: "destructive"
+                  }
+              ],
+              { cancelable: true }
+          );
+      };
 
     return (
         <Box p="$2" maxHeight={200} flex={1} >
             <VStack bg={colors.white} width="100%" height="auto" borderRadius={10} >
+              {/* {showDeleteButton && (
+                    <Button 
+                        variant="solid" 
+                        size="$sm" 
+                        bg="red.500" 
+                        onPress={confirmDelete} 
+                        backgroundColor='red'
+                        alignSelf="flex-end" 
+                        marginRight={2} 
+                        marginTop={2}
+                    >
+                        <Text color="black" fontSize="$md" bold>Delete</Text>
+                    </Button>
+                )} */}
                 
                 <HStack width="100%" >
                     {/* Update to listing image */}
