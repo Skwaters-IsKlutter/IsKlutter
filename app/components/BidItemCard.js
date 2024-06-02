@@ -7,11 +7,13 @@ import {
     Box,
     Image,
 } from '@gluestack-ui/themed';
-import colors from '../config/colors.js';
+
 import { useNavigation } from '@react-navigation/native';
-import Routes from '../components/constants/Routes.js';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { FIREBASE_APP } from '../../config/firebase';
+
+import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 
 const db = getFirestore(FIREBASE_APP);
 
@@ -51,41 +53,41 @@ export default function BidItemCard({ listingPrice, listingImage, listingName, r
     }, [listingName]);
 
     return (
-        <Box p="$2" flex={1}>
-            <VStack bg={colors.white} borderRadius={10} width="100%" height="auto">
+        <Box p="$2" maxHeight={200} flex={1} >
+            <VStack bg={colors.white} width="100%" height="auto" borderRadius={10} >
                 
-                <HStack width="100%">
+                <HStack width="100%" >
                     {/* Update to listing image */}
                     
                     {isImageUrl ? (
                         <Image
                             source={{ uri: listingImage }}
-                            style={{ height: 200, width: 150, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+                            style={{ height: "auto", width: 150 }}
                             resizeMode="cover"
                             alt="icon"
                         />
                     ) : (
                         <Text>No Image Available</Text>
                     )}
-                    <VStack p="$3" flex={1}>
-                        <Heading fontSize="$2xl" color={colors.primary} letterSpacing={-1}>{listingName}</Heading>
+                    <VStack p="$2" flex={1}>
+                        <Text fontSize="$xl" color={colors.primary} fontFamily={fonts.bold}>{listingName}</Text>
                         
                         {highestBid ? (
                             <>
-                                <Heading fontSize="$md" color={colors.secondary}>
+                                <Text fontSize="$md" color={colors.secondary} fontFamily={fonts.regular}>
                                     Highest Bid: PHP {highestBid}
-                                </Heading>
-                                <Heading fontSize="$sm" color={colors.black}>
-                                    Highest Bidder:{highestBidder}
-                                </Heading>
+                                </Text>
+                                <Text fontSize="$sm" color={colors.black} fontFamily={fonts.regular}>
+                                    Highest Bidder: {highestBidder}
+                                </Text>
                             </>
                         ) : (
-                            <Heading fontSize="$md" color={colors.secondary}>
+                            <Text fontSize="$md" color={colors.secondary} fontFamily={fonts.regular}>
                                 Base Price: PHP {listingPrice}
-                            </Heading>
+                            </Text>
                         )}
                         
-                        <Heading fontSize="$md" color={colors.black}>{remainingTime}</Heading>
+                        <Text fontSize="$md" color={colors.black} fontFamily={fonts.bold}>{remainingTime}</Text>
                         {buttonCondition}
                         
                     </VStack>

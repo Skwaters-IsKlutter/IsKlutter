@@ -6,7 +6,7 @@ import {
     FormControlLabel,
     FormControlLabelText,
     Input,
-    InputField
+    InputField,
 } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
 
@@ -16,7 +16,9 @@ export default function AddBiddingForm( {
     biddingFormPlaceholder, 
     biddingFormValue, 
     biddingFormBoxHeight, 
-    biddingFormMultiline, 
+    biddingFormMaxLength,
+    biddingFormMultiline,
+    biddingFormLineNum,
     onValueChange, 
 } ) {
     const handleInputChange = (value) => {
@@ -38,6 +40,8 @@ export default function AddBiddingForm( {
                             placeholder={biddingFormPlaceholder}
                             value={biddingFormValue}
                             multiline={biddingFormMultiline}
+                            maxLength={biddingFormMaxLength}
+                            numberOfLines={biddingFormLineNum}
                             onChangeText={handleInputChange}
                         />
                     </Input>

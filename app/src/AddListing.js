@@ -140,9 +140,7 @@ export default function AddListingPage() {
                     <Pressable onPress={navigation.goBack}>
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
-                    <Text fontFamily={fonts.semibold}>
-                        <Heading fontSize={24} color={colors.white} lineHeight={50}>Post</Heading>
-                    </Text>
+                    <Text fontSize={24} color={colors.white} lineHeight={50} fontFamily={fonts.semibold} m={10}>Post</Text>
                 </HStack>
             </Box>
 

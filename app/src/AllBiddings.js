@@ -17,9 +17,10 @@ import { FIREBASE_APP } from '../../config/firebase';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Routes from '../components/constants/Routes.js';
 import BidItemCard from '../components/BidItemCard';
+import SearchHeader from '../components/SearchHeader.js';
 
 import colors from '../config/colors.js';
-import SearchHeader from '../components/SearchHeader.js';
+import fonts from '../config/fonts.js';
 
 const db = getFirestore(FIREBASE_APP);
 const auth = getAuth();
@@ -158,18 +159,18 @@ export default function AllBiddingsPage() {
             <Box p="$5" w="100%" flex={1}>
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Heading lineHeight={50} fontSize={40} color={colors.secondary}>
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
                             Biddings
-                        </Heading>
+                        </Text>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDBIDDING)} p={2}>
                             <MaterialCommunityIcons name="plus" size={20} color={colors.white} />
-                            <Text pl={10} lineHeight={35}>Post</Text>
+                            <Text pl={10} lineHeight={35} color={colors.white}>Post</Text>
                         </Button>
                     </HStack>
                 </VStack>
 
-                <ScrollView>
+                <ScrollView >
                     {renderAllBiddings()}
                 </ScrollView>
 

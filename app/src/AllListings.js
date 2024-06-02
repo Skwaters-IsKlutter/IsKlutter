@@ -136,8 +136,8 @@ export default function AllListingsPage() {
             <Box p="$5" w="100%" flex={1} >
                 <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold}>
-                            Discover
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
+                            Listings
                         </Text>
 
                         <Button borderRadius={30} backgroundColor={colors.secondary} onPress={() => navigation.navigate(Routes.ADDLISTING)} p={2}>
