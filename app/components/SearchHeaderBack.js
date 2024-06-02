@@ -21,7 +21,7 @@ import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
 import Routes from '../components/constants/Routes.js';
 
-export default function SearchHeaderBack({ search, username, userIcon, userProfile, back }) {
+export default function SearchHeaderBack({ search, username, userIcon, userProfile, back, placeholder, onSearchChange, onSubmit}) {
     const navigation = useNavigation();
     const { userProfileImg } = useUser();
     const [, setForceUpdate] = useState(false);
@@ -45,7 +45,13 @@ export default function SearchHeaderBack({ search, username, userIcon, userProfi
                         <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
                     </Pressable>
                     <Input w="70%" bg={colors.white}  size="sm" borderRadius={20} left={3} h={40} >
-                        <InputField placeholder="Search" />
+                    <InputField
+                        placeholder={placeholder}
+                        value={search}
+                        onChangeText={onSearchChange}
+                        onSubmitEditing={onSubmit}
+                        fontFamily={fonts.regular}
+                    />
                         <InputSlot>
                             <InputIcon>
                                 <MaterialCommunityIcons name="magnify" color={colors.primary} size={15} right={15} />
