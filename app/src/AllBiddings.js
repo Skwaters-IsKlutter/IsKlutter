@@ -11,7 +11,7 @@ import {
     ScrollView,
     Button
 } from '@gluestack-ui/themed';
-import { getFirestore, getDocs, collection, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { getFirestore, getDocs, collection, query, where, deleteDoc, doc, toLowerCase } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_APP } from '../../config/firebase';
 
@@ -33,7 +33,7 @@ export default function AllBiddingsPage() {
     const [highestBidders, setHighestBidders] = useState({});
     const [biddingData, setBiddingData] = useState({});
     const [forceRender, setForceRender] = useState(false); // State to trigger re-renders
-    const [searchInput, setSearchInput] = useState(''); // Search input state
+    const [searchInput, setSearchInput] = useState('');
 
     const fetchListings = async () => {
         console.log("Fetching listings...");
@@ -80,24 +80,44 @@ export default function AllBiddingsPage() {
         });
         setBiddingData(biddingData);
         console.log("Bidding data fetched:", biddingData);
-    };
+    };    
 
     const handleBiddingClick = (listingId) => {
-        console.log("Navigating to bidding page for listingId:", listingId);
+        console.log("Navigating to bidding page for listingId:", listingId);    
         navigation.navigate(Routes.SPECIFICBIDDING, { listingId });
         setForceRender(prev => !prev); // Force re-render
     };
 
-    const handleDeleteBidding = async (listingId) => {
-        try {
-            await deleteDoc(doc(db, 'listings', listingId));
-            setForceRender(prev => !prev); // Force re-render
-            console.log(`Deleted listing with id: ${listingId}`);
-        } catch (error) {
-            console.error("Error deleting listing:", error);
-            throw(error);
-        }
+    const handleSearchChange = (text) => {
+        setSearchInput(text.toLowerCase());
     };
+
+    const filteredBiddings = listings.filter((bidding) => {
+        if (bidding.sold) {
+            return false;
+        }
+        const listingName = bidding.listingName.toLowerCase();
+    
+        // Check if the search input matches the listing name
+        if (listingName.includes(searchInput)) {
+            return true;
+        }
+    
+        // Check if the bidding price falls within the specified range
+        const searchPriceMatch = searchInput.match(/^(\d+)-(\d+)$|^(\d+)$/);
+        if (searchPriceMatch) {
+            const minPrice = searchPriceMatch[1] ? parseInt(searchPriceMatch[1], 10) : parseInt(searchPriceMatch[3], 10);
+            const maxPrice = searchPriceMatch[2] ? parseInt(searchPriceMatch[2], 10) : minPrice + 99;
+            const biddingPrice = parseInt(bidding.listingPrice, 10);
+    
+            if (biddingPrice >= minPrice && biddingPrice <= maxPrice) {
+                return true;
+            }
+        }
+    
+        // If no match found, exclude this bidding
+        return false;
+    });     
 
     const fetchHighestBidders = async () => {
         console.log("Fetching highest bidders...");
@@ -147,32 +167,16 @@ export default function AllBiddingsPage() {
         fetchHighestBidders();
     }, [forceRender]);
 
-    const handleSearchChange = (text) => {
-        setSearchInput(text.toLowerCase());
-    };
+    const renderAllBiddings = () => {
+        console.log("Rendering biddings...");
 
-    const filteredListings = listings.filter((listing) => {
-        const listingName = listing.listingName.toLowerCase();
-        const searchPriceMatch = searchInput.match(/^(\d+)-(\d+)$|^(\d+)$/);
-        if (searchPriceMatch) {
-            const minPrice = searchPriceMatch[1] ? parseInt(searchPriceMatch[1], 10) : parseInt(searchPriceMatch[3], 10);
-            const maxPrice = searchPriceMatch[2] ? parseInt(searchPriceMatch[2], 10) : minPrice + 99;
-            const listingPrice = parseInt(listing.listingPrice, 10);
-
-            if (listingPrice >= minPrice && listingPrice <= maxPrice) {
-                return true;
-            }
+        if (filteredBiddings.length === 0) {
+            return <Text style={styles.endOfResults} fontFamily={fonts.semibold}>No Results Found</Text>;
         }
 
-        return (
-            listingName.includes(searchInput)
-        );
-    });
-
-    const renderAllBiddings = () => {
         return <>
             <VStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
-                {filteredListings.map(listing => (
+                {listings.map(listing => (
                     <BidItemCard
                         key={listing.id}
                         listingImage={listing.listingImageURL}
@@ -193,7 +197,7 @@ export default function AllBiddingsPage() {
                                     borderRadius={8}
                                     onPress={() => handleBiddingClick(listing.id)} // Pass the listing id to handleBiddingClick
                                 >
-                                    <Text color={colors.white} fontSize="$md" bold="true">Bid Now</Text>
+                                    <Text color={colors.white} fontSize="$md" fontFamily={fonts.bold}>Bid Now</Text>
                                 </Button>
                             </HStack>
                         )}
