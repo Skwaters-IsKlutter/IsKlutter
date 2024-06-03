@@ -222,14 +222,14 @@ export default function PrivateMessagePage() {
     return (
         <Box w="100%" h="100%">
             <SenderBox recipientName={recipient} back={navigation.goBack} />
-            <Box h="75%" width="100%">
+            <Box h="75%" width="100%" flex={1}>
                 <ScrollView>
                     <HStack space={0} flexWrap="wrap" m={10}>
                         {renderSpecificMessage()}
                     </HStack>
                 </ScrollView>
             </Box>
-            <HStack m={20} alignContent='center' justifyContent='space-between'>
+            <HStack m={20} alignContent='center' justifyContent='space-between' alignItems='center'>
                 <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" borderRadius={15}>
                     <InputField
                         multiline={true}
