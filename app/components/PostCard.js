@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useWindowDimensions } from 'react-native';
 
 import { Box, VStack, HStack, Text, Image, Pressable } from '@gluestack-ui/themed';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
@@ -14,6 +15,8 @@ export default function PostCard({ userId, description, toIndividualPost, timest
     const [username, setUsername] = useState('');
     const [userProfileImg, setUserProfileImg] = useState('');
     const isFocused = useIsFocused();
+    const { width } = useWindowDimensions(); // Get screen width
+    const cardWidth = (width - 50);
 
     // const { bold } = usePoppinsFonts();
 
@@ -49,6 +52,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     backgroundColor={colors.white}
                     borderRadius={10}
                     width={380}
+                    maxWidth={cardWidth}
                     maxHeight={300}
                     m={5}
                     pb={3}

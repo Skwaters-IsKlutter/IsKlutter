@@ -133,7 +133,7 @@ export default function CommunityPage() {
                     {/* <PostBox /> */}
                     <VStack space="xs" pb="$2">
                     <HStack space="xs" justifyContent="space-between" alignItems="center">
-                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-1}>
+                        <Text lineHeight={50} fontSize={40} color={colors.secondary} fontFamily={fonts.semibold} letterSpacing={-4}>
                             Community
                         </Text>
 
