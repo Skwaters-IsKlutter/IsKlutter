@@ -44,6 +44,7 @@ export default function AddBiddingForm( {
                             maxLength={biddingFormMaxLength}
                             numberOfLines={biddingFormLineNum}
                             onChangeText={handleInputChange}
+                            fontFamily={fonts.regular}
                         />
                     </Input>
                 </FormControl>

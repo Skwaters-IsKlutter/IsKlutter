@@ -50,11 +50,10 @@ export default function ProfileCard({ userProfileImg, username, profileName, bio
       <VStack space="xs" pb="$2" mt={1} alignItems='center'>
         <HStack justifyContent="space-between" alignItems="center">
           <Text pt="$5" fontSize={20} color={colors.white} fontFamily={fonts.bold}>{profileName}</Text>
-          
         </HStack>
 
         {loading ? (
-          <Text>Loading...</Text>
+          <Text fontSize={13} fontFamily={fonts.regular} color={colors.white}>Loading...</Text>
         ) : (
           <>
             <HStack justifyContent="space-between" alignItems="center" >

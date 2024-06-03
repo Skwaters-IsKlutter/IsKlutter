@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Alert, Image, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
 import {
     VStack,
     Box,
@@ -26,6 +26,10 @@ import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
 
 export default function EditProfileScreen({ route, navigation }) {
+    LogBox.ignoreLogs([
+        'Non-serializable values were found in the navigation state',
+    ]);
+
     const [loadingSave, setLoadingSave] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState(false);
     const { username, profileName, bio, userID, userProfileImg } = route.params;

@@ -34,11 +34,11 @@ import { collection, doc, query, where, getDocs, setDoc } from 'firebase/firesto
 import { storage, storageRef, uploadBytes, database, auth } from '../../config/firebase';
 import { getDownloadURL } from 'firebase/storage';
 
-import AddListingBox from '../components/AddListingBox.js';
+import AddBiddingBox from '../components/AddBiddingBox.js';
+import BackHeader from '../components/BackHeader.js';
 
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
-import AddBiddingBox from '../components/AddBiddingBox';
 
 export default function AddListingPage() {
     const navigation = useNavigation();
@@ -172,19 +172,11 @@ export default function AddListingPage() {
     return (
         <Box w="100%" h="100%">
             {/* Header */}
-            <Box backgroundColor={colors.primary}>
-                <HStack p="$2" w="100%" mt={25} alignItems="center">
-                    <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-                    </Pressable>
-                    <Text lineHeight={50} fontSize={25} color={colors.white} m={10} fontFamily={fonts.semibold}>
-                        Bid
-                    </Text>
-                </HStack>
-            </Box>
+            <BackHeader headerText="Post Bid" />
 
-            <Box w="100%" flex={1} p="$3">
+            <Box w="100%" flex={1}>
                 <ScrollView>
+                    <VStack>
                     <Box>
                         <VStack space="xs">
                             <AddBiddingBox
@@ -197,45 +189,48 @@ export default function AddListingPage() {
                             />
                         </VStack>
                     </Box>
-                    <Box p={10} top={-30}>
-                        <Text color={colors.secondary} fontWeight={600} fontFamily={fonts.bold}>Select Bid Time</Text>
-                        <Select onValueChange={(value) => { handleBiddingTimeChange(value); }}>
-                            <SelectTrigger bg={colors.white} >
-                                <SelectInput  placeholder="Select Time" />
-                            </SelectTrigger>
-                            <SelectPortal>
-                                <SelectBackdrop />
-                                <SelectContent>
-                                    <SelectDragIndicatorWrapper>
-                                        <SelectDragIndicator />
-                                    </SelectDragIndicatorWrapper>
-                                    <SelectItem label="1 day" value={1} />
-                                    <SelectItem label="2 days" value={2} />
-                                    <SelectItem label="3 days" value={3} />
-                                    <SelectItem label="4 days" value={4} />
-                                    <SelectItem label="5 days" value={5} />
-                                </SelectContent>
-                            </SelectPortal>
-                        </Select>
-                    </Box>
+                    <Box p="$3" top={-50}>
+                        <Box p="$3" >
+                            <Text color={colors.secondary} fontWeight={600} fontFamily={fonts.bold} >Select Bid Time</Text>
+                            <Select onValueChange={(value) => { handleBiddingTimeChange(value);}}>
+                                <SelectTrigger bg={colors.white}  >
+                                    <SelectInput fontFamily={fonts.regular}   placeholder="Select Time" />
+                                </SelectTrigger>
+                                <SelectPortal>
+                                    <SelectBackdrop />
+                                    <SelectContent>
+                                        <SelectDragIndicatorWrapper>
+                                            <SelectDragIndicator />
+                                        </SelectDragIndicatorWrapper>
+                                        <SelectItem label="1 day" value={1}  />
+                                        <SelectItem label="2 days" value={2} />
+                                        <SelectItem label="3 days" value={3} />
+                                        <SelectItem label="4 days" value={4} />
+                                        <SelectItem label="5 days" value={5} />
+                                    </SelectContent>
+                                </SelectPortal>
+                            </Select>
+                        </Box>
 
-                    <Box p={10} top={-30}>
-                        <FormControl>
-                            <FormControlLabel mb="$1">
-                                <FormControlLabelText color={colors.secondary} fontWeight={600}  fontFamily={fonts.bold}>Bidding Increment</FormControlLabelText>
-                            </FormControlLabel>
-                            <Input w="100%" bg={colors.white} h='$10' borderRadius={10}>
-                                <InputField
-                                    value={bidIncrement}
-                                    onChangeText={(text) => setBidIncrement(text)}
-                                    keyboardType="numeric"
-                                    placeholder="Enter bidding increment"
-                                />
-                            </Input>
-                        </FormControl>
+                        <Box  p="$3">
+                            <FormControl>
+                                <FormControlLabel mb="$1">
+                                    <FormControlLabelText color={colors.secondary} fontWeight={600}  fontFamily={fonts.bold}>Bidding Increment</FormControlLabelText>
+                                </FormControlLabel>
+                                <Input w="100%" bg={colors.white} h='$10' borderRadius={10}>
+                                    <InputField
+                                        value={bidIncrement}
+                                        onChangeText={(text) => setBidIncrement(text)}
+                                        keyboardType="numeric"
+                                        placeholder="Enter bidding increment"
+                                        fontFamily={fonts.regular} 
+                                    />
+                                </Input>
+                            </FormControl>
+                        </Box>
                     </Box>
-
-                    <HStack p="$2" justifyContent="center" mb={10}>
+                    
+                    <HStack p="$2" justifyContent="center" mb={10} top={-20}>
                         <Button
                             variant="solid"
                             size="md"
@@ -261,6 +256,8 @@ export default function AddListingPage() {
                             </ButtonText>
                         </Button>
                     </HStack>
+                    </VStack>
+
                 </ScrollView>
             </Box>
         </Box>

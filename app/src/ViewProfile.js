@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Box, ScrollView, Heading, Text, HStack, VStack, Pressable } from '@gluestack-ui/themed';
 
@@ -12,6 +12,7 @@ import { database } from '../../config/firebase';
 import SearchHeaderBack from '../components/SearchHeaderBack.js';
 import fonts from '../config/fonts.js';
 import BackHeader from '../components/BackHeader.js';
+import { useWindowDimensions } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ViewProfile() {
@@ -20,6 +21,15 @@ export default function ViewProfile() {
     const [sellerProfile, setSellerProfile] = useState(null);
     const [userListings, setUserListings] = useState([]);
     const [userBiddings, setUserBiddings] = useState([]);
+    const { height } = useWindowDimensions();
+    const [viewCardHeight, setViewCardHeight] = useState(0);
+
+    const handleViewCardLayout = useCallback((event) => {
+        const { height } = event.nativeEvent.layout;
+        setViewCardHeight(height);
+    }, []);
+
+    const boxHeight = viewCardHeight + 70;
 
     useEffect(() => {
         const sellerID = route.params?.sellerID;
@@ -64,7 +74,7 @@ export default function ViewProfile() {
         fetchSellerListings();
     }, [route.params]);
 
-    const renderListings = (listings) => {
+    const renderListings = (listings, isBidding) => {
         return listings.map((item) => {
             const firstTag = item.listingTags && item.listingTags.length > 0 ? item.listingTags[0] : null;
 
@@ -76,7 +86,13 @@ export default function ViewProfile() {
                     productName={item.listingName}
                     productSeller={sellerProfile?.username}
                     tags={firstTag}
-                    toListing={() => navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg, sellerName: sellerProfile?.username })}
+                    toListing={() => {
+                        if (isBidding) {
+                            navigation.navigate(Routes.SPECIFICBIDDING, { listingId: item.id });
+                        } else {
+                            navigation.navigate(Routes.LISTINGS, { selectedItem: item, sellerImageURL: sellerProfile?.userProfileImg, sellerName: sellerProfile?.username });
+                        }
+                    }}
                 />
             );
         });
@@ -92,67 +108,74 @@ export default function ViewProfile() {
 
     return (
         <Box w="100%" h="100%">
-            <VStack>
-                <HStack p="$3" w="100%" mt={25} alignItems="center">
-                    <Pressable onPress={navigation.goBack}>
-                        <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
-                    </Pressable>
-                </HStack>
-            </VStack>
+        <VStack>
+            <HStack p="$3" w="100%" mt={25} alignItems="center">
+                <Pressable onPress={navigation.goBack}>
+                    <MaterialCommunityIcons name="arrow-left-bold" color={colors.white} size={30} p={5} />
+                </Pressable>
+            </HStack>
+        </VStack>
 
-            <Box height="45%" w="100%" bg={colors.primary} position='absolute' zIndex={-100} borderBottomLeftRadius={50} borderBottomRightRadius={50} />
+        <Box
+            height={boxHeight} w="100%"
+            bg={colors.primary}
+            position="absolute"
+            zIndex={-100}
+            borderBottomLeftRadius={50}
+            borderBottomRightRadius={50}
+        />
 
-            <VStack>
-                <Box w="100%" flex={1} zIndex={1} position='absolute'>
-                    {sellerProfile && (
-                        <ViewProfileCard
-                            userProfileImg={sellerProfile.userProfileImg}
-                            username={sellerProfile.username}
-                            profileName={sellerProfile.userProfile || sellerProfile.username}
-                            bio={sellerProfile.userBio || "I have no interesting info."}
-                            userID={sellerProfile.userID}
-                        />
-                    )}
-                </Box>
+        <VStack>
+            <Box w="100%" flex={1} zIndex={1} position="absolute" onLayout={handleViewCardLayout}>
+                {sellerProfile && (
+                    <ViewProfileCard
+                        userProfileImg={sellerProfile.userProfileImg}
+                        username={sellerProfile.username}
+                        profileName={sellerProfile.userProfile || sellerProfile.username}
+                        bio={sellerProfile.userBio || "I have no interesting info."}
+                        userID={sellerProfile.userID}
+                    />
+                )}
+            </Box>
 
-                <Box p="$3" w="100%" height="100%">
-                    <ScrollView mt={400} mb={60}>
-                        <Box p="$2" h="100%">
-                            <VStack>
-                                {/* User Listings */}
-                                <HStack p={5} alignItems="center" borderRadius={30}>
-                                    <MaterialCommunityIcons
-                                        name="view-grid"
-                                        color={colors.secondary}
-                                        size={25}
-                                    />
-                                    <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
-                                        {sellerProfile?.username}'s Listings
-                                    </Text>
-                                </HStack>
-                                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userListings.length > 0 ? "space-between" : "center"}>
-                                    {userListings.length > 0 ? renderListings(userListings) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active listings</Text>}
-                                </HStack>
+            <Box p="$3" w="100%" height="100%">
+                <ScrollView mt={viewCardHeight} mb={60}>
+                    <Box p="$2" h="100%">
+                        <VStack>
+                            {/* User Listings */}
+                            <HStack p={5} alignItems="center" borderRadius={30}>
+                                <MaterialCommunityIcons
+                                    name="view-grid"
+                                    color={colors.secondary}
+                                    size={25}
+                                />
+                                <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
+                                    {sellerProfile?.username}'s Listings
+                                </Text>
+                            </HStack>
+                            <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userListings.length > 0 ? "space-between" : "center"}>
+                                {userListings.length > 0 ? renderListings(userListings, false) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active listings</Text>}
+                            </HStack>
 
-                                {/* User Biddings */}
-                                <HStack p={5} alignItems="center" borderRadius={30}>
-                                    <MaterialCommunityIcons
-                                        name="view-grid"
-                                        color={colors.secondary}
-                                        size={25}
-                                    />
-                                    <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
-                                        {sellerProfile?.username}'s Biddings
-                                    </Text>
-                                </HStack>
-                                <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userBiddings.length > 0 ? "space-between" : "center"}>
-                                    {userBiddings.length > 0 ? renderListings(userBiddings) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active biddings</Text>}
-                                </HStack>
-                            </VStack>
-                        </Box>
-                    </ScrollView>
-                </Box>
-            </VStack >
-        </Box >
+                            {/* User Biddings */}
+                            <HStack p={5} alignItems="center" borderRadius={30}>
+                                <MaterialCommunityIcons
+                                    name="view-grid"
+                                    color={colors.secondary}
+                                    size={25}
+                                />
+                                <Text fontSize={20} mt="$2" color={colors.secondary} pl={10} fontFamily={fonts.semibold}>
+                                    {sellerProfile?.username}'s Biddings
+                                </Text>
+                            </HStack>
+                            <HStack space="xs" w="100%" flexWrap="wrap" justifyContent={userBiddings.length > 0 ? "space-between" : "center"}>
+                                {userBiddings.length > 0 ? renderListings(userBiddings, true) : <Text style={styles.empty} fontFamily={fonts.semibold}>{sellerProfile?.username} has no active biddings</Text>}
+                            </HStack>
+                        </VStack>
+                    </Box>
+                </ScrollView>
+            </Box>
+        </VStack>
+    </Box>
     );
 }
