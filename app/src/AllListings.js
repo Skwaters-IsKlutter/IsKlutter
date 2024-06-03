@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { HStack, VStack, Box, ScrollView, Button, ButtonIcon, ButtonText, Text } from '@gluestack-ui/themed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { collection, getDocs, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot, query, where, doc, updateDoc, toLowerCase } from 'firebase/firestore';
 import { database } from '../../config/firebase';
 import SearchHeader from '../components/SearchHeader.js';
 import ItemCard from '../components/ItemCard.js';
@@ -96,24 +96,26 @@ export default function AllListingsPage() {
 
         return (
             <>
-                <HStack flexWrap='wrap' justifyContent='space-between'>
-                    {filteredListings.map((item) => (
-                        <ItemCard
-                            key={item.id}
-                            productImage={item.listingImageURL}
-                            productPrice={item.listingPrice}
-                            productName={item.listingName}
-                            productSeller={item.username}
-                            sellerID={item.sellerID}
-                            tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
-                            toListing={() => navigation.navigate(Routes.LISTINGS, {
-                                selectedItem: item,
-                                sellerImageURL: item.sellerImageURL
-                            })}
-                        />
-                    ))}
-                </HStack>
-                <Text style={styles.endOfResults} fontFamily={fonts.semibold}>End of Results</Text>
+                <VStack justifyContent='space-between'>
+                    <HStack flexWrap='wrap' justifyContent='space-between'>
+                        {filteredListings.map((item) => (
+                            <ItemCard
+                                key={item.id}
+                                productImage={item.listingImageURL}
+                                productPrice={item.listingPrice}
+                                productName={item.listingName}
+                                productSeller={item.username}
+                                sellerID={item.sellerID}
+                                tags={item.listingTags.length > 0 ? item.listingTags[0] : null}
+                                toListing={() => navigation.navigate(Routes.LISTINGS, {
+                                    selectedItem: item,
+                                    sellerImageURL: item.sellerImageURL
+                                })}
+                            />
+                        ))}
+                    </HStack>
+                    <Text style={styles.endOfResults} fontFamily={fonts.semibold} alignSelf="center">End of Results</Text>
+                </VStack>
             </>
         );
     };

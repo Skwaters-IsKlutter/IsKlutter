@@ -97,51 +97,59 @@ export default function PrivateMessagePage() {
         }
     };
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                if (!auth || !auth.currentUser || !recipient) {
-                    return;
-                }
-
-                const user = auth.currentUser;
-                const loggedInUsername = username;
-
-                const messagesCollection = collection(db, 'Messages');
-                const messagesSnapshot = await getDocs(messagesCollection);
-
-                const filteredMessages = [];
-
-                messagesSnapshot.forEach((doc) => {
-                    const messageData = doc.data();
-                    const sender = messageData.sender;
-                    const currentRecipient = messageData.recipient;
-                    const message = messageData.message;
-                    const timestamp = messageData.timestamp; 
-
-                    const currentUserSent = sender === loggedInUsername && currentRecipient === recipient;
-                    const recipientSent = sender === recipient && currentRecipient === loggedInUsername;
-
-                    if (currentUserSent || recipientSent) {
-                        filteredMessages.push({
-                            id: doc.id, // Store the document ID
-                            sender: sender,
-                            message: message,
-                            currentUserSent: currentUserSent, 
-                            timestamp: timestamp 
-                        });
-                    }
-                });
-
-                const sortedMessages = filteredMessages.sort((a, b) => a.timestamp - b.timestamp);
-
-                setMessages(sortedMessages); 
-            } catch (error) {
-                console.error('Error fetching messages:', error.message);
+    const fetchMessages = async () => {
+        try {
+            if (!auth || !auth.currentUser || !recipient) {
+                return;
             }
-        };
 
+            const user = auth.currentUser;
+            const loggedInUsername = username;
+
+            const messagesCollection = collection(db, 'Messages');
+            const messagesSnapshot = await getDocs(messagesCollection);
+
+            const filteredMessages = [];
+
+            messagesSnapshot.forEach((doc) => {
+                const messageData = doc.data();
+                const sender = messageData.sender;
+                const currentRecipient = messageData.recipient;
+                const message = messageData.message;
+                const timestamp = messageData.timestamp; 
+
+                const currentUserSent = sender === loggedInUsername && currentRecipient === recipient;
+                const recipientSent = sender === recipient && currentRecipient === loggedInUsername;
+
+                if (currentUserSent || recipientSent) {
+                    filteredMessages.push({
+                        id: doc.id, // Store the document ID
+                        sender: sender,
+                        message: message,
+                        currentUserSent: currentUserSent, 
+                        timestamp: timestamp 
+                    });
+                }
+            });
+
+            const sortedMessages = filteredMessages.sort((a, b) => a.timestamp - b.timestamp);
+
+            setMessages(sortedMessages); 
+            console.log('Messages fetched and sorted: ', sortedMessages);
+        } catch (error) {
+            console.error('Error fetching messages:', error.message);
+        }
+    };
+
+    useEffect(() => {
         fetchMessages();
+
+        const interval = setInterval(() => {
+            fetchMessages();
+            console.log('Messages refreshed');
+        }, 5000);
+
+        return () => clearInterval(interval);
     }, [auth, recipient, username]);
 
     const handleDeleteMessage = async (messageId) => {
@@ -149,6 +157,7 @@ export default function PrivateMessagePage() {
             await deleteDoc(doc(db, 'Messages', messageId));
             setMessages(prevMessages => prevMessages.filter(message => message.id !== messageId));
             setSelectedMessage(null);
+            console.log('Message deleted with ID: ', messageId);
         } catch (error) {
             console.error('Error deleting message: ', error);
         }
@@ -222,14 +231,14 @@ export default function PrivateMessagePage() {
     return (
         <Box w="100%" h="100%">
             <SenderBox recipientName={recipient} back={navigation.goBack} />
-            <Box h="75%" width="100%">
+            <Box h="75%" width="100%" flex={1}>
                 <ScrollView>
                     <HStack space={0} flexWrap="wrap" m={10}>
                         {renderSpecificMessage()}
                     </HStack>
                 </ScrollView>
             </Box>
-            <HStack m={20} alignContent='center' justifyContent='space-between'>
+            <HStack m={20} alignContent='center' justifyContent='space-between' alignItems='center'>
                 <Input bg={colors.white} borderColor={colors.secondary} h={50} w="80%" borderRadius={15}>
                     <InputField
                         multiline={true}

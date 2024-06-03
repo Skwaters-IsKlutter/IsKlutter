@@ -7,11 +7,12 @@ import {
     Heading,
     Image,
 } from '@gluestack-ui/themed';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
 
-export default function SpecificBidCard({ listingName, listingPrice, highestBidderName, highestBiddingPrice, remainingTime, listingImage, bidIncrement }) {
+export default function SpecificBidCard({ listingName, listingPrice, highestBidderName, highestBiddingPrice, remainingTime, listingImage, bidIncrement, productSeller }) {
     return (
         <Box p="$3" w="100%" bg={colors.white}>
             <VStack space="md" p="$2">
@@ -27,10 +28,14 @@ export default function SpecificBidCard({ listingName, listingPrice, highestBidd
                 )}
             </VStack>
 
-            <VStack space="md" p="$2">
+            <VStack p="$2">
                 <HStack w="100%" justifyContent="space-between">
                     <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.primary}>{listingName}</Text>
                     <Text fontFamily={fonts.bold} fontSize="$lg" color={colors.secondary}>{`PHP ${listingPrice}`}</Text>
+                </HStack>
+                <HStack w="100%" alignItems="center">
+                    <MaterialCommunityIcons name="account" size={15} mr={2} color={colors.primary} />   
+                    <Text fontFamily={fonts.semibold} fontSize="$md" color={colors.gray} pl={5}>{productSeller}</Text>
                 </HStack>
             </VStack>
 

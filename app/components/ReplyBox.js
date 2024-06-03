@@ -3,6 +3,7 @@ import { TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Box, Text, VStack, HStack, Image } from '@gluestack-ui/themed';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import Routes from '../components/constants/Routes.js';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
@@ -41,7 +42,7 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
     }, [replyUser]);
 
     if (loading) {
-        return <Text>Loading...</Text>;
+        return <Text fontStyle={fonts.regular}>Loading...</Text>;
     }
 
     return (
@@ -54,10 +55,10 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
                         </TouchableOpacity>
 
                     <VStack  width="90%"  m="$2"  >
-                        <Text color={colors.secondary} fontSize="$md" fontWeight="$bold" >{userData?.username}</Text>
+                        <Text color={colors.secondary} fontSize="$md"  fontFamily={fonts.semibold}>{userData?.username}</Text>
                         <HStack space="sm">
-                            <Text color={colors.gray} fontSize="$xs">{replyDate}</Text>
-                            <Text color={colors.gray} fontSize="$xs">{replyTime}</Text>
+                            <Text color={colors.black} fontSize="$xs" fontFamily={fonts.regular}>{replyDate}</Text>
+                            <Text color={colors.black} fontSize="$xs" fontFamily={fonts.regular}>{replyTime}</Text>
                         </HStack>
                         <HStack space="sm" justifyContent="center" alignItems="center">
                             <ScrollView style={{ flex: 1, maxHeight: 100 }}>
@@ -67,6 +68,7 @@ const ReplyBox = ({ replyText, replyUser, replyDate, replyTime }) => {
                                         value={commentText}
                                         onChangeText={(text) => setCommentText(text)}
                                         style={{ minHeight: 30 }}
+                                        fontFamily={fonts.regular}
                                     />
                                 </Box>
                             </ScrollView>

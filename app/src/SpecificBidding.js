@@ -44,7 +44,7 @@ export default function SpecificBiddingPage() {
     const [listingImage, setListingImage] = useState(null);
     const [bidIncrement, setBidIncrement] = useState(10);
     const [remainingTime, setRemainingTime] = useState('');
-    const [endTime, setEndTimeDate] = useState('');
+    const [endTime, setEndTimeDate] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -65,7 +65,7 @@ export default function SpecificBiddingPage() {
                 return null;
             }
         } catch (error) {
-            throw(error);
+            throw (error);
         }
     };
 
@@ -81,9 +81,8 @@ export default function SpecificBiddingPage() {
                     }
                 }
             } catch (error) {
-                // Handle error
                 console.log("Failed to fetch listing image.")
-                throw(error);
+                throw (error);
             }
         };
 
@@ -98,12 +97,12 @@ export default function SpecificBiddingPage() {
                 return;
             }
 
-            if (biddingBet < listing.listingPrice + bidIncrement) {
-                Alert.alert('Invalid Bid', `Your bid must be PHP ${bidIncrement} higher than the starting bid.`);
+            if (biddingBet < listing.listingPrice) {
+                Alert.alert('Invalid Bid', `Your bid must be higher than PHP ${listing.listingPrice}`);
                 return;
             }
 
-            if (biddingBet < highestBiddingPrice + bidIncrement) {  // Use dynamic bidIncrement
+            if (biddingBet < highestBiddingPrice + bidIncrement) {
                 Alert.alert('Invalid Bid', `Your bid must be PHP ${bidIncrement} higher than the current highest bid.`);
                 return;
             }
@@ -119,8 +118,6 @@ export default function SpecificBiddingPage() {
                 listingName: listingName,
                 listingPrice: listingPrice
             });
-
-            // updateHighestBidder(username, biddingBet);
 
             const querySnapshot = await getDocs(query(biddingCollection, where('listingName', '==', listingName)));
             let newHighestBiddingPrice = 0;
@@ -143,10 +140,13 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice: newHighestBiddingPrice
             }));
 
+            fetchBiddingData();
             Alert.alert('Bid Successful', `Your bid of PHP ${biddingBet} has been placed successfully.`);
 
+            setBiddingAmount('');
+
         } catch (error) {
-            throw(error);
+            throw (error);
         }
     };
 
@@ -175,7 +175,6 @@ export default function SpecificBiddingPage() {
                     highestBiddingPrice: maxBiddingPrice
                 }));
             } catch (error) {
-                // Handle error
                 Alert.alert("Error", "Failed to fetch bidding data.");
                 throw (error);
             }
@@ -184,6 +183,21 @@ export default function SpecificBiddingPage() {
         fetchBiddingData();
     }, [listingId, listing, highestBidderName, highestBiddingPrice]);
 
+    const fetchBiddingData = async () => {
+        try {
+            const biddingCollection = collection(db, 'bidding');
+            const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
+            const data = querySnapshot.docs.map(doc => doc.data());
+
+            // Sort the data by biddingPrice in descending order
+            data.sort((a, b) => b.biddingPrice - a.biddingPrice);
+
+            setBiddingData(data);
+        } catch (error) {
+            Alert.alert('Error', 'Failed to fetch bidding data.');
+        }
+    };
+
     useEffect(() => {
         const fetchListing = async () => {
             try {
@@ -191,48 +205,54 @@ export default function SpecificBiddingPage() {
                 const querySnapshot = await getDocs(query(listingsCollection, where('key', '==', listingId)));
                 if (!querySnapshot.empty) {
                     const listingData = querySnapshot.docs[0].data();
-                    const { listingName, listingPrice, bidIncrement, sellerID } = listingData;
-                    setListing({ listingName, listingPrice, bidIncrement, sellerID, remainingTime, endTime });
-      
-                    const endTimeDate = setEndTimeDate(new Date(endTime.seconds * 1000));
-                    
-                    const now = new Date();
-                    const timeDifference = endTimeDate - now;
+                    const { listingName, listingPrice, bidIncrement, sellerID, endTime, productSeller } = listingData;
+                    setListing({ listingName, listingPrice, bidIncrement, sellerID, endTime, productSeller });
 
-                    if (timeDifference > 0) {
-                        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        setRemainingTime(`${days} days ${hours} hours`);
-                    } else {
-                        setRemainingTime('Bidding has ended.');
-                    }
+                    const endTimeDate = new Date(endTime.seconds * 1000);
+                    setEndTimeDate(endTimeDate);
                 } else {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
             } catch (error) {
-                throw(error);
+                throw (error);
             }
         };
 
-        const fetchBiddingData = async () => {
-            try {
-                const biddingCollection = collection(db, 'bidding');
-                const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
-                const data = querySnapshot.docs.map(doc => doc.data());
-                setBiddingData(data);
-            } catch (error) {
-                Alert.alert('Error', 'Failed to fetch bidding data.');
-            }
-        };
 
         fetchListing();
         fetchBiddingData();
     }, [listingId]);
 
+    useEffect(() => {
+        const updateRemainingTime = () => {
+            if (!endTime) return;
+
+            const now = new Date();
+            const timeDifference = endTime - now;
+
+            if (timeDifference > 0) {
+                const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                if (days > 0) {
+                    setRemainingTime(`${days}d ${hours}h remaining`);
+                } else {
+                    setRemainingTime(`${hours}h remaining`);
+                }
+            } else {
+                setRemainingTime('Bidding has ended.');
+            }
+        };
+
+        updateRemainingTime();
+        const intervalId = setInterval(updateRemainingTime, 1000 * 60); // Update every minute
+
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, [endTime]);
+
     const handleDelete = async () => {
         Alert.alert(
             'Delete Listing',
-            'Are you sure you want to delete this listing?',
+            'Are you sure you want to delete this bidding?',
             [
                 {
                     text: 'Cancel',
@@ -245,10 +265,10 @@ export default function SpecificBiddingPage() {
                         try {
                             const listingRef = doc(db, 'listings', listingId);
                             await deleteDoc(listingRef);
-                            Alert.alert('Deleted', 'The listing has been deleted.');
+                            Alert.alert('Deleted', 'The bidding has been deleted.');
                             navigation.goBack();
                         } catch (error) {
-                            Alert.alert('Error', 'Failed to delete the listing. Please try again later.');
+                            Alert.alert('Error', 'Failed to delete the bidding. Please try again later.');
                         }
                     }
                 }
@@ -266,6 +286,7 @@ export default function SpecificBiddingPage() {
                 highestBiddingPrice={highestBiddingPrice}
                 listingImage={listingImage}
                 bidIncrement={bidIncrement}
+                productSeller={listing.productSeller}
             />
         )
     };
@@ -281,13 +302,13 @@ export default function SpecificBiddingPage() {
             ))
         ) : (
             <Text p="$3" fontFamily={fonts.regular}>No bids yet</Text>
-        )
+        );
     };
 
     return (
         <Box w="100%" h="100%">
             <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Bid Details" />
-            <Box>
+            <ScrollView h="60%">
                 {currentUser && currentUser.uid === listing.sellerID && (
                     <Button
                         variant="solid"
@@ -307,38 +328,38 @@ export default function SpecificBiddingPage() {
                 )}
                 <VStack space="xs">
                     {renderSpecificBidding()}
+
+                    <HStack alignItems="center" justifyContent='space-around' p="$2">
+                        <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%">
+                            <InputField
+                                size="md"
+                                value={biddingAmount}
+                                keyboardType='numeric'
+                                placeholder="Place your bet amount in PHP..."
+                                onChangeText={(text) => setBiddingAmount(text)}
+                                fontFamily={fonts.regular}
+                            />
+                        </Input>
+                        <Button
+                            variant="solid"
+                            size="md"
+                            bg={colors.primary}
+                            borderRadius={5}
+                            ml={3}
+                            onPress={() => handleBid(listingId, biddingAmount)}
+                        >
+                            <ButtonText fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</ButtonText>
+                        </Button>
+                    </HStack>
                 </VStack>
 
-                <HStack alignItems="center" justifyContent='space-around' p="$2">
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%">
-                        <InputField
-                            size="md"
-                            value={biddingAmount}
-                            keyboardType='numeric'
-                            placeholder="Place your bet amount in PHP..."
-                            onChangeText={(text) => setBiddingAmount(text)}
-                            fontFamily={fonts.regular}
-                        />
-                    </Input>
-                    <Button
-                        variant="solid"
-                        size="md"
-                        bg={colors.primary}
-                        borderRadius={5}
-                        ml={3}
-                        onPress={() => handleBid(listingId, biddingAmount)}
-                    >
-                        <ButtonText fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</ButtonText>
-                    </Button>
-                </HStack>
-
-                <Box maxHeight="33%" m="$3">
+                <Box m="$3" flex={1}>
                     <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
                     <ScrollView>
                         {renderAllBidderList()}
                     </ScrollView>
                 </Box>
-            </Box>
+            </ScrollView>
         </Box>
     );
 }

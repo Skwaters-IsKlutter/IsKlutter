@@ -122,7 +122,7 @@ export default function IndividualPostCard({ postKey, userId, description, times
                         </Text>
                     </VStack>
                 </HStack>
-                <Text color="black" pb="$3" fontSize="$xl" mt="$5" textAlign='justify'fontFamily={fonts.regular} >
+                <Text color="black" pb="$3" fontSize={16} mt="$5" textAlign='justify'fontFamily={fonts.regular} >
                     {description}
                 </Text>
             </VStack>

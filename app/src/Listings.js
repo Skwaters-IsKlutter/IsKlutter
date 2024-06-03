@@ -143,7 +143,7 @@ export default function ListingsPage() {
                 sold: true,
             });
             console.log(`Listing ${selectedItem.id} marked as sold.`);
-            Alert.alert("Success", "This item is now sold");
+            Alert.alert("Success", "This item is now marked as sold.");
         } catch (error) {
             console.error('Error updating listing as sold:', error);
         }

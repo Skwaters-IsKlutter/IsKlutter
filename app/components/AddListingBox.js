@@ -49,6 +49,7 @@ export default function AddListingBox({ listingName, listingPrice, listingDescri
                     listingFormPlaceholder="Select a Tag"
                     listingTags={listingTags} 
                     setListingData={setListingData}
+                    
                 />
 
             </Box>

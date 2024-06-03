@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Alert, Image, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
 import {
     VStack,
     Box,
@@ -26,6 +26,10 @@ import colors from '../config/colors.js';
 import fonts from '../config/fonts.js';
 
 export default function EditProfileScreen({ route, navigation }) {
+    LogBox.ignoreLogs([
+        'Non-serializable values were found in the navigation state',
+    ]);
+
     const [loadingSave, setLoadingSave] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState(false);
     const { username, profileName, bio, userID, userProfileImg } = route.params;
@@ -107,6 +111,24 @@ export default function EditProfileScreen({ route, navigation }) {
                 const userDocRef = userQuerySnapshot.docs[0].ref;
 
                 await updateDoc(userDocRef, updatedProfileData);
+
+                const messagesCollection = collection(database, 'Messages');
+
+                // Update sender username in messages where the current user is the sender
+                const senderMessagesQuery = query(messagesCollection, where('sender', '==', username));
+                const senderMessagesSnapshot = await getDocs(senderMessagesQuery);
+                senderMessagesSnapshot.forEach(async (doc) => {
+                    const messageDocRef = doc.ref;
+                    await updateDoc(messageDocRef, { sender: newUsername });
+                });
+
+                // Update recipient username in messages where the current user is the recipient
+                const recipientMessagesQuery = query(messagesCollection, where('recipient', '==', username));
+                const recipientMessagesSnapshot = await getDocs(recipientMessagesQuery);
+                recipientMessagesSnapshot.forEach(async (doc) => {
+                    const messageDocRef = doc.ref;
+                    await updateDoc(messageDocRef, { recipient: newUsername });
+                });
 
                 // Update the state with the new values
                 route.params.setUsername(newUsername);
@@ -258,6 +280,7 @@ export default function EditProfileScreen({ route, navigation }) {
                                 onChangeText={(text) => setNewUsername(text)}
                                 value={newUsername}
                                 fontFamily={fonts.regular}
+                                maxLength={16}
                             />
                         </Input>
                     </FormControl>

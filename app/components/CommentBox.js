@@ -20,6 +20,7 @@ import { Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUser } from '../components/UserIcon.js';
 import colors from '../config/colors.js';
+import fonts from '../config/fonts.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function CommentBox({ posterUserId, selectedItem }) {
@@ -69,6 +70,7 @@ export default function CommentBox({ posterUserId, selectedItem }) {
                         placeholder="Write a comment..."
                         value={commentText}
                         onChangeText={(text) => setCommentText(text)} 
+                        fontFamily={fonts.regular}
                         
                     />
                     </Input>

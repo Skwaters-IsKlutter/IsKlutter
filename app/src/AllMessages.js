@@ -30,36 +30,80 @@ const auth = getAuth();
 export default function AllMessagesPage({ user }) {
     const navigation = useNavigation();
     const [usernames, setUsernames] = useState([]);
+    const [username, setUsername] = useState([]);
     const [messages, setMessages] = useState([]);
     const [sender, setSender] = useState([]);
     const [userProfileImgs, setUserProfileImgs] = useState([]);
+    const [searchInput, setSearchInput] = useState([]);
 
 
     useEffect(() => {
-        const fetchAllUsernames = async () => {
+        const fetchUserData = async () => {
             try {
+                if (!auth || !auth.currentUser) {
+                    console.log('User not authenticated');
+                    return;
+                }
+    
+                const user = auth.currentUser;
+                const loggedInUserId = user.uid; // Get the UID of the authenticated user
+    
+                // Fetch the username based on the UID
                 const userCollection = collection(db, 'users');
-                const querySnapshot = await getDocs(userCollection);
-
+                const userQuerySnapshot = await getDocs(query(userCollection, where('userID', '==', loggedInUserId)));
+    
+                // Extract the username from the query result
+                const loggedInUsername = userQuerySnapshot.docs[0].data().username;
+    
+                // Set the username state variable
+                setUsername(loggedInUsername);
+    
+                // Fetch messages involving the current user
+                const messagesCollection = collection(db, 'Messages');
+                const messagesSnapshot = await getDocs(messagesCollection);
+    
+                const uniqueUsernames = new Set(); // Set to store unique usernames
+    
+                // Iterate through messages to get unique usernames
+                messagesSnapshot.forEach((doc) => {
+                    const messageData = doc.data();
+                    const sender = messageData.sender;
+                    const recipient = messageData.recipient;
+    
+                    // Add sender and recipient to the set if current user is involved in the conversation
+                    if (sender === loggedInUsername || recipient === loggedInUsername) {
+                        uniqueUsernames.add(sender !== loggedInUsername ? sender : recipient);
+                    }
+                });
+    
+                if (uniqueUsernames.size === 0) {
+                    return; // If no conversations found, exit early
+                }
+    
+                // Fetch user data only for the unique usernames
+                const uniqueUsernamesArray = Array.from(uniqueUsernames);
+                const userDataQuerySnapshot = await getDocs(query(userCollection, where('username', 'in', uniqueUsernamesArray)));
+    
                 const allUsernames = [];
-                const allUserProfileImgs = []; // Array to store profile image URLs
-
-                querySnapshot.forEach((doc) => {
+                const allUserProfileImgs = [];
+    
+                userDataQuerySnapshot.forEach((doc) => {
                     const userData = doc.data();
                     allUsernames.push(userData.username);
-                    allUserProfileImgs.push(userData.userProfileImg); // Pushing the userProfileImg URL to the array
+                    allUserProfileImgs.push(userData.userProfileImg);
                 });
-
+    
+                // Set the usernames and user profile images state variables
                 setUsernames(allUsernames);
-                setUserProfileImgs(allUserProfileImgs); // Setting the state for profile image URLs
+                setUserProfileImgs(allUserProfileImgs);
             } catch (error) {
                 console.error('Error fetching user data:', error.message);
             }
         };
-
-        fetchAllUsernames();
+    
+        fetchUserData();
     }, []);
-
+    
 
     useEffect(() => {
         const fetchAllsender = async () => {
@@ -138,40 +182,54 @@ export default function AllMessagesPage({ user }) {
 
     const handleSearchChange = (text) => {
         setSearchInput(text.toLowerCase());
+        // Clear the userProfileImgs state
     };
+    
 
     const renderUsernames = () => {
-        return usernames.map((username, index) => (
-            <TouchableOpacity key={index} onPress={() => handleUsernameClick(username, userProfileImgs[index])}>
-                <ScrollView>
-                    <VStack width={380} backgroundColor={colors.white} m={5}>
-                        <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 5 }}>
-                            <HStack>
-                                {userProfileImgs[index] && typeof userProfileImgs[index] === 'string' ? (
-                                    <Image
-                                        source={{ uri: userProfileImgs[index] }}
-                                        h={50}
-                                        w={50}
-                                        alt="icon"
-                                        borderRadius={100}
-                                    />
-                                ) : (
-                                    <UserAvatar /> // Render a placeholder or default avatar component
-                                )}
-                                <Text p={10} fontFamily={fonts.semibold} lineHeight={30}>{username}</Text>
-                            </HStack>
-                        </View>
-                    </VStack>
-                </ScrollView>
-            </TouchableOpacity>
-        ));
+        // Filter usernames based on search input
+        const filteredUsernames = usernames.filter(username =>
+            username.toLowerCase().includes(searchInput)
+        );
+    
+        return filteredUsernames.map((username) => {
+            const userIndex = usernames.indexOf(username);
+            const userProfileImg = userProfileImgs[userIndex];
+    
+            return (
+                <TouchableOpacity key={username} onPress={() => handleUsernameClick(username, userProfileImg)}>
+                    <ScrollView>
+                        <VStack width={380} backgroundColor={colors.white} m={5}>
+                            <View style={{ justifyContent: 'center', fontSize: 10, margin: 5, padding: 5 }}>
+                                <HStack>
+                                    {userProfileImg && typeof userProfileImg === 'string' ? (
+                                        <Image
+                                            source={{ uri: userProfileImg }}
+                                            h={50}
+                                            w={50}
+                                            alt="icon"
+                                            borderRadius={100}
+                                        />
+                                    ) : (
+                                        <UserAvatar /> // Render a placeholder or default avatar component
+                                    )}
+                                    <Text p={10} fontFamily={fonts.semibold} lineHeight={30}>{username}</Text>
+                                </HStack>
+                            </View>
+                        </VStack>
+                    </ScrollView>
+                </TouchableOpacity>
+            );
+        });
     };
+    
+    
 
     return (
         <Box w="100%" h="100%">
             <SearchHeaderBack
                 userIcon={require('../../assets/img/usericon.jpg')}
-                placeholder="Search in listings"
+                placeholder="Search in messages"
                 onSearchChange={handleSearchChange}
             />
             <VStack space="xs" alignItems="left" p="$3" width="100%">

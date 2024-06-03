@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, query, where, getDocs, toLowerCase } from 'firebase/firestore';
 import { auth } from '../../config/firebase';
 import { FIREBASE_APP } from '../../config/firebase';
 
@@ -38,9 +38,16 @@ export default function SignupScreen() {
     const [loading, setLoading] = useState(false);
 
     const isUsernameUnique = async (username) => {
-        const q = query(collection(db, 'users'), where('username', '==', username));
+        const varUsername = username.toLowerCase();
+        const q = query(collection(db, 'users'), where('username', '==', varUsername));
         const usernameSnapshot = await getDocs(q);
         return usernameSnapshot.empty;
+    };
+    
+    const isEmailUnique = async (email) => {
+        const q = query(collection(db, 'users'), where('email', '==', email));
+        const emailSnapshot = await getDocs(q);
+        return emailSnapshot.empty;
     };
 
     const handleSignup = async () => {
@@ -48,13 +55,22 @@ export default function SignupScreen() {
             setLoading(true);
             setError(null);
 
+            const varUsername = username.toLowerCase();
+
             if (email && password && username && password === retypePassword) {
-                const uniqueUsername = await isUsernameUnique(username);
+                const uniqueUsername = await isUsernameUnique(varUsername);
+                const uniqueEmail = await isEmailUnique(email);
 
                 if (!email.includes('@up.edu.ph')) {
                     setError('Please use a valid email address with @up.edu.ph domain.');
                     setLoading(false);
                     Alert.alert("Signup Failed", "Please use a valid UP email address."); // Alert the user to use a valid email address
+                    return;
+                }
+
+                if (!uniqueEmail) {
+                    setError('Email is already taken. Please use a different one.');
+                    Alert.alert("Signup Failed", "Email is already taken. Please use a different one."); // Alert the user to use a different email address
                     return;
                 }
 
@@ -64,10 +80,25 @@ export default function SignupScreen() {
                     return;
                 }
 
+                if (username.length < 3 && username.length > 16) {
+                    setError('Error creating user. Username must be at least 3 characters long and 16 characters max.');
+                    Alert.alert("Signup Failed", "Invalid username. Please use a username with 3 or more characters.");
+                    return;
+                }
+
+                if (username.includes(' ')) {
+                    setError('Error creating user. Username must not contain spaces.');
+                    Alert.alert("Signup Failed", "Invalid username. Username must not contain spaces.");
+                    return;
+                }
+
                 if (!uniqueUsername) {
                     setError('Username is already taken. Please choose a different one.');
-                    Alert.alert("Signup Failed", "Username is already taken. Please choose a different one."); // Alert the user to use a different username
-                } else {
+                    Alert.alert("Signup Failed", "Username is already taken. Please choose a different one."); 
+                    return;
+                }
+                
+                 else {
                     const response = await createUserWithEmailAndPassword(auth, email, password);
                     const defaultImgURL = "https://firebasestorage.googleapis.com/v0/b/isklutterdb.appspot.com/o/profileImages%2Fprofile-holder.jpg?alt=media&token=c026e2ce-062b-4952-a5a3-8232cb3b85d5";
 
