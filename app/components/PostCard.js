@@ -49,7 +49,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     backgroundColor={colors.white}
                     borderRadius={10}
                     width={380}
-                    maxHeight={320}
+                    maxHeight={300}
                     m={5}
                     pb={3}
                     overflow="hidden"
@@ -73,7 +73,7 @@ export default function PostCard({ userId, description, toIndividualPost, timest
                     </HStack>
 
                     <VStack size="md">
-                        <Text color="black" pb="$3" size="lg" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7} fontFamily={fonts.regular}>
+                        <Text fontSize={16} color="black" pb="$3" ml="$3" mr={50} textAlign='justify' ellipsizeMode='tail' numberOfLines={7} fontFamily={fonts.regular}>
                             {description}
                         </Text>
                     </VStack>
