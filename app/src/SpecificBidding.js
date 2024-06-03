@@ -65,7 +65,7 @@ export default function SpecificBiddingPage() {
                 return null;
             }
         } catch (error) {
-            throw(error);
+            throw (error);
         }
     };
 
@@ -82,7 +82,7 @@ export default function SpecificBiddingPage() {
                 }
             } catch (error) {
                 console.log("Failed to fetch listing image.")
-                throw(error);
+                throw (error);
             }
         };
 
@@ -146,7 +146,7 @@ export default function SpecificBiddingPage() {
             setBiddingAmount('');
 
         } catch (error) {
-            throw(error);
+            throw (error);
         }
     };
 
@@ -188,15 +188,15 @@ export default function SpecificBiddingPage() {
             const biddingCollection = collection(db, 'bidding');
             const querySnapshot = await getDocs(query(biddingCollection, where('listingId', '==', listingId)));
             const data = querySnapshot.docs.map(doc => doc.data());
-    
+
             // Sort the data by biddingPrice in descending order
             data.sort((a, b) => b.biddingPrice - a.biddingPrice);
-    
+
             setBiddingData(data);
         } catch (error) {
             Alert.alert('Error', 'Failed to fetch bidding data.');
         }
-    };    
+    };
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -214,7 +214,7 @@ export default function SpecificBiddingPage() {
                     Alert.alert('Listing not found', 'The specified listing does not exist.');
                 }
             } catch (error) {
-                throw(error);
+                throw (error);
             }
         };
 
@@ -308,7 +308,7 @@ export default function SpecificBiddingPage() {
     return (
         <Box w="100%" h="100%">
             <BackHeader userIcon={require('../../assets/img/usericon.jpg')} back={navigation.goBack} headerText="Bid Details" />
-            <Box>
+            <ScrollView h="60%">
                 {currentUser && currentUser.uid === listing.sellerID && (
                     <Button
                         variant="solid"
@@ -328,38 +328,38 @@ export default function SpecificBiddingPage() {
                 )}
                 <VStack space="xs">
                     {renderSpecificBidding()}
+
+                    <HStack alignItems="center" justifyContent='space-around' p="$2">
+                        <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%">
+                            <InputField
+                                size="md"
+                                value={biddingAmount}
+                                keyboardType='numeric'
+                                placeholder="Place your bet amount in PHP..."
+                                onChangeText={(text) => setBiddingAmount(text)}
+                                fontFamily={fonts.regular}
+                            />
+                        </Input>
+                        <Button
+                            variant="solid"
+                            size="md"
+                            bg={colors.primary}
+                            borderRadius={5}
+                            ml={3}
+                            onPress={() => handleBid(listingId, biddingAmount)}
+                        >
+                            <ButtonText fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</ButtonText>
+                        </Button>
+                    </HStack>
                 </VStack>
 
-                <HStack alignItems="center" justifyContent='space-around' p="$2">
-                    <Input bg={colors.white} borderColor={colors.secondary} h={40} w="80%">
-                        <InputField
-                            size="md"
-                            value={biddingAmount}
-                            keyboardType='numeric'
-                            placeholder="Place your bet amount in PHP..."
-                            onChangeText={(text) => setBiddingAmount(text)}
-                            fontFamily={fonts.regular}
-                        />
-                    </Input>
-                    <Button
-                        variant="solid"
-                        size="md"
-                        bg={colors.primary}
-                        borderRadius={5}
-                        ml={3}
-                        onPress={() => handleBid(listingId, biddingAmount)}
-                    >
-                        <ButtonText fontSize="$md" bold='true' fontFamily={fonts.bold} color={colors.white}>Bid</ButtonText>
-                    </Button>
-                </HStack>
-
-                <Box maxHeight="33%" m="$3">
+                <Box m="$3" flex={1}>
                     <Text fontFamily={fonts.bold} fontSize="$xl" color={colors.secondary}>Bids</Text>
                     <ScrollView>
                         {renderAllBidderList()}
                     </ScrollView>
                 </Box>
-            </Box>
+            </ScrollView>
         </Box>
     );
 }
