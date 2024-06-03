@@ -33,6 +33,7 @@ export default function AllBiddingsPage() {
     const [highestBidders, setHighestBidders] = useState({});
     const [biddingData, setBiddingData] = useState({});
     const [forceRender, setForceRender] = useState(false); // State to trigger re-renders
+    const [searchInput, setSearchInput] = useState(''); // Search input state
 
     const fetchListings = async () => {
         console.log("Fetching listings...");
@@ -146,10 +147,32 @@ export default function AllBiddingsPage() {
         fetchHighestBidders();
     }, [forceRender]);
 
+    const handleSearchChange = (text) => {
+        setSearchInput(text.toLowerCase());
+    };
+
+    const filteredListings = listings.filter((listing) => {
+        const listingName = listing.listingName.toLowerCase();
+        const searchPriceMatch = searchInput.match(/^(\d+)-(\d+)$|^(\d+)$/);
+        if (searchPriceMatch) {
+            const minPrice = searchPriceMatch[1] ? parseInt(searchPriceMatch[1], 10) : parseInt(searchPriceMatch[3], 10);
+            const maxPrice = searchPriceMatch[2] ? parseInt(searchPriceMatch[2], 10) : minPrice + 99;
+            const listingPrice = parseInt(listing.listingPrice, 10);
+
+            if (listingPrice >= minPrice && listingPrice <= maxPrice) {
+                return true;
+            }
+        }
+
+        return (
+            listingName.includes(searchInput)
+        );
+    });
+
     const renderAllBiddings = () => {
         return <>
             <VStack space="xs" w="100%" flexWrap="wrap" justifyContent="center" >
-                {listings.map(listing => (
+                {filteredListings.map(listing => (
                     <BidItemCard
                         key={listing.id}
                         listingImage={listing.listingImageURL}
@@ -195,6 +218,8 @@ export default function AllBiddingsPage() {
             <SearchHeader
                 userIcon={require('../../assets/img/usericon.jpg')}
                 placeholder="Search in biddings"
+                search={searchInput}
+                onSearchChange={handleSearchChange}
             />
 
             <Box p="$5" w="100%" flex={1}>
