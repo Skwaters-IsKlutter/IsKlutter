@@ -24,9 +24,12 @@ Scrum Master and Product Manager: Parcon, Mary Nicolette J.
 1. Clone the repo locally.
      * Open command prompt or another terminal.
      * Copy the line and paste it to your terminal:
-```https://github.com/Skwaters-IsKlutter/IsKlutter.git```
+```
+https://github.com/Skwaters-IsKlutter/IsKlutter.git
+```
 2. Install dependencies
-     * Open command prompt or another terminal.
      * Navigate to the repo.
      * Copy the line and paste it to your terminal:
-```npm install```
+```
+npm install
+```
